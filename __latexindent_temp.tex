@@ -145,12 +145,12 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 % Preface (optional)
 \newpage
 \markboth{Preface}{Preface}
-\include{Preface}
+\include{tex/Preface}
 
 % Abstract should not be longer than one page.
 \newpage
 \markboth{Abstract}{Abstract}
-\include{Abstract}
+\include{tex/Abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Table of contents and list of figures and %%%   
@@ -168,7 +168,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 \phantomsection
 \addcontentsline{toc}{chapter}{\protect\numberline{}{Notation}}
 \markboth{Notation}{Notation}
-\include{Notation}
+\include{tex/Notation}
 
 \cleardoublepage
 \pagenumbering{arabic}%--- switch back to standard numbering 
@@ -179,10 +179,10 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %%% or even better: write in separate files   %%%
 %%% that you just have to include here.       %%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\include{Introduction}
-\include{Chapter1}
-%%\include{Chapter...}
-\include{Summary} 
+\include{tex/Introduction}
+\include{tex/Chapter1}
+%%\include{tex/Chapter...}
+\include{tex/Summary} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Bibliography                              %%%
@@ -204,9 +204,9 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \addtocontents{toc}{\vspace{.5\baselineskip}}
 \appendix
-\include{Appendix1}
-\include{Appendix2}
-\include{Appendix_more_R}
+\include{tex/Appendix1}
+\include{tex/Appendix2}
+\include{tex/Appendix_more_R}
 
 
 %% Epilogue (optional)
@@ -215,7 +215,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 \phantomsection
 \addcontentsline{toc}{chapter}{\protect\numberline{}{Epilogue}}
 \markboth{Epilogue}{Epilogue}
-\include{Epilogue}
+\include{tex/Epilogue}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -231,7 +231,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %% General info on plagiarism:
 %% https://www.ethz.ch/students/en/studies/performance-assessments/plagiarism.html 
 \cleardoublepage
-\includepdf[pages={-}, frame=true,scale=1]{confirmation-originality.pdf}
+\includepdf[pages={-}, frame=true,scale=1]{misc/confirmation-originality.pdf}
 \end{document}
 
 %%% Local Variables:
