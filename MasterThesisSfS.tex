@@ -109,6 +109,10 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\Bruch}[2]{{}^{#1}\!\!/\!_{#2}}
 \renewcommand{\labelenumi}{\roman{enumi}.)}
+\ifdraft \usepackage{lineno} \linenumbers  %XXX
+\definecolor{mygray}{gray}{0.75}
+\renewcommand{\linenumberfont}{\normalfont\scriptsize\color{mygray}}
+\fi %XXX
 
 
 
@@ -154,12 +158,12 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 % Preface (optional)
 \newpage
 \markboth{Preface}{Preface}
-\include{tex/Preface}
+\include{tex/misc/Preface}
 
 % Abstract should not be longer than one page.
 \newpage
 \markboth{Abstract}{Abstract}
-\include{tex/Abstract}
+\include{tex/misc/Abstract}
 \fi %XXX
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -179,7 +183,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 \phantomsection
 \addcontentsline{toc}{chapter}{\protect\numberline{}{Notation}}
 \markboth{Notation}{Notation}
-\include{tex/Notation}
+\include{misc/Notation}
 
 \cleardoublepage
 \fi %XXX
@@ -191,10 +195,10 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %%% or even better: write in separate files   %%%
 %%% that you just have to include here.       %%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\include{tex/Introduction}
-\include{tex/Chapter1}
+\include{tex/chapters/Introduction}
+% \include{tex/example/Chapter1}
 %%\include{tex/Chapter...}
-\include{tex/Summary} 
+\include{tex/chapters/Summary} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Bibliography                              %%%
@@ -216,9 +220,10 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \addtocontents{toc}{\vspace{.5\baselineskip}}
 \appendix
-\include{tex/Appendix1}
-\include{tex/Appendix2}
-\include{tex/Appendix_more_R}
+\include{tex/misc/Appendix}
+% \include{tex/example/Appendix1}
+% \include{tex/example/Appendix2}
+% \include{tex/example/Appendix_more_R}
 
 \ifdraft \else %XXX
 %% Epilogue (optional)
@@ -227,7 +232,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 \phantomsection
 \addcontentsline{toc}{chapter}{\protect\numberline{}{Epilogue}}
 \markboth{Epilogue}{Epilogue}
-\include{tex/Epilogue}
+\include{tex/misc/Epilogue}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
