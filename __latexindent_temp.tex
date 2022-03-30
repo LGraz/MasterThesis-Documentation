@@ -1,7 +1,12 @@
+\newif\ifdraft %XXX
+\drafttrue % \draftfalse %XXX
+
 %%%--- Template for master thesis at SfS
 %%%--- Modified template with more comments and examples -- SG, 11/06/09
 %%%------
+\ifdraft \documentclass[11pt,a4paper]{report} \else%XXX
 \documentclass[11pt,a4paper,twoside,openright]{report}
+\fi %XXX
 \usepackage[english]{sty/ETHDAsfs}%--> ETHDASA + fancyhdr + ... "umlaute"
 %  + sfs-hyper -> hyperref 
 
@@ -116,25 +121,29 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Title page                                %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\period{Summer 2009}
+\period{Spring 2022}
 \dasatype{Master Thesis}
-\students{Student Muster}
+\students{Lukas Graz}
 \mainreaderprefix{Adviser:}
-\mainreader{Prof.\ Dr.\ Sara van de Geer}
-\alternatereaderprefix{Co-Adviser}
-\alternatereader{Markus Kalisch}
-\submissiondate{August 19th 2009}
+\mainreader{Prof.\ Dr.\ Nicolai Meinshausen}
+\alternatereaderprefix{Co-Adviser:}
+\alternatereader{Gregor Perich}
+\submissiondate{September 18th 2022}
 \title{The title of my thesis \\ which should be split on \\ several lines
   if it is too long}
 
+\ifdraft \else%XXX
 \maketitle%- Titelseite wird abgeschlossen
 \cleardoublepage
+\fi %XXX
  %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Insert here acknowledgements and abstract %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Dedication (optional)
+\ifdraft \else%XXX
+
 \markright{}
 \vspace*{\stretch{1}}
 \begin{center}
@@ -151,6 +160,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 \newpage
 \markboth{Abstract}{Abstract}
 \include{tex/Abstract}
+\fi %XXX
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Table of contents and list of figures and %%%   
@@ -158,6 +168,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \tableofcontents
+\ifdraft \else%XXX
 \newpage
 \listoffigures
 \newpage
@@ -171,6 +182,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 \include{tex/Notation}
 
 \cleardoublepage
+\fi %XXX
 \pagenumbering{arabic}%--- switch back to standard numbering 
 
 
@@ -208,7 +220,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 \include{tex/Appendix2}
 \include{tex/Appendix_more_R}
 
-
+\ifdraft \else %XXX
 %% Epilogue (optional)
 \addtocontents{toc}{\vspace{.5\baselineskip}}
 \cleardoublepage
@@ -232,6 +244,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %% https://www.ethz.ch/students/en/studies/performance-assessments/plagiarism.html 
 \cleardoublepage
 \includepdf[pages={-}, frame=true,scale=1]{misc/confirmation-originality.pdf}
+\fi
 \end{document}
 
 %%% Local Variables:
