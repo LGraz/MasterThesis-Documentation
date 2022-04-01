@@ -118,7 +118,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 
 \begin{document}
 \bibliographystyle{chicago}% ---> Hampel,F., E.Ronchetti,... W.Stahel(1986) ...
- %was \bibliographystyle{sfsbib}\citationstyle{dcu} %OR DEFAULT : \citationstyle{agsm}
+%was \bibliographystyle{sfsbib}\citationstyle{dcu} %OR DEFAULT : \citationstyle{agsm}
 
 \pagenumbering{roman}%- roman numbering for first few pages
 
@@ -137,10 +137,10 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
   if it is too long}
 
 \ifdraft \else%XXX
-\maketitle%- Titelseite wird abgeschlossen
-\cleardoublepage
+  \maketitle%- Titelseite wird abgeschlossen
+  \cleardoublepage
 \fi %XXX
- %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+%%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Insert here acknowledgements and abstract %%%
@@ -148,22 +148,22 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %% Dedication (optional)
 \ifdraft \else%XXX
 
-\markright{}
-\vspace*{\stretch{1}}
-\begin{center}
+  \markright{}
+  \vspace*{\stretch{1}}
+  \begin{center}
     To some special person
-\end{center}
-\vspace*{\stretch{2}}
+  \end{center}
+  \vspace*{\stretch{2}}
 
-% Preface (optional)
-\newpage
-\markboth{Preface}{Preface}
-\include{tex/misc/Preface}
+  % Preface (optional)
+  \newpage
+  \markboth{Preface}{Preface}
+  \include{tex/misc/Preface}
 
-% Abstract should not be longer than one page.
-\newpage
-\markboth{Abstract}{Abstract}
-\include{tex/misc/Abstract}
+  % Abstract should not be longer than one page.
+  \newpage
+  \markboth{Abstract}{Abstract}
+  \include{tex/misc/Abstract}
 \fi %XXX
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -173,19 +173,19 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 \newpage
 \tableofcontents
 \ifdraft \else%XXX
-\newpage
-\listoffigures
-\newpage
-\listoftables
+  \newpage
+  \listoffigures
+  \newpage
+  \listoftables
 
-%% Notations and glossary (optional)
-\cleardoublepage
-\phantomsection
-\addcontentsline{toc}{chapter}{\protect\numberline{}{Notation}}
-\markboth{Notation}{Notation}
-\include{misc/Notation}
+  %% Notations and glossary (optional)
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{chapter}{\protect\numberline{}{Notation}}
+  \markboth{Notation}{Notation}
+  \include{tex/misc/Notation}
 
-\cleardoublepage
+  \cleardoublepage
 \fi %XXX
 \pagenumbering{arabic}%--- switch back to standard numbering 
 
@@ -195,11 +195,15 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %%% or even better: write in separate files   %%%
 %%% that you just have to include here.       %%% 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\include{tex/chapters/Introduction}
+\ifdraft \else %XXX
+  \include{tex/chapters/Introduction}
+\fi %XXX
+\include{tex/chapters/Methods}
 % \include{tex/example/Chapter1}
 %%\include{tex/Chapter...}
-\include{tex/chapters/Summary} 
-
+\ifdraft \else %XXX
+  \include{tex/chapters/Summary}
+\fi %XXX
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Bibliography                              %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -226,29 +230,29 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 % \include{tex/example/Appendix_more_R}
 
 \ifdraft \else %XXX
-%% Epilogue (optional)
-\addtocontents{toc}{\vspace{.5\baselineskip}}
-\cleardoublepage
-\phantomsection
-\addcontentsline{toc}{chapter}{\protect\numberline{}{Epilogue}}
-\markboth{Epilogue}{Epilogue}
-\include{tex/misc/Epilogue}
+  %% Epilogue (optional)
+  \addtocontents{toc}{\vspace{.5\baselineskip}}
+  \cleardoublepage
+  \phantomsection
+  \addcontentsline{toc}{chapter}{\protect\numberline{}{Epilogue}}
+  \markboth{Epilogue}{Epilogue}
+  \include{tex/misc/Epilogue}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-%%% Declaration of originality (Do not remove!)%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% Instructions:
-%% -------------
-%% fill in the empty document confirmation-originality.pdf electronically
-%% print it out and sign it
-%% scan it in again and save the scan in this directory with name
-%% confirmation-originality-scan.pdf 
-%%
-%% General info on plagiarism:
-%% https://www.ethz.ch/students/en/studies/performance-assessments/plagiarism.html 
-\cleardoublepage
-\includepdf[pages={-}, frame=true,scale=1]{misc/confirmation-originality.pdf}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%% Declaration of originality (Do not remove!)%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %% Instructions:
+  %% -------------
+  %% fill in the empty document confirmation-originality.pdf electronically
+  %% print it out and sign it
+  %% scan it in again and save the scan in this directory with name
+  %% confirmation-originality-scan.pdf 
+  %%
+  %% General info on plagiarism:
+  %% https://www.ethz.ch/students/en/studies/performance-assessments/plagiarism.html 
+  \cleardoublepage
+  \includepdf[pages={-}, frame=true,scale=1]{misc/confirmation-originality.pdf}
 \fi
 \end{document}
 
