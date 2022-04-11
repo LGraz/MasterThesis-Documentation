@@ -30,17 +30,19 @@ Different assumptions on $m$ will lead to the following models:
 
 \subsection{Kernel Regression}
 \label{sec:Kernel}
-$$
+As described previously, we would like to estimate
+\begin{equation}
+    \label{eq:nadaraya}
     \mathbb{E}[Y \mid X=x]
     = \int_{\mathbb{R}} y f_{Y \mid X}(y \mid x) d y
     =\frac{\int_{\mathbb{R}} y f_{X, Y}(x, y) d y}{f_{X}(x)},
-$$
+\end{equation}
 where $f_{Y \mid X}, f_{X, Y}, f_{X}$ denote the conditional, joint and marginal densities.
-We can estimate those with a kernel $K$ by
+This can be done with a kernel $K$:
 $$
     \hat{f}_{X}(x)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right)}{n h}, \hat{f}_{X, Y}(x, y)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}}
 $$
-Approximating the integral by a Riemann sum this yields the Nadaraya-Watson kernel estimator:
+By plugging the above into equation \ref{eq:nadaraya} we arrive at the \textit{Nadaraya-Watson} kernel estimator:
 $$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right)}$$
 
 **Pros**:
@@ -60,9 +62,9 @@ For local bandwidth selection see Brockmann et al. (1993) XXX
 \label{sec:Running}
 
 
-\subsection{Savitzky–Golay filter}
+\subsection{Savitzky-Golay Filter}
 \label{sec:Savitzky–Golay}
-For this section we refer to (Schafer, “What Is a Savitzky-Golay Filter?”). This technique is used in signal processing and can be used to filter out high frequencies . But it can also used for smoothing by filtering high frequency noise while keeping the low frequency signal.
+The \textit{Savitzky-Golay Filter}, introduced in \cite{savitzkySmoothingDifferentiationData1964} is a technique in signal processing and can be used to filter out high frequencies (low-pass filter) as argued in \cite{schaferWhatSavitzkyGolayFilter2011}. Furthermore, it also can be used for smoothing by filtering high frequency noise while keeping the low frequency signal.
 First we choose a window size $m$. Then, for each point $j \in \{m, m+1, \dots, n-m\}$ we fit a polynomial of degree $k$ by:
 $$\hat y_j=\min_{p\in P_k}\sum_{i=-m}^{m}(p (x_{j+i})-y_{i+j})^{2},$$
 were $P_k$ denotes the Polynomials of degree $k$ over $\mathbb R$.
@@ -71,16 +73,39 @@ For equidistant points this can efficiently be calculated by
 $$
     \hat y_{j}=\sum_{i=-m}^{m} c_{i} y_{j+i},
 $$
-where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in (XXXcitationXXX).
+where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in the original paper.
 
 **Pros**
 - popular technique in signal processing
 - efficient calculation for equidistant points
 
 **Cons**
-- no natural way of how to estimate points which are not in the data.
+- no natural way of how to estimate points which are not in the data. XXX
 
-\subsection{Polynomial interpolation }
+\subsubsection*{Interpolation and Smoothing}
+In a rather famous paper \cite{chenSimpleMethodReconstructing2004a} a ``robust'' method based on the Savitzky-Golay has been used.
+The method is based on the assumption that due to atmospheric effects the NDVI tends to be underestimated and that it cannot increase too quickly\footnote{The latter is argued by the biological impossibility of such fast vegetation changes}.
+
+\textbf{Algorithm:}
+\begin{enumerate}
+    \item Remove points which are labeled as cloudy
+    \item Remove points which would indicate an increase greater than 0.4 within 20 days
+    \item Linearly interpolate to obtain an equidistant time series $X^0$
+    \item Apply the Savitzky-Golay Filter to obtain a new time series $X^1$
+    \item Update $X^1$ by applying again a Savitzky-Golay Filter but this time weight the observations by $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the impact of outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step the authors obtain an ``upper NDVI envelope''
+\end{enumerate}
+
+Pros
+- Upper envelope matches intuition for the NDVI. Therefore, it is robust against outliers with small values.
+-
+
+Cons
+- Not generalizable to other spectral indices.
+- Linear interpolation to account for missing data might be not appropriate.
+- No smooth interpolation between two measurements.
+
+
+\subsection{Polynomial interpolation}
 \label{sec:Polynomial}
 
 \subsection{Polynomial approximation}
@@ -94,12 +119,12 @@ where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in (XXXc
 We interpolate with a function in $C^2$ (space of three time continuous differentiable functions) which is defined piecewise by cubic polynomials.
 **Pros**
 Regression splines (B-splines)
-XXXciteXXX Wood (2017)
+\cite{woodSmoothingParameterModel2016}
 use a basis of the spline space (eg B-splines or j-th cardinal basis) and fit the splines of degree k to approximate the data.
 
 \subsection{B-splines}
 \label{sec:B}
-from \cite{t.lycheSplineMethods}
+from \cite{lycheSplineMethods2005}
 $$
     S(x)=\sum_{j=0}^{n-1} c_{j} B_{j, k ; t}(x)
 $$
@@ -166,8 +191,13 @@ $$V(h):=V\left(t, t+h\right):=\frac{1}{2} \operatorname{Var}\left(S(t)-S(t+h)\ri
     =(\gamma(0))^2(1-\operatorname{corr}(S(t),S(t+h)))$$
 
 
-
-
-
-Ordinary Kriging
-Universal Kriging
+\subsection{Other Methods to study:}
+From inroduction of \cite{chenSimpleMethodReconstructing2004a}:\\
+(1) threshold-
+based methods, such as the best index slope extraction
+algorithm (BISE) (Viovy et al., 1992); (2) Fourier-based
+fitting methods (Cihlar, 1996; Roerink et al., 2000; Sellers
+et al., 1994); and (3) asymmetric function fitting methods
+such as the asymmetric Gaussian function fitting approach
+(Jonsson Eklundh, 2002) and the weighted least-squares
+linear regression approach (Swets et al., 1999).
