@@ -25,7 +25,6 @@ Different assumptions on $m$ will lead to the following models:
 
 
 
-
 \section{Methods - Description}
 
 \subsection{Kernel Regression}
@@ -84,7 +83,7 @@ where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in the o
 
 \subsubsection*{Interpolation and Smoothing}
 In a rather famous paper \cite{chenSimpleMethodReconstructing2004a} a ``robust'' method based on the Savitzky-Golay has been used.
-The method is based on the assumption that due to atmospheric effects the NDVI tends to be underestimated and that it cannot increase too quickly\footnote{The latter is argued by the biological impossibility of such fast vegetation changes}.
+The method is based on the assumption that due to atmospheric effects the observed NDVI tends to be underestimated and that it cannot increase too quickly\footnote{The latter is argued by the biological impossibility of such fast vegetation changes}.
 
 \textbf{Algorithm:}
 \begin{enumerate}
@@ -104,6 +103,22 @@ Cons
 - Linear interpolation to account for missing data might be not appropriate.
 - No smooth interpolation between two measurements.
 
+\subsection{Double Logistic}
+\label{sec:double_logistic}
+The Double Logistic smoothing as introduced in \cite{beckImprovedMonitoringVegetation2006} heavily relies on shape assumptions of the fitted curve (i.e. the NDVI time series).
+
+Assumptions:
+\begin{itemize}
+    \item There is a minimum NDVI level $Y_{\min}$ in the winter (e.g. due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking into several years into account.
+    \item The growth cycle can be divided into an increase and a decrease period where the time series follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$).
+\end{itemize}
+
+The equation of the double-logistic fit is given by:
+\begin{equation*}
+    Y(t) = Y_{\min} + \left(Y_{\max}-Y_{\min}\right)\left(\frac{1}{1+e^{-d_0(t-t_0)}}+\frac{1}{1+e^{-d_1(t-t_1)}}-1\right)
+\end{equation*}
+Where the five free parameters: $Y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay}) we reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations\footnote{For the details on the weights we refer to \cite{beckImprovedMonitoringVegetation2006}}.
+
 
 \subsection{Polynomial interpolation}
 \label{sec:Polynomial}
@@ -120,7 +135,7 @@ We interpolate with a function in $C^2$ (space of three time continuous differen
 **Pros**
 Regression splines (B-splines)
 \cite{woodSmoothingParameterModel2016}
-use a basis of the spline space (eg B-splines or j-th cardinal basis) and fit the splines of degree k to approximate the data.
+use a basis of the spline space (e.g. B-splines or j-th cardinal basis) and fit the splines of degree k to approximate the data.
 
 \subsection{B-splines}
 \label{sec:B}
