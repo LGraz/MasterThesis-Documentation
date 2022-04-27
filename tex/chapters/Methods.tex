@@ -117,9 +117,9 @@ where $\Phi=2 \pi \times(t-1) / n$.
 
 \cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
 
-\begin{my_figure}{interpol/fourier_dl_comparison}
-    \caption{Here we observe the nice fitting possibilitys of the two parametric methods but notice also some misbehaviour}
-\end{my_figure}
+% \begin{my_figure}[h]{keepaspectratio}{interpol/fourier-dl-comparison}
+%     \caption{Here we observe the nice fitting possibilitys of the two parametric methods but notice also some misbehaviour}
+% \end{my_figure}
 
 % \subsection{Polynomial interpolation}
 % \label{sec:Polynomial}
@@ -201,16 +201,15 @@ $$V(h):=V\left(t, t+h\right):=\frac{1}{2} \operatorname{Var}\left(S(t)-S(t+h)\ri
 $$
 And decide to use a gaussian Variogram defined by
 $$V(h) = p \cdot\left(1-e^{-\frac{h^{2}}{\left(\frac{4}{7} r\right)^{2}}}\right)+n,$$
-where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the partial sill visuilized in figure~\ref{fig:interpol/kriging_gauss_variogram}.\footnote{Strictrly speaking we use a scaled version of the variogram. Thus only the ratio of $p/n$ matters.}
-\begin{my_figure}[h]{interpol/kriging_gauss_variogram}
+where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the partial sill visuilized in figure~\ref{fig:interpol/kriging-gauss-variogram}.\footnote{Strictrly speaking we use a scaled version of the variogram. Thus only the ratio of $p/n$ matters.}
+\begin{my_figure}[h]{width=0.7\textwidth}{interpol/kriging-gauss-variogram}
     \caption{Gaussian Variogram with nugget=1, partial sill=3, range=55}
-    \label{fig:interpol/kriging_gauss_variogram}
+    \label{fig:interpol/kriging-gauss-variogram}
 \end{my_figure}
 
-\begin{my_figure}{interpol/kriging_med_vs_ml_param}
+\begin{my_figure}{}{interpol/kriging-parameter}
 \end{my_figure}
-\begin{my_figure}{interpol/kriging_effect_of_param}
-\end{my_figure}
+
 
 \subsection{Other Methods to study:}
 From inroduction of \cite{chenSimpleMethodReconstructing2004a}:\\
