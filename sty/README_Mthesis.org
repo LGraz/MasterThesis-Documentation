@@ -20,7 +20,7 @@ not at home, you probably have to get the latest .sty.
 ** Don't forget to spell-check your text 
    (for example in emacs: Tools -> Spell Checking)
 
-** Do generate *.pdf graphics files in R --> see ./Pictures/picture.R
+** Do generate *.pdf graphics files in R --> see ./figures/picture.R
 ** Otherwise: (This is only needed if you got .eps from somewhere!)
    Convert your .eps graphs in .pdf: in the terminal, type 
    eps2pdf *.eps

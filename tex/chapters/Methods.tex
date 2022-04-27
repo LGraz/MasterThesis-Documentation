@@ -1,18 +1,21 @@
+\chapter{plotting methods}
+\begin{figure}[]
+    \begin{center}
+        \fbox{\scalebox{0.5}{\input{figures/interpol/test_pfg.pgf}}}
+    \end{center}
+    \caption{A PDF plot from \texttt{matplotlib}.}
+\end{figure}
+
+\begin{figure}[]
+    \begin{center}
+        \fbox{\includegraphics[width=0.5\textwidth]{interpol/test}}
+    \end{center}
+    \caption{A PGF plot from \texttt{matplotlib}.}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \chapter{Interpolation Methods}
-Table - overview
-parameter: {h: bandwidth, $\lambda$: penalty-factor, k: neighbors}
-
-
-
-categories
-
-tuning parameter
-unbiased
-asympt. unbiased
-deg. of freedom
-continuous
-smooth ($C^\infty$)
-
 
 \section{Setting}
 
@@ -57,8 +60,9 @@ $$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{
 Normal, Box
 For local bandwidth selection see Brockmann et al. (1993) XXX
 
-\subsection{Running Mean}
-\label{sec:Running}
+
+\subsection{loess}
+\label{sec:loess}
 
 
 \subsection{Savitzky-Golay Filter}
@@ -96,12 +100,14 @@ The method is based on the assumption that due to atmospheric effects the observ
 
 Pros
 - Upper envelope matches intuition for the NDVI. Therefore, it is robust against outliers with small values.
--
 
 Cons
 - Not generalizable to other spectral indices.
 - Linear interpolation to account for missing data might be not appropriate.
 - No smooth interpolation between two measurements.
+
+\subsubsection*{Extension: Spatial-Temporal-Savitzky-Golay Filter}
+One notable adaptation of the Savitzky-Golay is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors we will waive this extension.
 
 \subsection{Double Logistic}
 \label{sec:double_logistic}
@@ -119,15 +125,22 @@ The equation of the double-logistic fit is given by:
 \end{equation*}
 Where the five free parameters: $Y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay}) we reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations\footnote{For the details on the weights we refer to \cite{beckImprovedMonitoringVegetation2006}}.
 
+\subsection{Fourier Approximation}
+\label{sec:fourier_approx}
+$$
+    \operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}\right)
+$$
+where $\Phi=2 \pi \times(t-1) / n$.
 
-\subsection{Polynomial interpolation}
-\label{sec:Polynomial}
+\cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
 
-\subsection{Polynomial approximation}
-\label{sec:Polynomial}
 
-\subsection{loess}
-\label{sec:loess}
+
+% \subsection{Polynomial interpolation}
+% \label{sec:Polynomial}
+
+% \subsection{Polynomial approximation}
+% \label{sec:Polynomial}
 
 \subsection{Cubic Smoothing Splines}
 \label{sec:Cubic}
@@ -185,26 +198,34 @@ Intuition: similar as Natural Smoothing Splines, but we choose knots
 
 \subsection{Kriging}
 \label{sec:Kriging}
----
-\cite{diggleGaussianModelsGeostatistical2007}
 
-Idea / Justification /
-Kriging was developed in geostatistics to deal with autocorrelation of the response variable at nearby points. By applying the notion that two spectral indices which are (timewise) close should also take similar values we justify the application of Kriging.
+Kriging was developed in geostatistics to deal with autocorrelation of the response variable at nearby points. By applying the notion that two spectral indices which are (timewise) close should also take similar values we justify the application of Kriging. In the end we would like to fit a smooth Gaussian process to the data. For this subsection we will follow \cite{diggleGaussianModelsGeostatistical2007}.
 
-Definitions and Assumptions
-In the end we would like to fit a smooth Gaussian process to the data.
-**Gaussian Process** $\{S(t) : t\in \mathbb R\} $ is a stochastic process if $(S(t_1),\dots,S(t_k))$ has a multivariate Gaussian distribution for every collection of times ${t_1, \dots , t_k}$.
+\subsubsection*{Definitions and Assumptions}
+
+A \textit{Gaussian Process} $\{S(t) : t\in \mathbb R\} $ is a stochastic process if $(S(t_1),\dots,S(t_k))$ has a multivariate Gaussian distribution for every collection of times ${t_1, \dots , t_k}$.
 $S$ can be fully characterized by the mean $\mu(t):=E[S(t)]$ and its covariance function $\gamma\left(t, t^{\prime}\right)=\operatorname{Cov}\left(S(t), S\left(t^{\prime}\right)\right)$
 
 Assumption:
-We will assume the Gaussian process to be stationary. That is for $\mu(t)$ to be constant in $t$ and $\gamma(t,t')$ to depend only on $h=t-t'$. Thus, we will write in the following only $\gamma(h)$.
+We will assume the Gaussian process to be stationary. That is for $\mu(t)$ to be constant in $t$ and $\gamma(t,t')$ to depend only on $h=t-t'$. Thus, we will write in the following only $\gamma(h)$.\footnote{Note that the process is also \textit{isotropic} (i.e. $\gamma(h)=\gamma(\|h\|$) since we are in a one-dimensional setting and the covariance is symmetric.}
 
-Note that the process is also isotropic (i.e. $\gamma(h)=\gamma(\|h\|$) since we are in a one-dimensional setting and the covariance is symmetric.
 
 We also define the variogram of a Gaussian process as
 $$V(h):=V\left(t, t+h\right):=\frac{1}{2} \operatorname{Var}\left(S(t)-S(t+h)\right)\\ %align XXX
-    =(\gamma(0))^2(1-\operatorname{corr}(S(t),S(t+h)))$$
+    =(\gamma(0))^2(1-\operatorname{corr}(S(t),S(t+h)))
+$$
+And decide to use a gaussian Variogram defined by
+$$V(h) = p \cdot\left(1-e^{-\frac{h^{2}}{\left(\frac{4}{7} r\right)^{2}}}\right)+n,$$
+where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the partial sill visuilized in figure~\ref{fig:interpol/kriging_gauss_variogram}.\footnote{Strictrly speaking we use a scaled version of the variogram. Thus only the ratio of $p/n$ matters.}
+\begin{my_figure}{interpol/kriging_gauss_variogram}
+    \caption{Gaussian Variogram with nugget=1, partial sill=3, range=55}
+    \label{fig:interpol/kriging_gauss_variogram}
+\end{my_figure}
 
+\begin{my_figure}{interpol/kriging_med_vs_ml_param}
+\end{my_figure}
+\begin{my_figure}{interpol/kriging_effect_of_param}
+\end{my_figure}
 
 \subsection{Other Methods to study:}
 From inroduction of \cite{chenSimpleMethodReconstructing2004a}:\\

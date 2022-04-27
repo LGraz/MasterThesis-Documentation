@@ -42,6 +42,6 @@ To display \Rp code nicely, use the \texttt{listings} package. It allows
 you to number the lines, color the comments differently than the code, and
 so on:
 
-\lstinputlisting{MasterThesisSfS/Pictures/picture.R}
+\lstinputlisting{MasterThesisSfS/figures/picture.R}
 
 \end{document}

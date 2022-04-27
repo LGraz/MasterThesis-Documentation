@@ -41,6 +41,7 @@
 %--------
 \usepackage{relsize}%-> \smaller (etc) used here
 \usepackage{color} %% to allow coloring in code listings
+\usepackage{pgf}
 \usepackage{listings}% Fuer R-code, C-code, ....  and settings for these:
 \definecolor{Mygrey}{gray}{0.75}% for linenumbers only!
 \definecolor{Cgrey}{gray}{0.4}% for comments
@@ -54,27 +55,28 @@
 %\newcommand{\lil}[1]{\lstinline|#1|}
 %%--- newer version of "listings of R"-style : ---------------------------
 \lstset{%% Help, e.g. --> https://en.wikibooks.org/wiki/LaTeX/Source_Code_Listings
-language=R,
-basicstyle=\ttfamily\scriptsize,%%- \small > \footnotesize > \scriptsize > \tiny
-%commentstyle=\ttfamily\color{Cgrey},
-commentstyle=\itshape\color{Cgrey},
-numbers=left,
-numberstyle=\ttfamily\color{Mygrey}\tiny,
-stepnumber=1,
-numbersep=5pt,
-backgroundcolor=\color{white},
-showspaces=false,
-showstringspaces=false,
-showtabs=false,
-frame=single,
-tabsize=2,
-captionpos=b,
-breaklines=true,
-%breakatwhitespace=false,
-keywordstyle={},
-morekeywords={},
-xleftmargin=4ex, 
-literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
+  language=R,
+  basicstyle=\ttfamily\scriptsize,%%- \small > \footnotesize > \scriptsize > \tiny
+  %commentstyle=\ttfamily\color{Cgrey},
+  commentstyle=\itshape\color{Cgrey},
+  numbers=left,
+  numberstyle=\ttfamily\color{Mygrey}\tiny,
+  stepnumber=1,
+  numbersep=5pt,
+  backgroundcolor=\color{white},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  frame=single,
+  tabsize=2,
+  captionpos=b,
+  breaklines=true,
+  %breakatwhitespace=false,
+  keywordstyle={},
+  morekeywords={},
+  xleftmargin=4ex, 
+  literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1
+}
 \lstset{escapeinside={(*}{*)}} % for (*\ref{ }*) inside lstlistings (Scode) 
 %%----------------------------------------------------------------------------
 
@@ -102,7 +104,7 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 %%% Path for your figures                      %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Set the paths where all figures are taken from:
-\graphicspath{{Pictures/}}
+\graphicspath{{./figures/}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Define your own commands here             %%%
@@ -113,6 +115,17 @@ literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1}
 \definecolor{mygray}{gray}{0.75}
 \renewcommand{\linenumberfont}{\normalfont\scriptsize\color{mygray}}
 \fi %XXX
+
+\newenvironment{my_figure}[1]{
+  \begin{figure}
+    \begin{center}
+      %\fbox % trim= left bottom right top
+      {\includegraphics[trim= 0.8cm 0.8cm 0.6cm 0.8cm, width=0.8\textwidth]{#1}}
+      % for more options: https://latexref.xyz/_005cincludegraphics.html 
+}{
+    \end{center}
+  \end{figure}
+}
 
 
 
