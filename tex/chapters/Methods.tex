@@ -1,20 +1,3 @@
-\chapter{plotting methods}
-\begin{figure}[]
-    \begin{center}
-        \fbox{\scalebox{0.5}{\input{figures/interpol/test_pfg.pgf}}}
-    \end{center}
-    \caption{A PDF plot from \texttt{matplotlib}.}
-\end{figure}
-
-\begin{figure}[]
-    \begin{center}
-        \fbox{\includegraphics[width=0.5\textwidth]{interpol/test}}
-    \end{center}
-    \caption{A PGF plot from \texttt{matplotlib}.}
-\end{figure}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \chapter{Interpolation Methods}
 
 \section{Setting}
@@ -134,7 +117,9 @@ where $\Phi=2 \pi \times(t-1) / n$.
 
 \cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
 
-
+\begin{my_figure}{interpol/fourier_dl_comparison}
+    \caption{Here we observe the nice fitting possibilitys of the two parametric methods but notice also some misbehaviour}
+\end{my_figure}
 
 % \subsection{Polynomial interpolation}
 % \label{sec:Polynomial}
@@ -217,7 +202,7 @@ $$
 And decide to use a gaussian Variogram defined by
 $$V(h) = p \cdot\left(1-e^{-\frac{h^{2}}{\left(\frac{4}{7} r\right)^{2}}}\right)+n,$$
 where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the partial sill visuilized in figure~\ref{fig:interpol/kriging_gauss_variogram}.\footnote{Strictrly speaking we use a scaled version of the variogram. Thus only the ratio of $p/n$ matters.}
-\begin{my_figure}{interpol/kriging_gauss_variogram}
+\begin{my_figure}[h]{interpol/kriging_gauss_variogram}
     \caption{Gaussian Variogram with nugget=1, partial sill=3, range=55}
     \label{fig:interpol/kriging_gauss_variogram}
 \end{my_figure}

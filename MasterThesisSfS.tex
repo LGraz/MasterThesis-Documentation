@@ -116,12 +116,14 @@
 \renewcommand{\linenumberfont}{\normalfont\scriptsize\color{mygray}}
 \fi %XXX
 
-\newenvironment{my_figure}[1]{
-  \begin{figure}
+\newenvironment{my_figure}[2][t]{
+  \begin{figure}[#1]
     \begin{center}
-      %\fbox % trim= left bottom right top
-      {\includegraphics[trim= 0.8cm 0.8cm 0.6cm 0.8cm, width=0.8\textwidth]{#1}}
+      % \fbox % trim= left bottom right top  % trim= 0.8cm 0.8cm 0.6cm 0.8cm
+      \ifdraft \fcolorbox{mygray}{white} {\includegraphics[width=0.9\textwidth]{#2}} \else
+      \includegraphics[width=0.9\textwidth]{#2} \fi
       % for more options: https://latexref.xyz/_005cincludegraphics.html 
+      \label{fig:#2}
 }{
     \end{center}
   \end{figure}
