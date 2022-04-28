@@ -1,5 +1,5 @@
 \chapter{Interpolation Methods}
-
+12345678912345678912345678123456789123456789123456789123456789123456789123456789
 \begin{my_pros_cons_table}{
         \item item 1
         \item item 2
@@ -8,6 +8,8 @@
         \item 2
     }
 \end{my_pros_cons_table}
+
+123456789123456789123456789123456789123456789123456789123456789123456789123456789
 
 \section{Setting}
 
@@ -39,14 +41,17 @@ $$
 By plugging the above into equation \ref{eq:nadaraya} we arrive at the \textit{Nadaraya-Watson} kernel estimator:
 $$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right)}$$
 
-**Pros**:
-- can be assigned degrees of freedom (trace of the hat-matrix)
-- estimation of the noise variance $\hat \sigma_\varepsilon^2$ (XXX c.f. CompStat 3.2.2)
 
-**Cons**:
-- choice of kernel
-- if the $x \mapsto K(x)$ is not continuous, $\hat m $ isn't either
-- choice of bandwidth, especially if $x_i$ are not equidistant.
+\begin{my_pros_cons_table}{
+        \item can be assigned degrees of freedom (trace of the hat-matrix)
+        \item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (XXX c.f. CompStat 3.2.2)
+    }{
+        \item choice of kernel
+        \item if the $x \mapsto K(x)$ is not continuous, $\hat m $ isn't either
+        \item choice of bandwidth, especially if $x_i$ are not equidistant.
+    }
+\end{my_pros_cons_table}
+
 
 **Examples:**
 Normal, Box
@@ -69,13 +74,14 @@ $$
     \hat y_{j}=\sum_{i=-m}^{m} c_{i} y_{j+i},
 $$
 where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in the original paper.
+\begin{my_pros_cons_table}{
+        \item popular technique in signal processing
+        \item efficient calculation for equidistant points
+    }{
+        \item no natural way of how to estimate points which are not in the data. XXX
 
-**Pros**
-- popular technique in signal processing
-- efficient calculation for equidistant points
-
-**Cons**
-- no natural way of how to estimate points which are not in the data. XXX
+    }
+\end{my_pros_cons_table}
 
 \subsubsection*{Interpolation and Smoothing}
 In a rather famous paper \cite{chenSimpleMethodReconstructing2004a} a ``robust'' method based on the Savitzky-Golay has been used.
@@ -90,13 +96,16 @@ The method is based on the assumption that due to atmospheric effects the observ
     \item Update $X^1$ by applying again a Savitzky-Golay Filter but this time weight the observations by $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the impact of outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step the authors obtain an ``upper NDVI envelope''
 \end{enumerate}
 
-Pros
-- Upper envelope matches intuition for the NDVI. Therefore, it is robust against outliers with small values.
+\begin{my_pros_cons_table}{
+        \item Upper envelope matches intuition for the NDVI. Therefore, it is robust against outliers with small values.
+        \item
+    }{
+        \item Not generalizable to other spectral indices.
+        \item Linear interpolation to account for missing data might be not appropriate.
+        \item No smooth interpolation between two measurements.
+    }
+\end{my_pros_cons_table}
 
-Cons
-- Not generalizable to other spectral indices.
-- Linear interpolation to account for missing data might be not appropriate.
-- No smooth interpolation between two measurements.
 
 \subsubsection*{Extension: Spatial-Temporal-Savitzky-Golay Filter}
 One notable adaptation of the Savitzky-Golay is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors we will waive this extension.
@@ -126,9 +135,9 @@ where $\Phi=2 \pi \times(t-1) / n$.
 
 \cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
 
-% \begin{my_figure}[h]{keepaspectratio}{interpol/fourier-dl-comparison}
-%     \caption{Here we observe the nice fitting possibilitys of the two parametric methods but notice also some misbehaviour}
-% \end{my_figure}
+\begin{my_figure}[h]{width=1\textwidth}{interpol/fourier_dl_comparison}
+    \caption{Here we observe the nice fitting possibilitys of the two parametric methods but notice also some misbehaviour}
+\end{my_figure}
 
 % \subsection{Polynomial interpolation}
 % \label{sec:Polynomial}
@@ -160,15 +169,16 @@ $$
 **Smoothing:**
 We can relax the constrain that we have to perfectly interpolate. Thus we use the minimum number of knots\footnote{SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number knots used} such that:
 $\sum_{i=1}^n(w (y_i - \hat y_i))^2 \leq s$
+\begin{my_pros_cons_table}{
+        \item can be assigned degrees of freedom
+        \item extendable to "smooth" version
+        \item performs also well if points are not equidistant
+    }{
+        \item smoothing process does not translate well to a interpretation (unlike smoothing splines)
+        \item choice of smoothing parameter $s$
+    }
+\end{my_pros_cons_table}
 
-**Pros**
-- can be assigned degrees of freedom
-- extendable to "smooth" version
-- performs also well if points are not equidistant
-
-**Cons**
-- smoothing process does not translate well to a interpretation (unlike smoothing splines)
-- choice of smoothing parameter $s$
 
 \subsection{Natural Smoothing Splines}
 \label{sec:Natural}
@@ -176,15 +186,17 @@ Let $\mathcal F$ be the Sobolev space (the space of functions of which the secon
 $$\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}\left(Y_{i}-{f}\left(x_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(x)^{2} d x$$
 is a natural\footnote{It is called natural since it is affine outside the data range ($\forall x\notin [x_1, x_n]:\hat m''(x) = 0$)} cubic spline.
 
-**Pros:**
-- can be assigned degrees of freedom (trace of the hat-matrix)
-- efficient estimation (closed form solution)
-- intuitive penalty (we don't want the function to be too ``wobbly'' --- change slopes)
-- performs also well if points are not equidistant
-- fixes the Runge's phenomenon (fluctuation of high degree polynomial interpolation)
+\begin{my_pros_cons_table}{
+        \item can be assigned degrees of freedom (trace of the hat-matrix)
+        \item efficient estimation (closed form solution)
+        \item intuitive penalty (we don't want the function to be too ``wobbly'' --- change slopes)
+        \item performs also well if points are not equidistant
+        \item fixes the Runge's phenomenon (fluctuation of high degree polynomial interpolation)
+    }{
+        \item choose $\lambda$
+    }
+\end{my_pros_cons_table}
 
-**Cons:**
-- choose $\lambda$
 
 \subsection{Penalized Regression Splines}
 \label{sec:Penalized}
@@ -217,6 +229,7 @@ where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the pa
 \end{my_figure}
 
 \begin{my_figure}{width=1\textwidth}{interpol/kriging_parameter}
+    \caption{On the left we see how the interpolation change if we increase the nugget and the range parameter. On the right we compare two kriging interpolations where one takes parameters by numerically maximizing the likelyhood and the other takes the median of many such numerical optimizations.}
 \end{my_figure}
 
 
