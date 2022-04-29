@@ -20,7 +20,7 @@ $$
 where $\varepsilon_i$ is some noise and $m: \mathbb{R} \rightarrow \mathbb{R}$ being some (non-parametric regression) function. If we assume that $\varepsilon_{1}, \ldots, \varepsilon_{n}$ i.i.d. with $\mathbb{E}\left[\varepsilon_{i}\right]=0$ then $$m(x)=\mathbb{E}[Y \mid x]$$
 Different assumptions on $m$ will lead to the following models:
 
-
+\section{Overview}
 
 \section{Methods - Description}
 
@@ -93,7 +93,7 @@ The method is based on the assumption that due to atmospheric effects the observ
     \item Remove points which would indicate an increase greater than 0.4 within 20 days
     \item Linearly interpolate to obtain an equidistant time series $X^0$
     \item Apply the Savitzky-Golay Filter to obtain a new time series $X^1$
-    \item Update $X^1$ by applying again a Savitzky-Golay Filter but this time weight the observations by $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the impact of outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step the authors obtain an ``upper NDVI envelope''
+    \item Update $X^1$ by applying again a Savitzky-Golay Filter. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the impact of outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''
 \end{enumerate}
 
 \begin{my_pros_cons_table}{
@@ -202,6 +202,22 @@ is a natural\footnote{It is called natural since it is affine outside the data r
 \label{sec:Penalized}
 Intuition: similar as Natural Smoothing Splines, but we choose knots
 
+
+\subsection{Whittaker Smoother}
+\label{sec:whittaker}
+% from [HERE](https://eigenvector.com/wp-content/uploads/2020/01/WhittakerSmoother.pdf):  
+%     The Whittaker Smoother: Eiler's paper[1] introduces the following objective function
+%     $$
+%     O(\mathbf{z})=(\mathbf{y}-\mathbf{z})^{\mathrm{T}} \mathbf{W}_{0}(\mathbf{y}-\mathbf{z})+\lambda_{\mathrm{s}} \mathbf{z}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}} \mathbf{z}
+%     $$
+%     where $\mathbf{y}$ is a $N \times 1$ vector of measured data, $\mathbf{z}$ is smooth curve to be fit to the data, $\mathbf{W}_{0}$ is a diagonal matrix of weights (typically $0 \leq w_{0, n} \leq 1$ for $n=1, \ldots, N, \mathbf{D}_{\mathrm{s}}$ is a second derivative operator (e.g., $\mathbf{D}_{\mathrm{s}} \mathbf{z}$ is the second derivative of $\mathbf{z}$ ) and $\lambda_{\mathrm{s}}$ is a scalar penalty on the smoothing term. When data are missing, the corresponding weight, $w_{0, n}$, can be set to zero. Once that $\mathbf{W}_{0}$ and $\lambda_{\mathrm{s}}$ are given (set by default or provided by the user) the corresponding estimate of $\mathbf{z}$ is given by
+%     $$
+%     \hat{\mathbf{z}}=\left(\mathbf{W}_{0}+\lambda_{\mathrm{s}} \mathbf{D}_{\mathrm{s}}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}}\right)^{-1} \mathbf{W}_{0} \mathbf{y}
+%     $$
+%     For example, an optical emission (OES) spectrum is plotted Figure 1 along with two smoothed versions shown for $\mathbf{W}_{0}=\mathbf{I}$ and $\lambda_{\mathrm{s}}=0.1$ (low smoothing) and $\lambda_{\mathrm{s}}=10$ (stronger smoothing).   
+% **Original paper states use of the first derivative**  
+% --> second derivative is very similar to smoothing splines
+
 \subsection{Kriging}
 \label{sec:Kriging}
 
@@ -229,7 +245,7 @@ where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the pa
 \end{my_figure}
 
 \begin{my_figure}{width=1\textwidth}{interpol/kriging_parameter}
-    \caption{On the left we see how the interpolation change if we increase the nugget and the range parameter. On the right we compare two kriging interpolations where one takes parameters by numerically maximizing the likelyhood and the other takes the median of many such numerical optimizations.}
+    \caption{On the left we see how the interpolation change if we increase the nugget and the range parameter. On the right we compare two kriging interpolations where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
 \end{my_figure}
 
 
