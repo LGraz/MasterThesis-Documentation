@@ -1,8 +1,8 @@
 \chapter{Interpolation Methods}
 12345678912345678912345678123456789123456789123456789123456789123456789123456789
 \begin{my_pros_cons_table}{
-        \item item 1
-        \item item 2
+        \item 1
+        \item 2
     }{
         \item 1
         \item 2
@@ -18,9 +18,10 @@ $$
     Y_{i}=m\left(x_{i}\right)+\varepsilon_{i},
 $$
 where $\varepsilon_i$ is some noise and $m: \mathbb{R} \rightarrow \mathbb{R}$ being some (non-parametric regression) function. If we assume that $\varepsilon_{1}, \ldots, \varepsilon_{n}$ i.i.d. with $\mathbb{E}\left[\varepsilon_{i}\right]=0$ then $$m(x)=\mathbb{E}[Y \mid x]$$
-Different assumptions on $m$ will lead to the following models:
+Different assumptions on $m$ will lead to the following methods:
 
 \section{Overview}
+here will be my nice summary table :)
 
 \section{Methods - Description}
 
@@ -43,10 +44,10 @@ $$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{
 
 
 \begin{my_pros_cons_table}{
+        \item flexible due to different possible kernels
         \item can be assigned degrees of freedom (trace of the hat-matrix)
         \item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (XXX c.f. CompStat 3.2.2)
     }{
-        \item choice of kernel
         \item if the $x \mapsto K(x)$ is not continuous, $\hat m $ isn't either
         \item choice of bandwidth, especially if $x_i$ are not equidistant.
     }
@@ -60,6 +61,14 @@ For local bandwidth selection see Brockmann et al. (1993) XXX
 
 \subsection{loess}
 \label{sec:loess}
+\begin{my_pros_cons_table}{
+    \item 1
+    \item 2
+}{
+    \item 1
+    \item 2
+}
+\end{my_pros_cons_table}
 
 
 \subsection{Savitzky-Golay Filter}
@@ -74,14 +83,6 @@ $$
     \hat y_{j}=\sum_{i=-m}^{m} c_{i} y_{j+i},
 $$
 where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in the original paper.
-\begin{my_pros_cons_table}{
-        \item popular technique in signal processing
-        \item efficient calculation for equidistant points
-    }{
-        \item no natural way of how to estimate points which are not in the data. XXX
-
-    }
-\end{my_pros_cons_table}
 
 \subsubsection*{Interpolation and Smoothing}
 In a rather famous paper \cite{chenSimpleMethodReconstructing2004a} a ``robust'' method based on the Savitzky-Golay has been used.
@@ -93,13 +94,15 @@ The method is based on the assumption that due to atmospheric effects the observ
     \item Remove points which would indicate an increase greater than 0.4 within 20 days
     \item Linearly interpolate to obtain an equidistant time series $X^0$
     \item Apply the Savitzky-Golay Filter to obtain a new time series $X^1$
-    \item Update $X^1$ by applying again a Savitzky-Golay Filter. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the impact of outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''
+    \item Update $X^1$ by applying again a Savitzky-Golay Filter. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''.
 \end{enumerate}
 
 \begin{my_pros_cons_table}{
-        \item Upper envelope matches intuition for the NDVI. Therefore, it is robust against outliers with small values.
-        \item
+    \item Popular technique in signal processing
+    \item Efficient calculation for equidistant points
+    \item Upper envelope matches intuition for the NDVI. Therefore, it is robust against outliers with small values.
     }{
+        \item No natural way of how to estimate points which are not in the data. 
         \item Not generalizable to other spectral indices.
         \item Linear interpolation to account for missing data might be not appropriate.
         \item No smooth interpolation between two measurements.
@@ -110,9 +113,10 @@ The method is based on the assumption that due to atmospheric effects the observ
 \subsubsection*{Extension: Spatial-Temporal-Savitzky-Golay Filter}
 One notable adaptation of the Savitzky-Golay is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors we will waive this extension.
 
+
 \subsection{Double Logistic}
 \label{sec:double_logistic}
-The Double Logistic smoothing as introduced in \cite{beckImprovedMonitoringVegetation2006} heavily relies on shape assumptions of the fitted curve (i.e. the NDVI time series).
+The Double Logistic smoothing as described in \cite{beckImprovedMonitoringVegetation2006} heavily relies on shape assumptions of the fitted curve (i.e. the NDVI time series).
 
 Assumptions:
 \begin{itemize}
@@ -124,19 +128,44 @@ The equation of the double-logistic fit is given by:
 \begin{equation*}
     Y(t) = Y_{\min} + \left(Y_{\max}-Y_{\min}\right)\left(\frac{1}{1+e^{-d_0(t-t_0)}}+\frac{1}{1+e^{-d_1(t-t_1)}}-1\right)
 \end{equation*}
-Where the five free parameters: $Y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay}) we reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations\footnote{For the details on the weights we refer to \cite{beckImprovedMonitoringVegetation2006}}.
+Where the five free parameters: $Y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Such fit can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}. 
+
+Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay}) we reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations\footnote{For the details on the weights we refer to \cite{beckImprovedMonitoringVegetation2006}}.
+
+\begin{my_pros_cons_table}{
+    \item Incorperates subject specific knowledge in the case of evergreen plants covered by snow.
+    \item Optimized parameters have an intuitive meaning.
+}{
+    \item Strong shape assumptions on the NDVI curve.
+    \item Parameter optimization might go wrong. This can be mitigated to some extend to provide bounds for the paramters
+    \item Strange behaviour in regrions with little observations. (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
+}
+\end{my_pros_cons_table}
+
 
 \subsection{Fourier Approximation}
 \label{sec:fourier_approx}
+Similar as in section~\ref{sec:double_logistic} we fit a parametric curve to the data by least squares. Here we take the second order fourier series:
 $$
-    \operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}\right)
+    \operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}  \right)
 $$
 where $\Phi=2 \pi \times(t-1) / n$.
 
-\cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
+% \cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
+
+\begin{my_pros_cons_table}{
+    \item Assumtion of periodicity can be helpful if we are modelling multiyear grow cycles
+    \item Flexible curve shape
+}{
+    \item Bad behaviour in regions with little data (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
+    \item Hard to interpret estimated parameters
+    \item Parameter estimation can go wrong. Introducing bounds can help.
+}
+\end{my_pros_cons_table}
 
 \begin{my_figure}[h]{width=1\textwidth}{interpol/fourier_dl_comparison}
     \caption{Here we observe the nice fitting possibilitys of the two parametric methods but notice also some misbehaviour}
+    \label{fig:interpol/fourier_dl_comparison}
 \end{my_figure}
 
 % \subsection{Polynomial interpolation}
@@ -145,13 +174,14 @@ where $\Phi=2 \pi \times(t-1) / n$.
 % \subsection{Polynomial approximation}
 % \label{sec:Polynomial}
 
-\subsection{Cubic Smoothing Splines}
-\label{sec:Cubic}
-We interpolate with a function in $C^2$ (space of three time continuous differentiable functions) which is defined piecewise by cubic polynomials.
-**Pros**
-Regression splines (B-splines)
-\cite{woodSmoothingParameterModel2016}
-use a basis of the spline space (e.g. B-splines or j-th cardinal basis) and fit the splines of degree k to approximate the data.
+% \subsection{Cubic Smoothing Splines}
+% \label{sec:Cubic}
+% We interpolate with a function in $C^2$ (space of three time continuous differentiable functions) which is defined piecewise by cubic polynomials.
+% **Pros**
+% Regression splines (B-splines)
+% \cite{woodSmoothingParameterModel2016}
+% use a basis of the spline space (e.g. B-splines or j-th cardinal basis) and fit the splines of degree k to approximate the data.
+
 
 \subsection{B-splines}
 \label{sec:B}
@@ -184,7 +214,8 @@ $\sum_{i=1}^n(w (y_i - \hat y_i))^2 \leq s$
 \label{sec:Natural}
 Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the unique\footnote{Strictly speaking it is only unique for $\lambda > 0$} minimizer
 $$\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}\left(Y_{i}-{f}\left(x_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(x)^{2} d x$$
-is a natural\footnote{It is called natural since it is affine outside the data range ($\forall x\notin [x_1, x_n]:\hat m''(x) = 0$)} cubic spline.
+is a natural\footnote{It is called natural since it is affine outside the data range ($\forall x\notin [x_1, x_n]:\hat m''(x) = 0$)} cubic spline (i.e. a piecewise cubic polynomial function).
+
 
 \begin{my_pros_cons_table}{
         \item can be assigned degrees of freedom (trace of the hat-matrix)
@@ -198,9 +229,17 @@ is a natural\footnote{It is called natural since it is affine outside the data r
 \end{my_pros_cons_table}
 
 
-\subsection{Penalized Regression Splines}
-\label{sec:Penalized}
-Intuition: similar as Natural Smoothing Splines, but we choose knots
+% \subsection{Penalized Regression Splines}
+% \label{sec:Penalized}
+% Intuition: similar as Natural Smoothing Splines, but we choose knots
+% \begin{my_pros_cons_table}{
+%     \item 1
+%     \item 2
+% }{
+%     \item 1
+%     \item 2
+% }
+% \end{my_pros_cons_table}
 
 
 \subsection{Whittaker Smoother}
@@ -217,6 +256,15 @@ Intuition: similar as Natural Smoothing Splines, but we choose knots
 %     For example, an optical emission (OES) spectrum is plotted Figure 1 along with two smoothed versions shown for $\mathbf{W}_{0}=\mathbf{I}$ and $\lambda_{\mathrm{s}}=0.1$ (low smoothing) and $\lambda_{\mathrm{s}}=10$ (stronger smoothing).   
 % **Original paper states use of the first derivative**  
 % --> second derivative is very similar to smoothing splines
+\begin{my_pros_cons_table}{
+    \item 1
+    \item 2
+}{
+    \item 1
+    \item 2
+}
+\end{my_pros_cons_table}
+
 
 \subsection{Kriging}
 \label{sec:Kriging}
@@ -238,7 +286,7 @@ $$V(h):=V\left(t, t+h\right):=\frac{1}{2} \operatorname{Var}\left(S(t)-S(t+h)\ri
 $$
 And decide to use a gaussian Variogram defined by
 $$V(h) = p \cdot\left(1-e^{-\frac{h^{2}}{\left(\frac{4}{7} r\right)^{2}}}\right)+n,$$
-where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the partial sill visuilized in figure~\ref{fig:interpol/kriging-gauss-variogram}.\footnote{Strictrly speaking we use a scaled version of the variogram. Thus only the ratio of $p/n$ matters.}
+where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the partial sill visuilized in figure~\ref{fig:interpol/kriging_gauss_variogram}.\footnote{Strictrly speaking we use a scaled version of the variogram. Thus only the ratio of $p/n$ matters.}
 \begin{my_figure}[h]{width=0.7\textwidth}{interpol/kriging_gauss_variogram}
     \caption{Gaussian Variogram with nugget=1, partial sill=3, range=55}
     \label{fig:interpol/kriging_gauss_variogram}
@@ -247,6 +295,17 @@ where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the pa
 \begin{my_figure}{width=1\textwidth}{interpol/kriging_parameter}
     \caption{On the left we see how the interpolation change if we increase the nugget and the range parameter. On the right we compare two kriging interpolations where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
 \end{my_figure}
+
+\begin{my_pros_cons_table}{
+    \item It is a well-studied method
+    \item Parameters have an intuitive meaning
+}{
+    \item Regression to the mean
+    \item Assumption of constant mean and constant variance is clearly violated
+    \item Skewness of errors is not taken into account
+    \item Flexible covariance structure
+}
+\end{my_pros_cons_table}
 
 
 \subsection{Other Methods to study:}
