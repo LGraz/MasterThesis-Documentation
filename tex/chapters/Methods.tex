@@ -1,15 +1,15 @@
 \chapter{Interpolation Methods}
-12345678912345678912345678123456789123456789123456789123456789123456789123456789
-\begin{my_pros_cons_table}{
-        \item 1
-        \item 2
-    }{
-        \item 1
-        \item 2
-    }
-\end{my_pros_cons_table}
+% \begin{my_pros_cons_table}{
+%         \item 1
+%         \item 2
+%     }{
+%         \item 1
+%         \item 2
+%     }
+% \end{my_pros_cons_table}
 
-123456789123456789123456789123456789123456789123456789123456789123456789123456789
+
+\input{tex/methods/pros_cons_overview.tex}
 
 \section{Setting}
 
@@ -22,6 +22,7 @@ Different assumptions on $m$ will lead to the following methods:
 
 \section{Overview}
 here will be my nice summary table :)
+
 
 \section{Methods - Description}
 
@@ -84,7 +85,7 @@ $$
 $$
 where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in the original paper.
 
-\subsubsection*{Interpolation and Smoothing}
+\subsubsection*{Adaptation to the NDVI}
 In a rather famous paper \cite{chenSimpleMethodReconstructing2004a} a ``robust'' method based on the Savitzky-Golay has been used.
 The method is based on the assumption that due to atmospheric effects the observed NDVI tends to be underestimated and that it cannot increase too quickly\footnote{The latter is argued by the biological impossibility of such fast vegetation changes}.
 
@@ -215,6 +216,7 @@ $\sum_{i=1}^n(w (y_i - \hat y_i))^2 \leq s$
 Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the unique\footnote{Strictly speaking it is only unique for $\lambda > 0$} minimizer
 $$\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}\left(Y_{i}-{f}\left(x_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(x)^{2} d x$$
 is a natural\footnote{It is called natural since it is affine outside the data range ($\forall x\notin [x_1, x_n]:\hat m''(x) = 0$)} cubic spline (i.e. a piecewise cubic polynomial function).
+The objective function has an intuitive meaning, as to avoid lateral acceleration it is desirable to move the steering wheel as little as possible, when driving a car.
 
 
 \begin{my_pros_cons_table}{
