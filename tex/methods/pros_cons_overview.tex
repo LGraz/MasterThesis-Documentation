@@ -3,10 +3,10 @@
     \footnotesize
     \begin{tabular}{p{1.6cm}p{3.3cm}p{3.3cm}p{3.3cm}p{0.4cm}p{0.4cm}p{3cm}p{3cm}p{3cm}p{3cm}p{3cm}p{3cm}|}
     % \hline
-    -- &
-	assumtpions &
-	pros &
-	cons &
+    ~ &
+	\textbf{assumtpions} &
+	\textbf{pros} &
+	\textbf{cons} &
 	\rotatebox{90}{weights} &
 	\rotatebox{90}{bounded} \\ \hline
     
@@ -15,66 +15,81 @@
 	~ &
 	-- cannot deal natively with missing data (need some interpolation) &
 	no &
-	yes \\ %\hline
+	yes \\ \hline%comment out?
     
     + NDVI &
 	-- upper envelope -- vegetation cannot grow faster than some slope &
 	-- biological knowledge  &
 	-- bad ``upper envelope'' since weights are not used for the estimation itselfe &
 	(no) &
-	yes \\ %\hline
+	yes \\ \hline%comment out?
+
+    Loess &
+	~ &
+	~ &
+	~ &
+	~ &
+	~ \\ \hline%comment out?
     
     Smoothing Splines &
 	-- 2cd derivative of function is integrable &
 	-- intuitive meaning of penalty -- general assumptions -- flexible shape &
 	-- unbounded &
 	yes &
-	no \\ %\hline
+	no \\ \hline%comment out?
     
     B-Splines + Smooth &
 	-- function can be approximated by a linear combination of B-splines basis functions &
 	-- general assumtion -- flexible shape &
 	-- unbounded -- no intuitive meaning for smoothing &
 	~ &
-	no \\ %\hline
-    
-    Loess &
-	~ &
-	~ &
-	~ &
-	~ &
-	~ \\ %\hline#
+	no \\ \hline%comment out?
 
-    Penalized Regression Splines &
-	\begin{itemize}
-        \item high
-        \item bs
-    \end{itemize} &
+    % Penalized Regression Splines &
+	% \begin{itemize}
+    %     \item high
+    %     \item bs
+    % \end{itemize} &
+	% ~ &
+	% ~ &
+	% ~ &
+	% ~ \\ \hline%comment out?
+	    
+    Whittaker &
 	~ &
 	~ &
 	~ &
-	~ \\ %\hline
+	~ &
+	~ \\ \hline%comment out?
     
-    gaussian smoothing &
+    (Gaussian) Kernel Smoothing &
 	~ &
 	-- simple -- general assumptions &
 	-- bandwidh: failes if there are big data-gaps  &
 	yes &
-	yes \\ %\hline
+	yes \\ \hline%comment out?
     
     Double-Logistic &
-	-- shape=increas+decrease  &
+	-- function first increases then decreases -- ndvi has a minimal value &
 	-- good for evergreen plants (if snow masks ndvi) --upper envelope  &
 	-- parameterestimation can go seriously wrong -- strange behaviour for long data-gaps &
-	~ &
-	~ \\ %\hline
+	yes &
+	yes \\ \hline%comment out?
     
     Universal Kriging &
 	-- function is a realization of a stationary gaussian process &
-	~ &
-	~ &
-	~ &
-	~ \\ %\hline#
+	-- informative parameters -- flexible &
+	-- regression to the mean -- assumptions clearly not met &
+	yes &
+	yes \\ \hline%comment out?
+
+    % methodname &
+	% ~ &
+	% ~ &
+	% ~ &
+	% ~ &
+	% ~ \\ %\hline
+
     \hline
     \end{tabular}
     \normalsize

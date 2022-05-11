@@ -60,19 +60,8 @@ Normal, Box
 For local bandwidth selection see Brockmann et al. (1993) XXX
 
 
-\subsection{loess}
-\label{sec:loess}
-\begin{my_pros_cons_table}{
-    \item 1
-    \item 2
-}{
-    \item 1
-    \item 2
-}
-\end{my_pros_cons_table}
 
-
-\subsection{Savitzky-Golay Filter}
+\subsection{Savitzky-Golay Filter (SG Filter)}
 \label{sec:Savitzky–Golay}
 The \textit{Savitzky-Golay Filter}, introduced in \cite{savitzkySmoothingDifferentiationData1964} is a technique in signal processing and can be used to filter out high frequencies (low-pass filter) as argued in \cite{schaferWhatSavitzkyGolayFilter2011}. Furthermore, it also can be used for smoothing by filtering high frequency noise while keeping the low frequency signal.
 First we choose a window size $m$. Then, for each point $j \in \{m, m+1, \dots, n-m\}$ we fit a polynomial of degree $k$ by:
@@ -114,6 +103,34 @@ The method is based on the assumption that due to atmospheric effects the observ
 \subsubsection*{Extension: Spatial-Temporal-Savitzky-Golay Filter}
 One notable adaptation of the Savitzky-Golay is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors we will waive this extension.
 
+
+\subsection{Robust Locally Weighted Regression (Robust LOESS)}
+\label{sec:loess}
+Introduced by : \cite{clevelandRobustLocallyWeighted1979}
+implemented here \cite{cappellariATLAS3DProjectXX2013}
+
+The Locally Weighted Regression (LOESS) can be understood as a generlalization of the Savitzky-Golay Filter (c.f. sec.~\ref{sec:Savitzky–Golay}).
+
+Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ seperately by fitting a polynomial of order $d$ by weighted least squares. The weights are usually defined by 
+$$w_i(x_j)=\begin{cases}
+    \left(1-\left(\frac{x_j}{h_i}\right)^{2}\right)^{2},& \text{for } |x_j|<h_i\\
+    0,& \text{for } |x_j| \geqslant h_i
+\end{cases} ,$$
+where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(x_i)$. So for each $y_i$ we only consider a proportion $\alpha$ of the observations.  
+
+\subsubsection{How does the Robust LOESS differ from the SG Filter?}
+
+
+\begin{my_pros_cons_table}{
+    \item 1
+    \item 2
+}{
+    \item 1
+    \item 2
+}
+\end{my_pros_cons_table}
+
+\subsubsection{}
 
 \subsection{Double Logistic}
 \label{sec:double_logistic}
@@ -301,11 +318,11 @@ where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the pa
 \begin{my_pros_cons_table}{
     \item It is a well-studied method
     \item Parameters have an intuitive meaning
+    \item Flexible covariance structure
 }{
     \item Regression to the mean
-    \item Assumption of constant mean and constant variance is clearly violated
-    \item Skewness of errors is not taken into account
-    \item Flexible covariance structure
+    \item Assumption of constant mean and constant variance is clearly violated. Thus, the NVI is not a stationary process.
+    \item Skewness of errors is not taken into account.
 }
 \end{my_pros_cons_table}
 
