@@ -3,34 +3,79 @@
     \footnotesize
     \begin{tabular}{p{1.6cm}p{3.3cm}p{3.3cm}p{3.3cm}p{0.4cm}p{0.4cm}p{3cm}p{3cm}p{3cm}p{3cm}p{3cm}p{3cm}|}
     % \hline
-    -- & assumtpions & pros & cons & \rotatebox{90}{weights} & \rotatebox{90}{bounded} \\ \hline
-    Savitzky-Golay filter & -- high frequencies are noise (low.pass filter) -- equidistant points & ~ & -- cannot deal natively with missing data (need some interpolation) & no & yes \\ %\hline
-    + NDVI & -- upper envelope -- vegetation cannot grow faster than some slope & -- biological knowledge  & -- bad ``upper envelope'' since weights are not used for the estimation itselfe & (no) & yes \\ %\hline
-    Smoothing Splines & -- 2cd derivative of function is integrable & -- intuitive meaning of penalty -- general assumptions -- flexible shape & -- unbounded & yes & no \\ %\hline
-    B-Splines + Smooth & -- function can be approximated by a linear combination of B-splines basis functions & -- general assumtion -- flexible shape & -- unbounded -- no intuitive meaning for smoothing & ~ & no \\ %\hline
-    Loess & ~ & ~ & ~ & ~ & ~ \\ %\hline
-    Penalized Regression Splines & \begin{itemize}
+    -- &
+	assumtpions &
+	pros &
+	cons &
+	\rotatebox{90}{weights} &
+	\rotatebox{90}{bounded} \\ \hline
+    
+    Savitzky-Golay filter &
+	-- high frequencies are noise (low.pass filter) -- equidistant points &
+	~ &
+	-- cannot deal natively with missing data (need some interpolation) &
+	no &
+	yes \\ %\hline
+    
+    + NDVI &
+	-- upper envelope -- vegetation cannot grow faster than some slope &
+	-- biological knowledge  &
+	-- bad ``upper envelope'' since weights are not used for the estimation itselfe &
+	(no) &
+	yes \\ %\hline
+    
+    Smoothing Splines &
+	-- 2cd derivative of function is integrable &
+	-- intuitive meaning of penalty -- general assumptions -- flexible shape &
+	-- unbounded &
+	yes &
+	no \\ %\hline
+    
+    B-Splines + Smooth &
+	-- function can be approximated by a linear combination of B-splines basis functions &
+	-- general assumtion -- flexible shape &
+	-- unbounded -- no intuitive meaning for smoothing &
+	~ &
+	no \\ %\hline
+    
+    Loess &
+	~ &
+	~ &
+	~ &
+	~ &
+	~ \\ %\hline#
+
+    Penalized Regression Splines &
+	\begin{itemize}
         \item high
         \item bs
-    \end{itemize} & ~ & ~ & ~ & ~ \\ %\hline
-    gaussian smoothing & ~ & -- simple -- general assumptions & -- bandwidh: failes if there are big data-gaps  & yes & yes \\ %\hline
-    Double-Logistic & -- shape=increas+decrease  & -- good for evergreen plants (if snow masks ndvi) --upper envelope  & -- parameterestimation can go seriously wrong -- strange behaviour for long data-gaps & ~ & ~ \\ \hline
+    \end{itemize} &
+	~ &
+	~ &
+	~ &
+	~ \\ %\hline
+    
+    gaussian smoothing &
+	~ &
+	-- simple -- general assumptions &
+	-- bandwidh: failes if there are big data-gaps  &
+	yes &
+	yes \\ %\hline
+    
+    Double-Logistic &
+	-- shape=increas+decrease  &
+	-- good for evergreen plants (if snow masks ndvi) --upper envelope  &
+	-- parameterestimation can go seriously wrong -- strange behaviour for long data-gaps &
+	~ &
+	~ \\ %\hline
+    
+    Universal Kriging &
+	-- function is a realization of a stationary gaussian process &
+	~ &
+	~ &
+	~ &
+	~ \\ %\hline#
+    \hline
     \end{tabular}
     \normalsize
 \end{table}
-
-% \begin{tabular}{ |p{3cm}||p{3cm}|p{3cm}|p{3cm}|  }
-%     \hline
-%     \multicolumn{4}{|c|}{Country List} \\
-%     \hline
-%     Country Name or Area Name& ISO ALPHA 2 Code &ISO ALPHA 3 Code&ISO numeric Code\\
-%     \hline
-%     Afghanistan   & AF    &AFG&   004\\
-%     Aland Islands&   AX  & ALA   &248\\
-%     Albania &AL & ALB&  008\\
-%     Algeria    &DZ & DZA&  012\\
-%     American Samoa&   AS  & ASM&016\\
-%     Andorra& AD  & AND   &020\\
-%     Angola& AO  & AGO&024\\
-%     \hline
-%    \end{tabular}
