@@ -8,6 +8,7 @@
 %     }
 % \end{my_pros_cons_table}
 
+
 \footnotesize
 \input{tex/chapters/methods/pros_cons_overview.tex}
 \normalsize
@@ -16,7 +17,7 @@
 
 We are given data in the form of $\left(x_{i}, Y_{i}\right)$ for $i=1, \ldots, n)$. Assume that it can be represented by
 $$
-    Y_{i}=m\left(x_{i}\right)+\varepsilon_{i},
+  Y_{i}=m\left(x_{i}\right)+\varepsilon_{i},
 $$
 where $\varepsilon_i$ is some noise and $m: \mathbb{R} \rightarrow \mathbb{R}$ being some (non-parametric regression) function. If we assume that $\varepsilon_{1}, \ldots, \varepsilon_{n}$ i.i.d. with $\mathbb{E}\left[\varepsilon_{i}\right]=0$ then $$m(x)=\mathbb{E}[Y \mid x]$$
 Different assumptions on $m$ will lead to the following methods:
@@ -31,28 +32,28 @@ here will be my nice summary table :)
 \label{sec:Kernel}
 As described previously, we would like to estimate
 \begin{equation}
-    \label{eq:nadaraya}
-    \mathbb{E}[Y \mid X=x]
-    = \int_{\mathbb{R}} y f_{Y \mid X}(y \mid x) d y
-    =\frac{\int_{\mathbb{R}} y f_{X, Y}(x, y) d y}{f_{X}(x)},
+  \label{eq:nadaraya}
+  \mathbb{E}[Y \mid X=x]
+  = \int_{\mathbb{R}} y f_{Y \mid X}(y \mid x) d y
+  =\frac{\int_{\mathbb{R}} y f_{X, Y}(x, y) d y}{f_{X}(x)},
 \end{equation}
 where $f_{Y \mid X}, f_{X, Y}, f_{X}$ denote the conditional, joint and marginal densities.
 This can be done with a kernel $K$:
 $$
-    \hat{f}_{X}(x)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right)}{n h}, \hat{f}_{X, Y}(x, y)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}}
+  \hat{f}_{X}(x)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right)}{n h}, \hat{f}_{X, Y}(x, y)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}}
 $$
 By plugging the above into equation \ref{eq:nadaraya} we arrive at the \textit{Nadaraya-Watson} kernel estimator:
 $$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right)}$$
 
 
 \begin{my_pros_cons_table}{
-        \item flexible due to different possible kernels
-        \item can be assigned degrees of freedom (trace of the hat-matrix)
-        \item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (XXX c.f. CompStat 3.2.2)
-    }{
-        \item if the $x \mapsto K(x)$ is not continuous, $\hat m $ isn't either
-        \item choice of bandwidth, especially if $x_i$ are not equidistant.
-    }
+    \item flexible due to different possible kernels
+    \item can be assigned degrees of freedom (trace of the hat-matrix)
+    \item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (XXX c.f. CompStat 3.2.2)
+  }{
+    \item if the $x \mapsto K(x)$ is not continuous, $\hat m $ isn't either
+    \item choice of bandwidth, especially if $x_i$ are not equidistant.
+  }
 \end{my_pros_cons_table}
 
 
@@ -71,7 +72,7 @@ were $P_k$ denotes the Polynomials of degree $k$ over $\mathbb R$.
 
 For equidistant points this can efficiently be calculated by
 $$
-    \hat y_{j}=\sum_{i=-m}^{m} c_{i} y_{j+i},
+  \hat y_{j}=\sum_{i=-m}^{m} c_{i} y_{j+i},
 $$
 where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in the original paper.
 
@@ -81,23 +82,23 @@ The method is based on the assumption that due to atmospheric effects the observ
 
 \textbf{Algorithm:}
 \begin{enumerate}
-    \item Remove points which are labeled as cloudy
-    \item Remove points which would indicate an increase greater than 0.4 within 20 days
-    \item Linearly interpolate to obtain an equidistant time series $X^0$
-    \item Apply the Savitzky-Golay Filter to obtain a new time series $X^1$
-    \item Update $X^1$ by applying again a Savitzky-Golay Filter. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''.
+  \item Remove points which are labeled as cloudy
+  \item Remove points which would indicate an increase greater than 0.4 within 20 days
+  \item Linearly interpolate to obtain an equidistant time series $X^0$
+  \item Apply the Savitzky-Golay Filter to obtain a new time series $X^1$
+  \item Update $X^1$ by applying again a Savitzky-Golay Filter. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''.
 \end{enumerate}
 
 \begin{my_pros_cons_table}{
     \item Popular technique in signal processing
     \item Efficient calculation for equidistant points
     \item Upper envelope matches intuition for the NDVI. Therefore, it is robust against outliers with small values.
-    }{
-        \item No natural way of how to estimate points which are not in the data. 
-        \item Not generalizable to other spectral indices.
-        \item Linear interpolation to account for missing data might be not appropriate.
-        \item No smooth interpolation between two measurements.
-    }
+  }{
+    \item No natural way of how to estimate points which are not in the data.
+    \item Not generalizable to other spectral indices.
+    \item Linear interpolation to account for missing data might be not appropriate.
+    \item No smooth interpolation between two measurements.
+  }
 \end{my_pros_cons_table}
 
 
@@ -112,12 +113,12 @@ implemented here \cite{cappellariATLAS3DProjectXX2013}
 
 The Locally Weighted Regression (LOESS) can be understood as a generlalization of the Savitzky-Golay Filter (c.f. sec.~\ref{sec:Savitzky–Golay}).
 
-Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ seperately by fitting a polynomial of order $d$ by weighted least squares. The weights are usually defined by 
+Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ seperately by fitting a polynomial of order $d$ by weighted least squares. The weights are usually defined by
 $$w_i(x_j)=\begin{cases}
-    \left(1-\left(\frac{x_j}{h_i}\right)^{2}\right)^{2},& \text{for } |x_j|<h_i\\
-    0,& \text{for } |x_j| \geqslant h_i
-\end{cases} ,$$
-where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(x_i)$. So for each $y_i$ we only consider a proportion $\alpha$ of the observations.  
+    \left(1-\left(\frac{x_j}{h_i}\right)^{2}\right)^{2}, & \text{for } |x_j|<h_i           \\
+    0,                                                   & \text{for } |x_j| \geqslant h_i
+  \end{cases} ,$$
+where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(x_i)$. So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
 
 \subsubsection{How does the Robust LOESS differ from the SG Filter?}
 
@@ -125,10 +126,10 @@ where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observatio
 \begin{my_pros_cons_table}{
     \item 1
     \item 2
-}{
+  }{
     \item 1
     \item 2
-}
+  }
 \end{my_pros_cons_table}
 
 \subsubsection{}
@@ -139,26 +140,26 @@ The Double Logistic smoothing as described in \cite{beckImprovedMonitoringVegeta
 
 Assumptions:
 \begin{itemize}
-    \item There is a minimum NDVI level $Y_{\min}$ in the winter (e.g. due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking into several years into account.
-    \item The growth cycle can be divided into an increase and a decrease period where the time series follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$).
+  \item There is a minimum NDVI level $Y_{\min}$ in the winter (e.g. due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking into several years into account.
+  \item The growth cycle can be divided into an increase and a decrease period where the time series follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$).
 \end{itemize}
 
 The equation of the double-logistic fit is given by:
 \begin{equation*}
-    Y(t) = Y_{\min} + \left(Y_{\max}-Y_{\min}\right)\left(\frac{1}{1+e^{-d_0(t-t_0)}}+\frac{1}{1+e^{-d_1(t-t_1)}}-1\right)
+  Y(t) = Y_{\min} + \left(Y_{\max}-Y_{\min}\right)\left(\frac{1}{1+e^{-d_0(t-t_0)}}+\frac{1}{1+e^{-d_1(t-t_1)}}-1\right)
 \end{equation*}
-Where the five free parameters: $Y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Such fit can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}. 
+Where the five free parameters: $Y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Such fit can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}.
 
 Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay}) we reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations\footnote{For the details on the weights we refer to \cite{beckImprovedMonitoringVegetation2006}}.
 
 \begin{my_pros_cons_table}{
     \item Incorperates subject specific knowledge in the case of evergreen plants covered by snow.
     \item Optimized parameters have an intuitive meaning.
-}{
+  }{
     \item Strong shape assumptions on the NDVI curve.
     \item Parameter optimization might go wrong. This can be mitigated to some extend to provide bounds for the paramters
     \item Strange behaviour in regrions with little observations. (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
-}
+  }
 \end{my_pros_cons_table}
 
 
@@ -166,7 +167,7 @@ Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay
 \label{sec:fourier_approx}
 Similar as in section~\ref{sec:double_logistic} we fit a parametric curve to the data by least squares. Here we take the second order fourier series:
 $$
-    \operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}  \right)
+  \operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}  \right)
 $$
 where $\Phi=2 \pi \times(t-1) / n$.
 
@@ -175,16 +176,16 @@ where $\Phi=2 \pi \times(t-1) / n$.
 \begin{my_pros_cons_table}{
     \item Assumtion of periodicity can be helpful if we are modelling multiyear grow cycles
     \item Flexible curve shape
-}{
+  }{
     \item Bad behaviour in regions with little data (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
     \item Hard to interpret estimated parameters
     \item Parameter estimation can go wrong. Introducing bounds can help.
-}
+  }
 \end{my_pros_cons_table}
 
 \begin{my_figure}[h]{width=1\textwidth}{interpol/fourier_dl_comparison}
-    \caption{Here we observe the nice fitting possibilitys of the two parametric methods but notice also some misbehaviour}
-    \label{fig:interpol/fourier_dl_comparison}
+  \caption{Here we observe the nice fitting possibilitys of the two parametric methods but notice also some misbehaviour}
+  \label{fig:interpol/fourier_dl_comparison}
 \end{my_figure}
 
 % \subsection{Polynomial interpolation}
@@ -206,26 +207,26 @@ where $\Phi=2 \pi \times(t-1) / n$.
 \label{sec:B}
 from \cite{lycheSplineMethods2005}
 $$
-    S(x)=\sum_{j=0}^{n-1} c_{j} B_{j, k ; t}(x)
+  S(x)=\sum_{j=0}^{n-1} c_{j} B_{j, k ; t}(x)
 $$
 $$
-    \begin{array}{r}
-        B_{i, 0}(x)=1, \text { if } t_{i} \leq x<t_{i+1}, \text { otherwise } 0 \\
-        B_{i, k}(x)=\frac{x-t_{i}}{t_{i+k}-t_{i}} B_{i, k-1}(x)+\frac{t_{i+k+1}-x}{t_{i+k+1}-t_{i+1}} B_{i+1, k-1}(x)
-    \end{array}
+  \begin{array}{r}
+    B_{i, 0}(x)=1, \text { if } t_{i} \leq x<t_{i+1}, \text { otherwise } 0 \\
+    B_{i, k}(x)=\frac{x-t_{i}}{t_{i+k}-t_{i}} B_{i, k-1}(x)+\frac{t_{i+k+1}-x}{t_{i+k+1}-t_{i+1}} B_{i+1, k-1}(x)
+  \end{array}
 $$
 
 **Smoothing:**
 We can relax the constrain that we have to perfectly interpolate. Thus we use the minimum number of knots\footnote{SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number knots used} such that:
 $\sum_{i=1}^n(w (y_i - \hat y_i))^2 \leq s$
 \begin{my_pros_cons_table}{
-        \item can be assigned degrees of freedom
-        \item extendable to "smooth" version
-        \item performs also well if points are not equidistant
-    }{
-        \item smoothing process does not translate well to a interpretation (unlike smoothing splines)
-        \item choice of smoothing parameter $s$
-    }
+    \item can be assigned degrees of freedom
+    \item extendable to "smooth" version
+    \item performs also well if points are not equidistant
+  }{
+    \item smoothing process does not translate well to a interpretation (unlike smoothing splines)
+    \item choice of smoothing parameter $s$
+  }
 \end{my_pros_cons_table}
 
 
@@ -238,14 +239,14 @@ The objective function has an intuitive meaning, as to avoid lateral acceleratio
 
 
 \begin{my_pros_cons_table}{
-        \item can be assigned degrees of freedom (trace of the hat-matrix)
-        \item efficient estimation (closed form solution)
-        \item intuitive penalty (we don't want the function to be too ``wobbly'' --- change slopes)
-        \item performs also well if points are not equidistant
-        \item fixes the Runge's phenomenon (fluctuation of high degree polynomial interpolation)
-    }{
-        \item choose $\lambda$
-    }
+    \item can be assigned degrees of freedom (trace of the hat-matrix)
+    \item efficient estimation (closed form solution)
+    \item intuitive penalty (we don't want the function to be too ``wobbly'' --- change slopes)
+    \item performs also well if points are not equidistant
+    \item fixes the Runge's phenomenon (fluctuation of high degree polynomial interpolation)
+  }{
+    \item choose $\lambda$
+  }
 \end{my_pros_cons_table}
 
 
@@ -279,10 +280,10 @@ The objective function has an intuitive meaning, as to avoid lateral acceleratio
 \begin{my_pros_cons_table}{
     \item 1
     \item 2
-}{
+  }{
     \item 1
     \item 2
-}
+  }
 \end{my_pros_cons_table}
 
 
@@ -302,29 +303,29 @@ We will assume the Gaussian process to be stationary. That is for $\mu(t)$ to be
 
 We also define the variogram of a Gaussian process as
 $$V(h):=V\left(t, t+h\right):=\frac{1}{2} \operatorname{Var}\left(S(t)-S(t+h)\right)\\ %align XXX
-    =(\gamma(0))^2(1-\operatorname{corr}(S(t),S(t+h)))
+  =(\gamma(0))^2(1-\operatorname{corr}(S(t),S(t+h)))
 $$
 And decide to use a gaussian Variogram defined by
 $$V(h) = p \cdot\left(1-e^{-\frac{h^{2}}{\left(\frac{4}{7} r\right)^{2}}}\right)+n,$$
 where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the partial sill visuilized in figure~\ref{fig:interpol/kriging_gauss_variogram}.\footnote{Strictrly speaking we use a scaled version of the variogram. Thus only the ratio of $p/n$ matters.}
 \begin{my_figure}[h]{width=0.7\textwidth}{interpol/kriging_gauss_variogram}
-    \caption{Gaussian Variogram with nugget=1, partial sill=3, range=55}
-    \label{fig:interpol/kriging_gauss_variogram}
+  \caption{Gaussian Variogram with nugget=1, partial sill=3, range=55}
+  \label{fig:interpol/kriging_gauss_variogram}
 \end{my_figure}
 
 \begin{my_figure}{width=1\textwidth}{interpol/kriging_parameter}
-    \caption{On the left we see how the interpolation change if we increase the nugget and the range parameter. On the right we compare two kriging interpolations where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
+  \caption{On the left we see how the interpolation change if we increase the nugget and the range parameter. On the right we compare two kriging interpolations where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
 \end{my_figure}
 
 \begin{my_pros_cons_table}{
     \item It is a well-studied method
     \item Parameters have an intuitive meaning
     \item Flexible covariance structure
-}{
+  }{
     \item Regression to the mean
     \item Assumption of constant mean and constant variance is clearly violated. Thus, the NVI is not a stationary process.
     \item Skewness of errors is not taken into account.
-}
+  }
 \end{my_pros_cons_table}
 
 

@@ -1,0 +1,58 @@
+% for my table env
+  \usepackage{booktabs}
+  \usepackage{tabularx}
+  \usepackage{lipsum}
+  \usepackage{enumitem} %for compact itemize
+  % \usepackage{makecell} %for table 
+%-------
+\renewcommand\labelitemi{---}
+
+
+
+\newenvironment{my_figure}[3][t]{
+  \begin{figure}[#1]
+    \begin{center}
+      % \fbox % trim= left bottom right top  % trim= 0.8cm 0.8cm 0.6cm 0.8cm
+      \ifdraft \fcolorbox{mygray}{white} {\includegraphics[#2]{#3}} \else
+      \includegraphics[#2]{#3} \fi
+      % for more options: https://latexref.xyz/_005cincludegraphics.html 
+      \label{fig:#3}
+}{
+    \end{center}
+  \end{figure}
+}
+
+% Environment for pros and cons table
+\newenvironment{my_pros_cons_table}[3][topsep=0pt,parsep=2pt,partopsep=0pt, leftmargin=5pt, rightmargin=-10pt]{
+  \begin{table}[h]
+    \vspace{-8pt} % remove space before table
+    \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
+      % \toprule %makes a bar at the top
+      \hfil\bfseries Pros & \hfil\bfseries Cons
+      \\\cmidrule(r{3\tabcolsep}){1-1}\cmidrule(l{-\tabcolsep}){2-2}
+      \vspace{-11pt} % no gap wetween pros/cons and list
+      \begin{itemize}[#1]
+        #2
+      \end{itemize}
+      % \vspace{-11pt} % no effect
+      \nointerlineskip & 
+      \vspace{-11pt} % no gap wetween pros/cons and list
+      \begin{itemize}[#1]
+        #3
+      \end{itemize}
+      % \vspace{-11pt} % no effect
+      \nointerlineskip
+     \\\bottomrule
+    \end{tabularx}
+    \vspace{-5pt}
+}{\end{table}}
+
+
+\newenvironment{cptitemize}
+    {\par \parskip=0pt
+    \begin{minipage}[t]{\linewidth}
+        \begin{itemize}[nosep, topsep=0pt,parsep=2pt,partopsep=0pt, leftmargin=5pt, rightmargin=0pt,after=\strut]
+    }{
+        \end{itemize}
+    \end{minipage}
+    }
