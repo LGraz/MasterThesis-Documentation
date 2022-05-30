@@ -9,24 +9,31 @@
 % \end{my_pros_cons_table}
 
 
+
+In this section we take a closer look at several interpolation methods, which will be used to interpolate and smooth the NDVI timeseries.
+
+First, we give an brief overview in table~\ref{table:pros_cons_overview}.
+
+Second, we introduce and discuss each method.
+
+Then, we try to extract the main ingrediendts of each method to forge our own one.
+
+Finally, using leave-one-out cross validation we tune the parameters (where necessary) and get a first idea of the perfomance of each method.
+
+
 \footnotesize
 \input{tex/chapters/methods/pros_cons_overview.tex}
 \normalsize
 
-\section{Setting}
 
+\section{Methods - Description}
+\subsection*{Setting}
 We are given data in the form of $\left(x_{i}, Y_{i}\right)$ for $i=1, \ldots, n)$. Assume that it can be represented by
 $$
   Y_{i}=m\left(x_{i}\right)+\varepsilon_{i},
 $$
 where $\varepsilon_i$ is some noise and $m: \mathbb{R} \rightarrow \mathbb{R}$ being some (non-parametric regression) function. If we assume that $\varepsilon_{1}, \ldots, \varepsilon_{n}$ i.i.d. with $\mathbb{E}\left[\varepsilon_{i}\right]=0$ then $$m(x)=\mathbb{E}[Y \mid x]$$
 Different assumptions on $m$ will lead to the following methods:
-
-\section{Overview}
-here will be my nice summary table :)
-
-
-\section{Methods - Description}
 
 \subsection{Kernel Regression}
 \label{sec:Kernel}
