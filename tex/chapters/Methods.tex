@@ -113,33 +113,45 @@ The method is based on the assumption that due to atmospheric effects the observ
 One notable adaptation of the Savitzky-Golay is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors we will waive this extension.
 
 
-\subsection{Robust Locally Weighted Regression (Robust LOESS)}
+\subsection{Locally Weighted Regression (LOESS)}
 \label{sec:loess}
 Introduced by : \cite{clevelandRobustLocallyWeighted1979}
 implemented here \cite{cappellariATLAS3DProjectXX2013}
 
 The Locally Weighted Regression (LOESS) can be understood as a generlalization of the Savitzky-Golay Filter (c.f. sec.~\ref{sec:Savitzky–Golay}).
 
-Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ seperately by fitting a polynomial of order $d$ by weighted least squares. The weights are usually defined by
+Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ seperately by fitting a polynomial of order $d$ by weighted least squares. The weights are (usually) defined by
 $$w_i(x_j)=\begin{cases}
-    \left(1-\left(\frac{x_j}{h_i}\right)^{2}\right)^{2}, & \text{for } |x_j|<h_i           \\
+    \left(1-\left(\frac{x_j}{h_i}\right)^{3}\right)^{3}, & \text{for } |x_j|<h_i           \\
     0,                                                   & \text{for } |x_j| \geqslant h_i
   \end{cases} ,$$
 where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(x_i)$. So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
 
 \subsubsection{How does the Robust LOESS differ from the SG Filter?}
+The Loess smoother takes a fraction of points instead of a fixed number and therefore automatically adapts to the size of the data we wish to interpolate. However, we run into the danger of considering to little observations since the estimation breaks down if $\lceil \alpha n\rceil < d+1$.
+Furthermore, Loess gives less weight to points further away. This yields a "smoother" estimate, since when we slide the window (e.g. for estimating the next value) an influential point at the border does not suddenly get zero weight from being weighted equally before.
+Finally, the Loess also can be used for non-equidistant data and allows for arbitrary interpolation.
+
+\subsubsection{Robustify}
+\cite{clevelandRobustLocallyWeighted1979} also propose a method how to reduce the impact of outliers.\footnote{Note that due to using the median for the normalization we gain a breakdown point of $50 \%$ for outliers in $y$.} The idea is similar to what is done in iteratively reweighted least squares. Simply, reiterate with updating the weights of each observation with
+$$w_i^\text{new}=w_i^\text{old} \operatorname{B}\left(\frac{|y_i - \hat y_i|}{6\med_{i\in \{1,\dots,n\}}|y_i - \hat y_i|}\right)$$
+where B the bisquare function
+$$B(x)=\begin{cases}
+    \left(1-x^{2}\right)^{2}, & \text{for } |x_j|<i           \\
+    0,                        & \text{for } |x_j| \geqslant i
+  \end{cases}.$$
+Stop the reiteration after several steps or till the change of the values is smaller than some tolerance.
 
 
 \begin{my_pros_cons_table}{
-    \item 1
-    \item 2
+    \item Flexible generalization of Savitzky-Golay
+    \item arbitrary interpolation possible
+    \item Intuitive parameters
   }{
-    \item 1
-    \item 2
+    \item The nature of local regression might lead to suprising estimates (no smoothness guarantees for the second derivative)
+    \item Multiple XXXXXXx
   }
 \end{my_pros_cons_table}
-
-\subsubsection{}
 
 \subsection{Double Logistic}
 \label{sec:double_logistic}
