@@ -32,7 +32,7 @@ We are given data in the form of $\left(x_{i}, Y_{i}\right)$ for $i=1, \ldots, n
 $$
   Y_{i}=m\left(x_{i}\right)+\varepsilon_{i},
 $$
-where $\varepsilon_i$ is some noise and $m: \mathbb{R} \rightarrow \mathbb{R}$ being some (non-parametric regression) function. If we assume that $\varepsilon_{1}, \ldots, \varepsilon_{n}$ i.i.d. with $\mathbb{E}\left[\varepsilon_{i}\right]=0$ then $$m(x)=\mathbb{E}[Y \mid x]$$
+where $\varepsilon_i$ is some noise and $m: \R \rightarrow \R$ being some (non-parametric regression) function. If we assume that $\varepsilon_{1}, \ldots, \varepsilon_{n}$ i.i.d. with $\mathbb{E}\left[\varepsilon_{i}\right]=0$ then $$m(x)=\mathbb{E}[Y \mid x]$$
 Different assumptions on $m$ will lead to the following methods:
 
 \subsection{Kernel Regression}
@@ -41,8 +41,8 @@ As described previously, we would like to estimate
 \begin{equation}
   \label{eq:nadaraya}
   \mathbb{E}[Y \mid X=x]
-  = \int_{\mathbb{R}} y f_{Y \mid X}(y \mid x) d y
-  =\frac{\int_{\mathbb{R}} y f_{X, Y}(x, y) d y}{f_{X}(x)},
+  = \int_{\R} y f_{Y \mid X}(y \mid x) d y
+  =\frac{\int_{\R} y f_{X, Y}(x, y) d y}{f_{X}(x)},
 \end{equation}
 where $f_{Y \mid X}, f_{X, Y}, f_{X}$ denote the conditional, joint and marginal densities.
 This can be done with a kernel $K$:
@@ -75,7 +75,7 @@ For local bandwidth selection see Brockmann et al. (1993) XXX
 The \textit{Savitzky-Golay Filter}, introduced in \cite{savitzkySmoothingDifferentiationData1964} is a technique in signal processing and can be used to filter out high frequencies (low-pass filter) as argued in \cite{schaferWhatSavitzkyGolayFilter2011}. Furthermore, it also can be used for smoothing by filtering high frequency noise while keeping the low frequency signal.
 First we choose a window size $m$. Then, for each point $j \in \{m, m+1, \dots, n-m\}$ we fit a polynomial of degree $k$ by:
 $$\hat y_j=\min_{p\in P_k}\sum_{i=-m}^{m}(p (x_{j+i})-y_{i+j})^{2},$$
-were $P_k$ denotes the Polynomials of degree $k$ over $\mathbb R$.
+were $P_k$ denotes the Polynomials of degree $k$ over $\R$.
 
 For equidistant points this can efficiently be calculated by
 $$
@@ -133,14 +133,34 @@ Furthermore, Loess gives less weight to points further away. This yields a "smoo
 Finally, the Loess also can be used for non-equidistant data and allows for arbitrary interpolation.
 
 \subsubsection{Robustify}
-\cite{clevelandRobustLocallyWeighted1979} also propose a method how to reduce the impact of outliers.\footnote{Note that due to using the median for the normalization we gain a breakdown point of $50 \%$ for outliers in $y$.} The idea is similar to what is done in iteratively reweighted least squares. Simply, reiterate with updating the weights of each observation with
-$$w_i^\text{new}=w_i^\text{old} \operatorname{B}\left(\frac{|y_i - \hat y_i|}{6\med_{i\in \{1,\dots,n\}}|y_i - \hat y_i|}\right)$$
-where B the bisquare function
-$$B(x)=\begin{cases}
-    \left(1-x^{2}\right)^{2}, & \text{for } |x_j|<i           \\
-    0,                        & \text{for } |x_j| \geqslant i
-  \end{cases}.$$
-Stop the reiteration after several steps or till the change of the values is smaller than some tolerance.
+\cite{clevelandRobustLocallyWeighted1979} also propose a method how to reduce the impact of outliers.\footnote{Note that due to using the median for the normalization we gain a breakdown point of $50 \%$ for outliers in $y$.}
+
+First we shall introduce a robust measure of the scale (i.e. a robust version of the standard deviation). Define the median of absulute deviation (mad) for $r\in\mathbb R^n$ as:
+\begin{equation}
+  \operatorname{mad}(r) := \med\left(|r_i - \med(r)|_{i\in \{1,\dots,n\}}\right)
+\end{equation}
+and the bisquare function B:
+$$
+  B(x):=\begin{cases}
+    \left(1-x^{2}\right)^{2}, & \text{if } |x|<1 \\
+    0,                        & \text{else }
+  \end{cases}
+$$
+Now, we do something similar to what is done in iteratively reweighted least squares. Simply, reiterate with updating the weights of each observation with
+\begin{equation}
+  w_i^\text{new}:=w_i^\text{old} \operatorname{B}\left(\frac{|r_i|}{6\operatorname{mad}\left(r_1,\dots,r_n\right)}\right)
+  \label{eq:bisquare}
+\end{equation}
+where $r_i = y_i - \hat y_i$ denotes the resiudals. Stop the reiteration after several steps or till the change of the values is smaller than some tolerance.
+
+\textbf{Our Adjustment:} Since we usually observe outliers with negative residuals we decide to devide the negative residuals by two before updating the weights. Furthermore, we want to prevent low-weighted observations to corrupt our estimation of scale (the mad) and thus we use the weighted mad, where we just use a weighted version of the median. This can be defined as
+$$
+  \med_\text{weighted}(r,w) := \argmin_(x \in \R) \sum_{i=1}^n |r_i*w_i -x|
+$$
+for $r,w\in \R^n$
+
+\footnote{Another rather technical adjustment is that we give a reasonable threshold}
+
 
 
 \begin{my_pros_cons_table}{
