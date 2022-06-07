@@ -155,11 +155,11 @@ where $r_i = y_i - \hat y_i$ denotes the resiudals. Stop the reiteration after s
 
 \textbf{Our Adjustment:} Since we usually observe outliers with negative residuals we decide to devide the negative residuals by two before updating the weights. Furthermore, we want to prevent low-weighted observations to corrupt our estimation of scale (the mad) and thus we use the weighted mad, where we just use a weighted version of the median. This can be defined as
 $$
-  \med_\text{weighted}(r,w) := \argmin_(x \in \R) \sum_{i=1}^n |r_i*w_i -x|
+  \med_\text{weighted}(r,w) := \argmin_{x \in \R} \sum_{i=1}^n |r_iw_i -x|
 $$
 for $r,w\in \R^n$
 
-\footnote{Another rather technical adjustment is that we give a reasonable threshold}
+\footnote{A rather technical adjustment is that we give a reasonable minimal threshold to our scale estimation s.t. the weight $w_i$ wont be set to zero if $r_i<0.1$. This is done to avoid ignoring to many observations, which could lead to convergence issues or singular matrixes}
 
 
 
