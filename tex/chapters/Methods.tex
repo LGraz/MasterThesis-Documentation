@@ -22,7 +22,7 @@ Finally, using leave-one-out cross validation we tune the parameters (where nece
 
 
 \footnotesize
-\input{tex/chapters/methods/pros_cons_overview.tex}
+\input{tex/chapters/misc/pros_cons_overview.tex}
 \normalsize
 
 
@@ -67,7 +67,6 @@ $$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{
 **Examples:**
 Normal, Box
 For local bandwidth selection see Brockmann et al. (1993) XXX
-
 
 
 \subsection{Savitzky-Golay Filter (SG Filter)}
@@ -173,6 +172,7 @@ for $r,w\in \R^n$
   }
 \end{my_pros_cons_table}
 
+
 \subsection{Double Logistic}
 \label{sec:double_logistic}
 The Double Logistic smoothing as described in \cite{beckImprovedMonitoringVegetation2006} heavily relies on shape assumptions of the fitted curve (i.e. the NDVI time series).
@@ -226,20 +226,6 @@ where $\Phi=2 \pi \times(t-1) / n$.
   \caption{Here we observe the nice fitting possibilitys of the two parametric methods but notice also some misbehaviour}
   \label{fig:interpol/fourier_dl_comparison}
 \end{my_figure}
-
-% \subsection{Polynomial interpolation}
-% \label{sec:Polynomial}
-
-% \subsection{Polynomial approximation}
-% \label{sec:Polynomial}
-
-% \subsection{Cubic Smoothing Splines}
-% \label{sec:Cubic}
-% We interpolate with a function in $C^2$ (space of three time continuous differentiable functions) which is defined piecewise by cubic polynomials.
-% **Pros**
-% Regression splines (B-splines)
-% \cite{woodSmoothingParameterModel2016}
-% use a basis of the spline space (e.g. B-splines or j-th cardinal basis) and fit the splines of degree k to approximate the data.
 
 
 \subsection{B-splines}
@@ -378,3 +364,44 @@ et al., 1994); and (3) asymmetric function fitting methods
 such as the asymmetric Gaussian function fitting approach
 (Jonsson Eklundh, 2002) and the weighted least-squares
 linear regression approach (Swets et al., 1999).
+
+
+\subsection*{TEMP --- Figures}
+
+
+\begin{my_figure}[h]{width=1\textwidth}{interpol/problem_illustration}
+  \caption{XXX caption XXX}
+  \label{fig:interpol/problem_illustration}
+\end{my_figure}
+
+\begin{my_figure}[h]{width=1\textwidth}{interpol/3x3_B-Splines_robust}
+  \caption{XXX caption XXX}
+  \label{fig:interpol/3x3_B-Splines_robust}
+\end{my_figure}
+
+\begin{my_figure}[h]{width=1\textwidth}{interpol/3x3_DL_robust}
+  \caption{XXX caption XXX}
+  \label{fig:interpol/3x3_DL_robust}
+\end{my_figure}
+
+\begin{my_figure}[h]{width=1\textwidth}{interpol/3x3_loess_robust}
+  \caption{XXX caption XXX}
+  \label{fig:interpol/3x3_loess_robust}
+\end{my_figure}
+
+\begin{my_figure}[h]{width=1\textwidth}{interpol/3x3_SS_robust}
+  \caption{XXX caption XXX}
+  \label{fig:interpol/3x3_SS_robust}
+\end{my_figure}
+
+\begin{my_figure}[h]{width=1\textwidth}{interpol/statistics_SS_param_optim}
+  \caption{XXX caption XXX}
+  \label{fig:interpol/statistics_SS_param_optim}
+\end{my_figure}
+
+\begin{my_figure}[h]{width=0.6\textwidth}{interpol/res_cv}
+  \caption{XXX caption XXX}
+  \label{fig:interpol/res_cv}
+\end{my_figure}
+
+
