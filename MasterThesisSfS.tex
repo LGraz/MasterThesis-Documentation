@@ -186,11 +186,13 @@
 
   %% Notations and glossary (optional)
   \cleardoublepage
-  \phantomsection
-  \addcontentsline{toc}{chapter}{\protect\numberline{}{Notation}}
-  \markboth{Notation}{Notation}
-  \include{tex/misc/Notation}
+\fi
+\phantomsection
+\addcontentsline{toc}{chapter}{\protect\numberline{}{Notation}}
+\markboth{Notation}{Notation}
+\include{tex/misc/Notation}
 
+\ifdraft \else%XXX
   \cleardoublepage
 \fi %XXX
 \pagenumbering{arabic}%--- switch back to standard numbering 
@@ -204,8 +206,10 @@
 \ifdraft \else %XXX
   \include{tex/chapters/Introduction}
 \fi %XXX
+\include{tex/chapters/Problemdescription.tex}
 \include{tex/chapters/Methods}
 \include{tex/chapters/ndvi_corr}
+
 % \include{tex/example/Chapter1}
 %%\include{tex/Chapter...}
 \ifdraft \else %XXX
