@@ -1,3 +1,6 @@
+\newcommand{\RobItPlot}{fitted to different (scl45-)NDVI time series. Iterations of a robustifing refit (as indicated in section~\ref{sec:loess_robustify}) are also displayed}
+
+
 \chapter{Interpolation Methods}
 % \begin{my_pros_cons_table}{
 %         \item 1
@@ -8,17 +11,15 @@
 %     }
 % \end{my_pros_cons_table}
 
+In this section we take a closer look at several interpolation methods, which will be used to interpolate and smooth the NDVI time series.
 
-
-In this section we take a closer look at several interpolation methods, which will be used to interpolate and smooth the NDVI timeseries.
-
-First, we give an brief overview in table~\ref{table:pros_cons_overview}.
+First, we give a brief overview in table~\ref{table:pros_cons_overview}.
 
 Second, we introduce and discuss each method.
 
-Then, we try to extract the main ingrediendts of each method to forge our own one.
+Then, we try to extract the main ingredients of each method to forge our own one.
 
-Finally, using leave-one-out cross validation we tune the parameters (where necessary) and get a first idea of the perfomance of each method.
+Finally, using leave-one-out cross validation we tune the parameters (where necessary) and get a first idea of the performance of each method.
 
 
 \footnotesize
@@ -26,152 +27,20 @@ Finally, using leave-one-out cross validation we tune the parameters (where nece
 \normalsize
 
 
-\section{Methods - Description}
-\subsection*{Setting}
+\section{Setting}
 We are given data in the form of $\left(x_{i}, Y_{i}\right)$ for $i=1, \ldots, n)$. Assume that it can be represented by
 $$
   Y_{i}=m\left(x_{i}\right)+\varepsilon_{i},
 $$
-where $\varepsilon_i$ is some noise and $m: \R \rightarrow \R$ being some (non-parametric regression) function. If we assume that $\varepsilon_{1}, \ldots, \varepsilon_{n}$ i.i.d. with $\mathbb{E}\left[\varepsilon_{i}\right]=0$ then $$m(x)=\mathbb{E}[Y \mid x]$$
+where $\varepsilon_i$ is some noise and $m: \R \rightarrow \R$ being some (parametric or non-parametric) function. If we assume that $\varepsilon_{1}, \ldots, \varepsilon_{n}$ i.i.d. with $\mathbb{E}\left[\varepsilon_{i}\right]=0$ then $$m(x)=\mathbb{E}[Y \mid x]$$
 Different assumptions on $m$ will lead to the following methods:
 
-\subsection{Kernel Regression}
-\label{sec:Kernel}
-As described previously, we would like to estimate
-\begin{equation}
-  \label{eq:nadaraya}
-  \mathbb{E}[Y \mid X=x]
-  = \int_{\R} y f_{Y \mid X}(y \mid x) d y
-  =\frac{\int_{\R} y f_{X, Y}(x, y) d y}{f_{X}(x)},
-\end{equation}
-where $f_{Y \mid X}, f_{X, Y}, f_{X}$ denote the conditional, joint and marginal densities.
-This can be done with a kernel $K$:
-$$
-  \hat{f}_{X}(x)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right)}{n h}, \hat{f}_{X, Y}(x, y)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}}
-$$
-By plugging the above into equation \ref{eq:nadaraya} we arrive at the \textit{Nadaraya-Watson} kernel estimator:
-$$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right)}$$
 
+\section{Parametric Regression}
+Parametric Curve estimation tries to fit a parametric function (e.g. a Gaussian function with parameter $\mu$ and $\sigma$) to a dataset. In the following we introduce 2 such parametric approaches.
 
-\begin{my_pros_cons_table}{
-    \item flexible due to different possible kernels
-    \item can be assigned degrees of freedom (trace of the hat-matrix)
-    \item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (XXX c.f. CompStat 3.2.2)
-  }{
-    \item if the $x \mapsto K(x)$ is not continuous, $\hat m $ isn't either
-    \item choice of bandwidth, especially if $x_i$ are not equidistant.
-  }
-\end{my_pros_cons_table}
-
-
-**Examples:**
-Normal, Box
-For local bandwidth selection see Brockmann et al. (1993) XXX
-
-
-\subsection{Savitzky-Golay Filter (SG Filter)}
-\label{sec:Savitzky–Golay}
-The \textit{Savitzky-Golay Filter}, introduced in \cite{savitzkySmoothingDifferentiationData1964} is a technique in signal processing and can be used to filter out high frequencies (low-pass filter) as argued in \cite{schaferWhatSavitzkyGolayFilter2011}. Furthermore, it also can be used for smoothing by filtering high frequency noise while keeping the low frequency signal.
-First we choose a window size $m$. Then, for each point $j \in \{m, m+1, \dots, n-m\}$ we fit a polynomial of degree $k$ by:
-$$\hat y_j=\min_{p\in P_k}\sum_{i=-m}^{m}(p (x_{j+i})-y_{i+j})^{2},$$
-were $P_k$ denotes the Polynomials of degree $k$ over $\R$.
-
-For equidistant points this can efficiently be calculated by
-$$
-  \hat y_{j}=\sum_{i=-m}^{m} c_{i} y_{j+i},
-$$
-where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in the original paper.
-
-\subsubsection*{Adaptation to the NDVI}
-In a rather famous paper \cite{chenSimpleMethodReconstructing2004a} a ``robust'' method based on the Savitzky-Golay has been used.
-The method is based on the assumption that due to atmospheric effects the observed NDVI tends to be underestimated and that it cannot increase too quickly\footnote{The latter is argued by the biological impossibility of such fast vegetation changes}.
-
-\textbf{Algorithm:}
-\begin{enumerate}
-  \item Remove points which are labeled as cloudy
-  \item Remove points which would indicate an increase greater than 0.4 within 20 days
-  \item Linearly interpolate to obtain an equidistant time series $X^0$
-  \item Apply the Savitzky-Golay Filter to obtain a new time series $X^1$
-  \item Update $X^1$ by applying again a Savitzky-Golay Filter. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''.
-\end{enumerate}
-
-\begin{my_pros_cons_table}{
-    \item Popular technique in signal processing
-    \item Efficient calculation for equidistant points
-    \item Upper envelope matches intuition for the NDVI. Therefore, it is robust against outliers with small values.
-  }{
-    \item No natural way of how to estimate points which are not in the data.
-    \item Not generalizable to other spectral indices.
-    \item Linear interpolation to account for missing data might be not appropriate.
-    \item No smooth interpolation between two measurements.
-  }
-\end{my_pros_cons_table}
-
-
-\subsubsection*{Extension: Spatial-Temporal-Savitzky-Golay Filter}
-One notable adaptation of the Savitzky-Golay is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors we will waive this extension.
-
-
-\subsection{Locally Weighted Regression (LOESS)}
-\label{sec:loess}
-Introduced by : \cite{clevelandRobustLocallyWeighted1979}
-implemented here \cite{cappellariATLAS3DProjectXX2013}
-
-The Locally Weighted Regression (LOESS) can be understood as a generlalization of the Savitzky-Golay Filter (c.f. sec.~\ref{sec:Savitzky–Golay}).
-
-Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ seperately by fitting a polynomial of order $d$ by weighted least squares. The weights are (usually) defined by
-$$w_i(x_j)=\begin{cases}
-    \left(1-\left(\frac{x_j}{h_i}\right)^{3}\right)^{3}, & \text{for } |x_j|<h_i           \\
-    0,                                                   & \text{for } |x_j| \geqslant h_i
-  \end{cases} ,$$
-where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(x_i)$. So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
-
-\subsubsection{How does the Robust LOESS differ from the SG Filter?}
-The Loess smoother takes a fraction of points instead of a fixed number and therefore automatically adapts to the size of the data we wish to interpolate. However, we run into the danger of considering to little observations since the estimation breaks down if $\lceil \alpha n\rceil < d+1$.
-Furthermore, Loess gives less weight to points further away. This yields a "smoother" estimate, since when we slide the window (e.g. for estimating the next value) an influential point at the border does not suddenly get zero weight from being weighted equally before.
-Finally, the Loess also can be used for non-equidistant data and allows for arbitrary interpolation.
-
-\subsubsection{Robustify}
-\cite{clevelandRobustLocallyWeighted1979} also propose a method how to reduce the impact of outliers.\footnote{Note that due to using the median for the normalization we gain a breakdown point of $50 \%$ for outliers in $y$.}
-
-First we shall introduce a robust measure of the scale (i.e. a robust version of the standard deviation). Define the median of absulute deviation (mad) for $r\in\mathbb R^n$ as:
-\begin{equation}
-  \operatorname{mad}(r) := \med\left(|r_i - \med(r)|_{i\in \{1,\dots,n\}}\right)
-\end{equation}
-and the bisquare function B:
-$$
-  B(x):=\begin{cases}
-    \left(1-x^{2}\right)^{2}, & \text{if } |x|<1 \\
-    0,                        & \text{else }
-  \end{cases}
-$$
-Now, we do something similar to what is done in iteratively reweighted least squares. Simply, reiterate with updating the weights of each observation with
-\begin{equation}
-  w_i^\text{new}:=w_i^\text{old} \operatorname{B}\left(\frac{|r_i|}{6\operatorname{mad}\left(r_1,\dots,r_n\right)}\right)
-  \label{eq:bisquare}
-\end{equation}
-where $r_i = y_i - \hat y_i$ denotes the resiudals. Stop the reiteration after several steps or till the change of the values is smaller than some tolerance.
-
-\textbf{Our Adjustment:} Since we usually observe outliers with negative residuals we decide to devide the negative residuals by two before updating the weights. Furthermore, we want to prevent low-weighted observations to corrupt our estimation of scale (the mad) and thus we use the weighted mad, where we just use a weighted version of the median. This can be defined as
-$$
-  \med_\text{weighted}(r,w) := \argmin_{x \in \R} \sum_{i=1}^n |r_iw_i -x|
-$$
-for $r,w\in \R^n$
-
-\footnote{A rather technical adjustment is that we give a reasonable minimal threshold to our scale estimation s.t. the weight $w_i$ wont be set to zero if $r_i<0.1$. This is done to avoid ignoring to many observations, which could lead to convergence issues or singular matrixes}
-
-
-
-\begin{my_pros_cons_table}{
-    \item Flexible generalization of Savitzky-Golay
-    \item arbitrary interpolation possible
-    \item Intuitive parameters
-  }{
-    \item The nature of local regression might lead to suprising estimates (no smoothness guarantees for the second derivative)
-    \item Multiple XXXXXXx
-  }
-\end{my_pros_cons_table}
-
+\subsubsection*{Optimization Issues}
+In the following we search for 5 or 6 parameters that minimize the residuals sum of squares. This is a non-convex optimization problem and thus the algorithm\footnote{We used the python function \texttt{scipy.optimize.curve\_fit}} either could not find the global minimum or failed to converge. This was fixed by providing for each parameter reasonable initial values and generous bounds (which match our experience).
 
 \subsection{Double Logistic}
 \label{sec:double_logistic}
@@ -223,93 +92,46 @@ where $\Phi=2 \pi \times(t-1) / n$.
 \end{my_pros_cons_table}
 
 \begin{my_figure}[h]{width=1\textwidth}{interpol/fourier_dl_comparison}
-  \caption{Here we observe the nice fitting possibilitys of the two parametric methods but notice also some misbehaviour}
+  \caption{Here we observe the nice fitting possibilities of the two parametric methods but notice also some misbehavior}
   \label{fig:interpol/fourier_dl_comparison}
 \end{my_figure}
 
 
-\subsection{B-splines}
-\label{sec:B}
-from \cite{lycheSplineMethods2005}
-$$
-  S(x)=\sum_{j=0}^{n-1} c_{j} B_{j, k ; t}(x)
-$$
-$$
-  \begin{array}{r}
-    B_{i, 0}(x)=1, \text { if } t_{i} \leq x<t_{i+1}, \text { otherwise } 0 \\
-    B_{i, k}(x)=\frac{x-t_{i}}{t_{i+k}-t_{i}} B_{i, k-1}(x)+\frac{t_{i+k+1}-x}{t_{i+k+1}-t_{i+1}} B_{i+1, k-1}(x)
-  \end{array}
-$$
 
-**Smoothing:**
-We can relax the constrain that we have to perfectly interpolate. Thus we use the minimum number of knots\footnote{SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number knots used} such that:
-$\sum_{i=1}^n(w (y_i - \hat y_i))^2 \leq s$
-\begin{my_pros_cons_table}{
-    \item can be assigned degrees of freedom
-    \item extendable to "smooth" version
-    \item performs also well if points are not equidistant
-  }{
-    \item smoothing process does not translate well to a interpretation (unlike smoothing splines)
-    \item choice of smoothing parameter $s$
-  }
-\end{my_pros_cons_table}
-
-
-\subsection{Natural Smoothing Splines}
-\label{sec:Natural}
-Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the unique\footnote{Strictly speaking it is only unique for $\lambda > 0$} minimizer
-$$\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}\left(Y_{i}-{f}\left(x_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(x)^{2} d x$$
-is a natural\footnote{It is called natural since it is affine outside the data range ($\forall x\notin [x_1, x_n]:\hat m''(x) = 0$)} cubic spline (i.e. a piecewise cubic polynomial function).
-The objective function has an intuitive meaning, as to avoid lateral acceleration it is desirable to move the steering wheel as little as possible, when driving a car.
+\section{Non-Parametric Regression}
+In non-parametric curve estimation we no longer demand our curve to be fully determined by several parameters, but we allow it to also dependent on the data. That said we might still use some tuning-parameters sometimes.
+\subsection{Kernel Regression}
+\label{sec:Kernel}
+As described previously, we would like to estimate
+\begin{equation}
+  \label{eq:nadaraya}
+  \mathbb{E}[Y \mid X=x]
+  = \int_{\R} y f_{Y \mid X}(y \mid x) d y
+  =\frac{\int_{\R} y f_{X, Y}(x, y) d y}{f_{X}(x)},
+\end{equation}
+where $f_{Y \mid X}, f_{X, Y}, f_{X}$ denote the conditional, joint and marginal densities.
+This can be done with a kernel $K$:
+$$
+  \hat{f}_{X}(x)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right)}{n h}, \hat{f}_{X, Y}(x, y)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}}
+$$
+By plugging the above into equation \ref{eq:nadaraya} we arrive at the \textit{Nadaraya-Watson} kernel estimator:
+$$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right)}$$
 
 
 \begin{my_pros_cons_table}{
+    \item flexible due to different possible kernels
     \item can be assigned degrees of freedom (trace of the hat-matrix)
-    \item efficient estimation (closed form solution)
-    \item intuitive penalty (we don't want the function to be too ``wobbly'' --- change slopes)
-    \item performs also well if points are not equidistant
-    \item fixes the Runge's phenomenon (fluctuation of high degree polynomial interpolation)
+    \item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (XXX c.f. CompStat 3.2.2)
   }{
-    \item choose $\lambda$
+    \item if the $x \mapsto K(x)$ is not continuous, $\hat m $ isn't either
+    \item choice of bandwidth, especially if $x_i$ are not equidistant.
   }
 \end{my_pros_cons_table}
 
 
-% \subsection{Penalized Regression Splines}
-% \label{sec:Penalized}
-% Intuition: similar as Natural Smoothing Splines, but we choose knots
-% \begin{my_pros_cons_table}{
-%     \item 1
-%     \item 2
-% }{
-%     \item 1
-%     \item 2
-% }
-% \end{my_pros_cons_table}
-
-
-\subsection{Whittaker Smoother}
-\label{sec:whittaker}
-% from [HERE](https://eigenvector.com/wp-content/uploads/2020/01/WhittakerSmoother.pdf):  
-%     The Whittaker Smoother: Eiler's paper[1] introduces the following objective function
-%     $$
-%     O(\mathbf{z})=(\mathbf{y}-\mathbf{z})^{\mathrm{T}} \mathbf{W}_{0}(\mathbf{y}-\mathbf{z})+\lambda_{\mathrm{s}} \mathbf{z}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}} \mathbf{z}
-%     $$
-%     where $\mathbf{y}$ is a $N \times 1$ vector of measured data, $\mathbf{z}$ is smooth curve to be fit to the data, $\mathbf{W}_{0}$ is a diagonal matrix of weights (typically $0 \leq w_{0, n} \leq 1$ for $n=1, \ldots, N, \mathbf{D}_{\mathrm{s}}$ is a second derivative operator (e.g., $\mathbf{D}_{\mathrm{s}} \mathbf{z}$ is the second derivative of $\mathbf{z}$ ) and $\lambda_{\mathrm{s}}$ is a scalar penalty on the smoothing term. When data are missing, the corresponding weight, $w_{0, n}$, can be set to zero. Once that $\mathbf{W}_{0}$ and $\lambda_{\mathrm{s}}$ are given (set by default or provided by the user) the corresponding estimate of $\mathbf{z}$ is given by
-%     $$
-%     \hat{\mathbf{z}}=\left(\mathbf{W}_{0}+\lambda_{\mathrm{s}} \mathbf{D}_{\mathrm{s}}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}}\right)^{-1} \mathbf{W}_{0} \mathbf{y}
-%     $$
-%     For example, an optical emission (OES) spectrum is plotted Figure 1 along with two smoothed versions shown for $\mathbf{W}_{0}=\mathbf{I}$ and $\lambda_{\mathrm{s}}=0.1$ (low smoothing) and $\lambda_{\mathrm{s}}=10$ (stronger smoothing).   
-% **Original paper states use of the first derivative**  
-% --> second derivative is very similar to smoothing splines
-\begin{my_pros_cons_table}{
-    \item 1
-    \item 2
-  }{
-    \item 1
-    \item 2
-  }
-\end{my_pros_cons_table}
+**Examples:**
+Normal, Box
+For local bandwidth selection see Brockmann et al. (1993) XXX
 
 
 \subsection{Kriging}
@@ -354,6 +176,186 @@ where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the pa
 \end{my_pros_cons_table}
 
 
+\subsection{Savitzky-Golay Filter (SG Filter)}
+\label{sec:Savitzky–Golay}
+The \textit{Savitzky-Golay Filter}, introduced in \cite{savitzkySmoothingDifferentiationData1964} is a technique in signal processing and can be used to filter out high frequencies (low-pass filter) as argued in \cite{schaferWhatSavitzkyGolayFilter2011}. Furthermore, it also can be used for smoothing by filtering high frequency noise while keeping the low frequency signal.
+First we choose a window size $m$. Then, for each point $j \in \{m, m+1, \dots, n-m\}$ we fit a polynomial of degree $k$ by:
+$$\hat y_j=\min_{p\in P_k}\sum_{i=-m}^{m}(p (x_{j+i})-y_{i+j})^{2},$$
+were $P_k$ denotes the Polynomials of degree $k$ over $\R$.
+
+For equidistant points this can efficiently be calculated by
+$$
+  \hat y_{j}=\sum_{i=-m}^{m} c_{i} y_{j+i},
+$$
+where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in the original paper.
+
+\subsubsection*{Adaptation to the NDVI}
+In a rather famous paper \cite{chenSimpleMethodReconstructing2004a} a ``robust'' method based on the Savitzky-Golay has been used.
+The method is based on the assumption that due to atmospheric effects the observed NDVI tends to be underestimated and that it cannot increase too quickly\footnote{The latter is argued by the biological impossibility of such fast vegetation changes}.
+
+\textbf{Algorithm:}
+\begin{enumerate}
+  \item Remove points which are labeled as cloudy
+  \item Remove points which would indicate an increase greater than 0.4 within 20 days
+  \item Linearly interpolate to obtain an equidistant time series $X^0$
+  \item Apply the Savitzky-Golay Filter to obtain a new time series $X^1$
+  \item Update $X^1$ by applying again a Savitzky-Golay Filter. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''.
+\end{enumerate}
+
+\begin{my_pros_cons_table}{
+    \item Popular technique in signal processing
+    \item Efficient calculation for equidistant points
+    \item Upper envelope matches intuition for the NDVI. Therefore, it is robust against outliers with small values.
+  }{
+    \item No natural way of how to estimate points which are not in the data.
+    \item Not generalizable to other spectral indices.
+    \item Linear interpolation to account for missing data might be not appropriate.
+    \item No smooth interpolation between two measurements.
+  }
+\end{my_pros_cons_table}
+
+
+\subsubsection*{Extension: Spatial-Temporal-Savitzky-Golay Filter}
+One notable adaptation of the Savitzky-Golay is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors we will waive this extension.
+
+
+\subsection{Locally Weighted Regression (LOESS)}
+\label{sec:loess}
+Introduced by : \cite{clevelandRobustLocallyWeighted1979}
+implemented here \cite{cappellariATLAS3DProjectXX2013}
+
+The Locally Weighted Regression (LOESS) can be understood as a generalization of the Savitzky-Golay Filter (c.f. sec.~\ref{sec:Savitzky–Golay}).
+
+Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ separately by fitting a polynomial of order $d$ by weighted least squares. The weights are (usually) defined by
+$$w_i(x_j)=\begin{cases}
+    \left(1-\left(\frac{x_j}{h_i}\right)^{3}\right)^{3}, & \text{for } |x_j|<h_i           \\
+    0,                                                   & \text{for } |x_j| \geqslant h_i
+  \end{cases} ,$$
+where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(x_i)$.\footnote{If too many weights are set to zero, we might end up considering not enough observations and thus get a singular design-matrix (for the least squares estimation). Therefore, we substitute $h_i$ with $1.01 h_i$, so that the observation on the boundary of $B_{h_i}(x_i)$ does not get completely ignored.} So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
+
+\subsubsection{How does the Robust LOESS differ from the SG Filter?}
+The LOESS smoother takes a fraction of points instead of a fixed number and therefore automatically adapts to the size of the data we wish to interpolate. However, we run into the danger of considering to little observations since the estimation breaks down if $\lceil \alpha n\rceil < d+1$.
+Furthermore, LOESS gives less weight to points further away. This yields a "smoother" estimate, since when we slide the window (e.g. for estimating the next value) an influential point at the border does not suddenly get zero weight from being weighted equally before.
+Finally, the LOESS also can be used for non-equidistant data and allows for arbitrary interpolation.
+
+\subsubsection{Robustify}
+\label{sec:loess_robustify}
+\cite{clevelandRobustLocallyWeighted1979} also proposes an iterative method how to reduce the impact of outliers.\footnote{Note that due to using the median for the normalization we gain a breakdown point of $50 \%$ for outliers in $y$.}
+
+First we define a function which will determine the weight given to each observation such that observations with large scaled residuals will have less weight. That is the bisquare function B:
+$$
+  B(x):=\begin{cases}
+    \left(1-x^{2}\right)^{2}, & \text{if } |x|<1 \\
+    0,                        & \text{else }
+  \end{cases}
+$$
+Now, we do something similar to what is done in iteratively reweighted least squares. Simply, reiterate with updating the weights of each observation with
+\begin{equation}
+  w_i^\text{new}:=w_i^\text{old} \operatorname{B}\left(\frac{|r_i|}{6\operatorname{mad}\left(r_1,\dots,r_n\right)}\right)
+  \label{eq:bisquare}
+\end{equation}
+where $r_i = y_i - \hat y_i$ denotes the residuals. Stop the reiteration after several steps or till the change of the values is smaller than some tolerance.
+
+Examples of such iterative fits are illustrated in fig.~\ref{fig:interpol/2x3_loess_robust}.
+\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_loess_robust}
+  \caption{The loess smoother \RobItPlot}
+  \label{fig:interpol/2x3_loess_robust}
+\end{my_figure}
+
+\textbf{XXX Our Adjustment:} Since we usually observe outliers with negative residuals we decide to divide the negative residuals by two before updating the weights. Furthermore, we want to prevent low-weighted observations to corrupt our estimation of scale (the median) and thus we use the weighted median. This can be defined as
+$$
+  \med_\text{weighted}(r,w) := \argmin_{\lambda \in \R} \sum_{i=1}^n |r_iw_i -\lambda|
+$$
+for $r,w\in \R^n$
+
+% \footnote{A rather technical adjustment is that we give a reasonable minimal threshold to our scale estimation s.t. the weight $w_i$ wont be set to zero if $r_i<0.1$. This is done to avoid ignoring to many observations, which could lead to convergence issues or singular matrixes}
+
+
+
+\begin{my_pros_cons_table}{
+    \item Flexible generalization of Savitzky-Golay
+    \item arbitrary interpolation possible
+    \item Intuitive parameters
+  }{
+    \item The nature of local regression might lead to suprising estimates (no smoothness guarantees for the second derivative)
+    \item Multiple XXXXXXx
+  }
+\end{my_pros_cons_table}
+
+
+\subsection{B-splines}
+\label{sec:B}
+from \cite{lycheSplineMethods2005}
+$$
+  S(x)=\sum_{j=0}^{n-1} c_{j} B_{j, k ; t}(x)
+$$
+$$
+  \begin{array}{r}
+    B_{i, 0}(x)=1, \text { if } t_{i} \leq x<t_{i+1}, \text { otherwise } 0 \\
+    B_{i, k}(x)=\frac{x-t_{i}}{t_{i+k}-t_{i}} B_{i, k-1}(x)+\frac{t_{i+k+1}-x}{t_{i+k+1}-t_{i+1}} B_{i+1, k-1}(x)
+  \end{array}
+$$
+
+**Smoothing:**
+We can relax the constrain that we have to perfectly interpolate. Thus we use the minimum number of knots\footnote{SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number knots used} such that:
+$\sum_{i=1}^n(w (y_i - \hat y_i))^2 \leq s$
+\begin{my_pros_cons_table}{
+    \item can be assigned degrees of freedom
+    \item extendable to "smooth" version
+    \item performs also well if points are not equidistant
+  }{
+    \item smoothing process does not translate well to a interpretation (unlike smoothing splines)
+    \item choice of smoothing parameter $s$
+  }
+\end{my_pros_cons_table}
+
+
+\subsection{Natural Smoothing Splines}
+\label{sec:Natural}
+Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the unique\footnote{Strictly speaking it is only unique for $\lambda > 0$} minimizer
+$$
+  \hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}\left(Y_{i}-{f}\left(x_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(x)^{2} dx
+$$
+is a natural\footnote{It is called natural since it is affine outside the data range ($\forall x\notin [x_1, x_n]:\hat m''(x) = 0$)} cubic spline (i.e. a piecewise cubic polynomial function).
+The objective function has an intuitive meaning, as to avoid lateral acceleration it is desirable to move the steering wheel as little as possible, when driving a car.
+
+
+\begin{my_pros_cons_table}{
+    \item can be assigned degrees of freedom (trace of the hat-matrix)
+    \item efficient estimation (closed form solution)
+    \item intuitive penalty (we don't want the function to be too ``wobbly'' --- change slopes)
+    \item performs also well if points are not equidistant
+    \item fixes the Runge's phenomenon (fluctuation of high degree polynomial interpolation)
+  }{
+    \item choose $\lambda$
+  }
+\end{my_pros_cons_table}
+
+
+% \subsection{Whittaker Smoother}
+% \label{sec:whittaker}
+% from [HERE](https://eigenvector.com/wp-content/uploads/2020/01/WhittakerSmoother.pdf):  
+%     The Whittaker Smoother: Eiler's paper[1] introduces the following objective function
+%     $$
+%     O(\mathbf{z})=(\mathbf{y}-\mathbf{z})^{\mathrm{T}} \mathbf{W}_{0}(\mathbf{y}-\mathbf{z})+\lambda_{\mathrm{s}} \mathbf{z}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}} \mathbf{z}
+%     $$
+%     where $\mathbf{y}$ is a $N \times 1$ vector of measured data, $\mathbf{z}$ is smooth curve to be fit to the data, $\mathbf{W}_{0}$ is a diagonal matrix of weights (typically $0 \leq w_{0, n} \leq 1$ for $n=1, \ldots, N, \mathbf{D}_{\mathrm{s}}$ is a second derivative operator (e.g., $\mathbf{D}_{\mathrm{s}} \mathbf{z}$ is the second derivative of $\mathbf{z}$ ) and $\lambda_{\mathrm{s}}$ is a scalar penalty on the smoothing term. When data are missing, the corresponding weight, $w_{0, n}$, can be set to zero. Once that $\mathbf{W}_{0}$ and $\lambda_{\mathrm{s}}$ are given (set by default or provided by the user) the corresponding estimate of $\mathbf{z}$ is given by
+%     $$
+%     \hat{\mathbf{z}}=\left(\mathbf{W}_{0}+\lambda_{\mathrm{s}} \mathbf{D}_{\mathrm{s}}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}}\right)^{-1} \mathbf{W}_{0} \mathbf{y}
+%     $$
+%     For example, an optical emission (OES) spectrum is plotted Figure 1 along with two smoothed versions shown for $\mathbf{W}_{0}=\mathbf{I}$ and $\lambda_{\mathrm{s}}=0.1$ (low smoothing) and $\lambda_{\mathrm{s}}=10$ (stronger smoothing).   
+% **Original paper states use of the first derivative**  
+% --> second derivative is very similar to smoothing splines
+% \begin{my_pros_cons_table}{
+%     \item 1
+%     \item 2
+%   }{
+%     \item 1
+%     \item 2
+%   }
+% \end{my_pros_cons_table}
+
+
 \subsection{Other Methods to study:}
 From inroduction of \cite{chenSimpleMethodReconstructing2004a}:\\
 (1) threshold-
@@ -369,33 +371,29 @@ linear regression approach (Swets et al., 1999).
 \subsection*{TEMP --- Figures}
 
 
-\begin{my_figure}[h]{width=1\textwidth}{interpol/problem_illustration}
-  \caption{XXX caption XXX}
-  \label{fig:interpol/problem_illustration}
+
+
+
+
+
+
+\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_B-Splines_robust}
+  \caption{B-Splines \RobItPlot}
+  \label{fig:interpol/2x3_B-Splines_robust}
 \end{my_figure}
 
-\begin{my_figure}[h]{width=1\textwidth}{interpol/3x3_B-Splines_robust}
-  \caption{XXX caption XXX}
-  \label{fig:interpol/3x3_B-Splines_robust}
+\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_DL_robust}
+  \caption{A Double Logistic curve \RobItPlot}
+  \label{fig:interpol/2x3_DL_robust}
 \end{my_figure}
 
-\begin{my_figure}[h]{width=1\textwidth}{interpol/3x3_DL_robust}
-  \caption{XXX caption XXX}
-  \label{fig:interpol/3x3_DL_robust}
-\end{my_figure}
-
-\begin{my_figure}[h]{width=1\textwidth}{interpol/3x3_loess_robust}
-  \caption{XXX caption XXX}
-  \label{fig:interpol/3x3_loess_robust}
-\end{my_figure}
-
-\begin{my_figure}[h]{width=1\textwidth}{interpol/3x3_SS_robust}
-  \caption{XXX caption XXX}
-  \label{fig:interpol/3x3_SS_robust}
+\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_SS_robust}
+  \caption{Smoothing Splines \RobItPlot}
+  \label{fig:interpol/2x3_SS_robust}
 \end{my_figure}
 
 \begin{my_figure}[h]{width=1\textwidth}{interpol/statistics_SS_param_optim}
-  \caption{XXX caption XXX}
+  \caption{Smoothing splines fit with smoothing parameter optimized by minimizing the ``\dots''-quantile of the absolute leave-one-out residuals. Note that the larger the considered quantile is, the smoother the resulting curve becomes.}
   \label{fig:interpol/statistics_SS_param_optim}
 \end{my_figure}
 
