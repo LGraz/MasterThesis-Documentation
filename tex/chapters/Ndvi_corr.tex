@@ -10,11 +10,11 @@ In figure ~\ref{fig:ndvi_corr/residuals_scl_classes} we see for example that som
     \label{fig:ndvi_corr/residuals_scl_classes}
 \end{my_figure}
 
-To get an impression whether there is some useful information contained in the remaining scl-classes (all except 4 and 5) we would like to compare the observed NDVI with the true NDVI. But since we do not have any ground truth data we will make the following assumtion:
+To get an impression whether there is some useful information contained in the remaining scl-classes (all except 4 and 5) we would like to compare the observed NDVI with the true NDVI. But since we do not have any ground truth data, we will make the following assumption:
 
 
 \begin{definition}{XXXAssumption (true NDVI)}
-    The true NDVI value at time $t$ can be successfully estimated by out-of-bag interpolation using high quality observations. That is the interpolated value (using XXX) considering the points $P^{scl45}\setminus P_t$. In the following we will call this estimate the ``true''-NDVI
+    The true NDVI value at time $t$ can be successfully estimated by out-of-bag interpolation using high quality observations. That is the interpolated value (using XXX) considering the points $P^{scl45}\setminus P_t$. In the following, we will call this estimate the ``true''-NDVI
 \end{definition}
 
 shall pair every observed NDVI value with its out-of-bag-estimate. Then for each category we collect all pairs and create a scatter plot in fig~\ref{fig:ndvi_corr/scl_residuals_scatter}XXXXXXXXXXXXXX

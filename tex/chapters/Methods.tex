@@ -11,7 +11,7 @@
 %     }
 % \end{my_pros_cons_table}
 
-In this section we take a closer look at several interpolation methods, which will be used to interpolate and smooth the NDVI time series.
+In this section, we take a closer look at several interpolation methods, which will be used to interpolate and smooth the NDVI time series.
 
 First, we give a brief overview in table~\ref{table:pros_cons_overview}.
 
@@ -19,7 +19,7 @@ Second, we introduce and discuss each method.
 
 Then, we try to extract the main ingredients of each method to forge our own one.
 
-Finally, using leave-one-out cross validation we tune the parameters (where necessary) and get a first idea of the performance of each method.
+Finally, using leave-one-out cross validation, we tune the parameters (where necessary) and get a first idea of the performance of each method.
 
 
 \footnotesize
@@ -37,10 +37,10 @@ Different assumptions on $m$ will lead to the following methods:
 
 
 \section{Parametric Regression}
-Parametric Curve estimation tries to fit a parametric function (e.g. a Gaussian function with parameter $\mu$ and $\sigma$) to a dataset. In the following we introduce 2 such parametric approaches.
+Parametric Curve estimation tries to fit a parametric function (e.g. a Gaussian function with parameter $\mu$ and $\sigma$) to a dataset. In the following, we introduce 2 such parametric approaches.
 
 \subsubsection*{Optimization Issues}
-In the following we search for 5 or 6 parameters that minimize the residuals sum of squares. This is a non-convex optimization problem and thus the algorithm\footnote{We used the python function \texttt{scipy.optimize.curve\_fit}} either could not find the global minimum or failed to converge. This was fixed by providing for each parameter reasonable initial values and generous bounds (which match our experience).
+Now we try to minimize the residuals sum of squares over 5 (or 6) parameters. This is a non-convex optimization problem, and thus the algorithm\footnote{We used the python function \texttt{scipy.optimize.curve\_fit}} either could not find the global minimum or failed to converge. This was fixed by providing for each parameter reasonable initial values and generous bounds (which match our experience).
 
 \subsection{Double Logistic}
 \label{sec:double_logistic}
@@ -49,7 +49,7 @@ The Double Logistic smoothing as described in \cite{beckImprovedMonitoringVegeta
 Assumptions:
 \begin{itemize}
   \item There is a minimum NDVI level $Y_{\min}$ in the winter (e.g. due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking into several years into account.
-  \item The growth cycle can be divided into an increase and a decrease period where the time series follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$).
+  \item The growth cycle can be divided into an increase and a decrease period, where the time series follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$).
 \end{itemize}
 
 The equation of the double-logistic fit is given by:
@@ -61,19 +61,19 @@ Where the five free parameters: $Y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initi
 Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay}) we reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations\footnote{For the details on the weights we refer to \cite{beckImprovedMonitoringVegetation2006}}.
 
 \begin{my_pros_cons_table}{
-    \item Incorperates subject specific knowledge in the case of evergreen plants covered by snow.
+    \item Incorporates subject specific knowledge in the case of evergreen plants covered in snow.
     \item Optimized parameters have an intuitive meaning.
   }{
     \item Strong shape assumptions on the NDVI curve.
-    \item Parameter optimization might go wrong. This can be mitigated to some extend to provide bounds for the paramters
-    \item Strange behaviour in regrions with little observations. (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
+    \item Parameter optimization might go wrong. This can be mitigated to some extent to provide bounds for the parameters
+    \item Strange behavior in regions with little observations. (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
   }
 \end{my_pros_cons_table}
 
 
 \subsection{Fourier Approximation}
 \label{sec:fourier_approx}
-Similar as in section~\ref{sec:double_logistic} we fit a parametric curve to the data by least squares. Here we take the second order fourier series:
+Similar as in section~\ref{sec:double_logistic} we fit a parametric curve to the data by least squares. Here we take the second order Fourier series:
 $$
   \operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}  \right)
 $$
@@ -82,10 +82,10 @@ where $\Phi=2 \pi \times(t-1) / n$.
 % \cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
 
 \begin{my_pros_cons_table}{
-    \item Assumtion of periodicity can be helpful if we are modelling multiyear grow cycles
+    \item Assumption of periodicity can be helpful if we are modelling multiyear grow cycles
     \item Flexible curve shape
   }{
-    \item Bad behaviour in regions with little data (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
+    \item Bad behavior in regions with little data (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
     \item Hard to interpret estimated parameters
     \item Parameter estimation can go wrong. Introducing bounds can help.
   }
@@ -99,7 +99,7 @@ where $\Phi=2 \pi \times(t-1) / n$.
 
 
 \section{Non-Parametric Regression}
-In non-parametric curve estimation we no longer demand our curve to be fully determined by several parameters, but we allow it to also dependent on the data. That said we might still use some tuning-parameters sometimes.
+In non-parametric curve estimation, we no longer demand our curve to be fully determined by several parameters, but we allow it to also dependent on the data. That said, we might still use some tuning-parameters sometimes.
 \subsection{Kernel Regression}
 \label{sec:Kernel}
 As described previously, we would like to estimate
@@ -137,7 +137,7 @@ For local bandwidth selection see Brockmann et al. (1993) XXX
 \subsection{Kriging}
 \label{sec:Kriging}
 
-Kriging was developed in geostatistics to deal with autocorrelation of the response variable at nearby points. By applying the notion that two spectral indices which are (timewise) close should also take similar values we justify the application of Kriging. In the end we would like to fit a smooth Gaussian process to the data. For this subsection we will follow \cite{diggleGaussianModelsGeostatistical2007}.
+Kriging was developed in geostatistics to deal with autocorrelation of the response variable at nearby points. By applying the notion that two spectral indices which are (timewise) close should also take similar values, we justify the application of Kriging. In the end, we would like to fit a smooth Gaussian process to the data. For this subsection, we will follow \cite{diggleGaussianModelsGeostatistical2007}.
 
 \subsubsection*{Definitions and Assumptions}
 
@@ -152,25 +152,25 @@ We also define the variogram of a Gaussian process as
 $$V(h):=V\left(t, t+h\right):=\frac{1}{2} \operatorname{Var}\left(S(t)-S(t+h)\right)\\ %align XXX
   =(\gamma(0))^2(1-\operatorname{corr}(S(t),S(t+h)))
 $$
-And decide to use a gaussian Variogram defined by
+And decide to use a Gaussian Variogram defined by
 $$V(h) = p \cdot\left(1-e^{-\frac{h^{2}}{\left(\frac{4}{7} r\right)^{2}}}\right)+n,$$
-where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the partial sill visuilized in figure~\ref{fig:interpol/kriging_gauss_variogram}.\footnote{Strictrly speaking we use a scaled version of the variogram. Thus only the ratio of $p/n$ matters.}
+where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the partial sill visualized in figure~\ref{fig:interpol/kriging_gauss_variogram}.\footnote{Strictly speaking we use a scaled version of the variogram. Thus, only the ratio of $p/n$ matters.}
 \begin{my_figure}[h]{width=0.7\textwidth}{interpol/kriging_gauss_variogram}
   \caption{Gaussian Variogram with nugget=1, partial sill=3, range=55}
   \label{fig:interpol/kriging_gauss_variogram}
 \end{my_figure}
 
 \begin{my_figure}{width=1\textwidth}{interpol/kriging_parameter}
-  \caption{On the left we see how the interpolation change if we increase the nugget and the range parameter. On the right we compare two kriging interpolations where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
+  \caption{On the left, we see how the interpolation change if we increase the nugget and the range parameter. On the right we compare two kriging interpolations, where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
 \end{my_figure}
 
 \begin{my_pros_cons_table}{
-    \item It is a well-studied method
-    \item Parameters have an intuitive meaning
-    \item Flexible covariance structure
+    \item It is a well-studied method.
+    \item Parameters have an intuitive meaning.
+    \item Flexible covariance structure.
   }{
-    \item Regression to the mean
-    \item Assumption of constant mean and constant variance is clearly violated. Thus, the NVI is not a stationary process.
+    \item Regression to the mean.
+    \item Violated assumption of constant mean and constant variance. Thus, the NDVI is not a stationary process.
     \item Skewness of errors is not taken into account.
   }
 \end{my_pros_cons_table}
@@ -179,9 +179,9 @@ where $h$ is the distance, $n$ is the nugget, $r$ is the range and $p$ is the pa
 \subsection{Savitzky-Golay Filter (SG Filter)}
 \label{sec:Savitzky–Golay}
 The \textit{Savitzky-Golay Filter}, introduced in \cite{savitzkySmoothingDifferentiationData1964} is a technique in signal processing and can be used to filter out high frequencies (low-pass filter) as argued in \cite{schaferWhatSavitzkyGolayFilter2011}. Furthermore, it also can be used for smoothing by filtering high frequency noise while keeping the low frequency signal.
-First we choose a window size $m$. Then, for each point $j \in \{m, m+1, \dots, n-m\}$ we fit a polynomial of degree $k$ by:
+First, we choose a window size $m$. Then, for each point, $j \in \{m, m+1, \dots, n-m\}$ we fit a polynomial of degree $k$ by:
 $$\hat y_j=\min_{p\in P_k}\sum_{i=-m}^{m}(p (x_{j+i})-y_{i+j})^{2},$$
-were $P_k$ denotes the Polynomials of degree $k$ over $\R$.
+where $P_k$ denotes the Polynomials of degree $k$ over $\R$.
 
 For equidistant points this can efficiently be calculated by
 $$
@@ -195,16 +195,16 @@ The method is based on the assumption that due to atmospheric effects the observ
 
 \textbf{Algorithm:}
 \begin{enumerate}
-  \item Remove points which are labeled as cloudy
-  \item Remove points which would indicate an increase greater than 0.4 within 20 days
-  \item Linearly interpolate to obtain an equidistant time series $X^0$
-  \item Apply the Savitzky-Golay Filter to obtain a new time series $X^1$
+  \item Remove points which are labeled as cloudy.
+  \item Remove points which would indicate an increase greater than 0.4 within 20 days.
+  \item Linearly interpolate to obtain an equidistant time series $X^0$.
+  \item Apply the Savitzky-Golay Filter to obtain a new time series $X^1$.
   \item Update $X^1$ by applying again a Savitzky-Golay Filter. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''.
 \end{enumerate}
 
 \begin{my_pros_cons_table}{
-    \item Popular technique in signal processing
-    \item Efficient calculation for equidistant points
+    \item Popular technique in signal processing.
+    \item Efficient calculation for equidistant points.
     \item Upper envelope matches intuition for the NDVI. Therefore, it is robust against outliers with small values.
   }{
     \item No natural way of how to estimate points which are not in the data.
@@ -216,7 +216,7 @@ The method is based on the assumption that due to atmospheric effects the observ
 
 
 \subsubsection*{Extension: Spatial-Temporal-Savitzky-Golay Filter}
-One notable adaptation of the Savitzky-Golay is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors we will waive this extension.
+One notable adaptation of the Savitzky-Golay is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors, we will waive this extension.
 
 
 \subsection{Locally Weighted Regression (LOESS)}
@@ -234,13 +234,13 @@ $$w_i(x_j)=\begin{cases}
 where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(x_i)$.\footnote{If too many weights are set to zero, we might end up considering not enough observations and thus get a singular design-matrix (for the least squares estimation). Therefore, we substitute $h_i$ with $1.01 h_i$, so that the observation on the boundary of $B_{h_i}(x_i)$ does not get completely ignored.} So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
 
 \subsubsection{How does the Robust LOESS differ from the SG Filter?}
-The LOESS smoother takes a fraction of points instead of a fixed number and therefore automatically adapts to the size of the data we wish to interpolate. However, we run into the danger of considering to little observations since the estimation breaks down if $\lceil \alpha n\rceil < d+1$.
+The LOESS smoother takes a fraction of points instead of a fixed number and therefore automatically adapts to the size of the data we wish to interpolate. However, we run into the danger of considering too little observations, since the estimation breaks down if $\lceil \alpha n\rceil < d+1$.
 Furthermore, LOESS gives less weight to points further away. This yields a "smoother" estimate, since when we slide the window (e.g. for estimating the next value) an influential point at the border does not suddenly get zero weight from being weighted equally before.
 Finally, the LOESS also can be used for non-equidistant data and allows for arbitrary interpolation.
 
 \subsubsection{Robustify}
 \label{sec:loess_robustify}
-\cite{clevelandRobustLocallyWeighted1979} also proposes an iterative method how to reduce the impact of outliers.\footnote{Note that due to using the median for the normalization we gain a breakdown point of $50 \%$ for outliers in $y$.}
+\cite{clevelandRobustLocallyWeighted1979} also proposes an iterative method how to reduce the impact of outliers.\footnote{Note that due to using the median for the normalization, we gain a breakdown point of $50 \%$ for outliers in $y$.}
 
 First we define a function which will determine the weight given to each observation such that observations with large scaled residuals will have less weight. That is the bisquare function B:
 $$
@@ -258,7 +258,7 @@ where $r_i = y_i - \hat y_i$ denotes the residuals. Stop the reiteration after s
 
 Examples of such iterative fits are illustrated in fig.~\ref{fig:interpol/2x3_loess_robust}.
 \begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_loess_robust}
-  \caption{The loess smoother \RobItPlot}
+  \caption{The LOESS smoother \RobItPlot}
   \label{fig:interpol/2x3_loess_robust}
 \end{my_figure}
 
@@ -277,7 +277,7 @@ for $r,w\in \R^n$
     \item arbitrary interpolation possible
     \item Intuitive parameters
   }{
-    \item The nature of local regression might lead to suprising estimates (no smoothness guarantees for the second derivative)
+    \item The nature of local regression might lead to surprising estimates (no smoothness guarantees for the second derivative)
     \item Multiple XXXXXXx
   }
 \end{my_pros_cons_table}
@@ -297,7 +297,7 @@ $$
 $$
 
 **Smoothing:**
-We can relax the constrain that we have to perfectly interpolate. Thus we use the minimum number of knots\footnote{SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number knots used} such that:
+We can relax the constraint that we have to perfectly interpolate. Thus, we use the minimum number of knots\footnote{SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number knots used} such that:
 $\sum_{i=1}^n(w (y_i - \hat y_i))^2 \leq s$
 \begin{my_pros_cons_table}{
     \item can be assigned degrees of freedom
@@ -357,7 +357,7 @@ The objective function has an intuitive meaning, as to avoid lateral acceleratio
 
 
 \subsection{Other Methods to study:}
-From inroduction of \cite{chenSimpleMethodReconstructing2004a}:\\
+From introduction of \cite{chenSimpleMethodReconstructing2004a}:\\
 (1) threshold-
 based methods, such as the best index slope extraction
 algorithm (BISE) (Viovy et al., 1992); (2) Fourier-based
