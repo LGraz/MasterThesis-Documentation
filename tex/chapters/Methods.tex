@@ -15,7 +15,9 @@ In this section, we take a closer look at several interpolation methods, which w
 
 First, we give a brief overview in table~\ref{table:pros_cons_overview}.
 
-Second, we introduce and discuss each method.
+Second, we define the general setting and discuss a general approach to make the interpolation more robust (i.e. reduce the impact of outliers).
+
+Later, we introduce and discuss each method.
 
 Then, we try to extract the main ingredients of each method to forge our own one.
 
@@ -35,6 +37,38 @@ $$
 where $\varepsilon_i$ is some noise and $m: \R \rightarrow \R$ being some (parametric or non-parametric) function. If we assume that $\varepsilon_{1}, \ldots, \varepsilon_{n}$ i.i.d. with $\mathbb{E}\left[\varepsilon_{i}\right]=0$ then $$m(x)=\mathbb{E}[Y \mid x]$$
 Different assumptions on $m$ will lead to the following methods:
 
+\section{Robustify}
+\label{sec:loess_robustify}
+Now we discuss a general approach of how to robustify an interpolation. The main idea is to give less weight to observations which have high residuals after the initial (or if we reiterate, the last) fit.
+
+Even though the procedure is taken from the robust version of the LOESS smoother (c.f. section~\ref{sec:loess} and \cite{clevelandRobustLocallyWeighted1979}), we discuss it now because we will apply it also to other interpolation methods.
+
+
+XXX\footnote{Note that due to using the median for the normalization, we gain a breakdown point of $50 \%$ for outliers in $y$.}
+
+Before we describe the procedure, we define a function which will determine the weight given to each observation such that observations with large scaled residuals will have less weight. That is the bisquare function B:
+$$
+  B(x):=\begin{cases}
+    \left(1-x^{2}\right)^{2}, & \text{if } |x|<1 \\
+    0,                        & \text{else }
+  \end{cases}
+$$
+
+Now, we do something similar to what is done in iteratively reweighted least squares. After an initial interpolation, update the weights of each observation with
+\begin{equation}
+  w_i^\text{new}:=w_i^\text{old} \operatorname{B}\left(\frac{|r_i|}{6\operatorname{mad}\left(r_1,\dots,r_n\right)}\right)
+  \label{eq:bisquare}
+\end{equation}
+where $r_i = y_i - \hat y_i$ denotes the residuals. We can iterate this reweighting and stop after several steps or when the change of the values is smaller than some tolerance.
+
+Examples of such iterative fits are illustrated in the figures \ref{fig:interpol/2x3_loess_robust} \ref{fig:interpol/2x3_B-Splines_robust}, \ref{fig:interpol/2x3_DL_robust}, \ref{fig:interpol/2x3_loess_robust} and \ref{fig:interpol/2x3_SS_robust}.
+
+
+\subsection{XXX Our Adjustment:} Since we usually observe outliers with negative residuals we decide to divide the negative residuals by two before updating the weights. Furthermore, we want to prevent low-weighted observations to corrupt our estimation of scale (the median) and thus we use the weighted median. This can be defined as
+$$
+  \med_\text{weighted}(r,w) := \argmin_{\lambda \in \R} \sum_{i=1}^n |r_iw_i -\lambda|
+$$
+for $r,w\in \R^n$
 
 \section{Parametric Regression}
 Parametric Curve estimation tries to fit a parametric function (e.g. a Gaussian function with parameter $\mu$ and $\sigma$) to a dataset. In the following, we introduce 2 such parametric approaches.
@@ -238,39 +272,10 @@ The LOESS smoother takes a fraction of points instead of a fixed number and ther
 Furthermore, LOESS gives less weight to points further away. This yields a "smoother" estimate, since when we slide the window (e.g. for estimating the next value) an influential point at the border does not suddenly get zero weight from being weighted equally before.
 Finally, the LOESS also can be used for non-equidistant data and allows for arbitrary interpolation.
 
-\subsubsection{Robustify}
-\label{sec:loess_robustify}
-\cite{clevelandRobustLocallyWeighted1979} also proposes an iterative method how to reduce the impact of outliers.\footnote{Note that due to using the median for the normalization, we gain a breakdown point of $50 \%$ for outliers in $y$.}
-
-First we define a function which will determine the weight given to each observation such that observations with large scaled residuals will have less weight. That is the bisquare function B:
-$$
-  B(x):=\begin{cases}
-    \left(1-x^{2}\right)^{2}, & \text{if } |x|<1 \\
-    0,                        & \text{else }
-  \end{cases}
-$$
-Now, we do something similar to what is done in iteratively reweighted least squares. Simply, reiterate with updating the weights of each observation with
-\begin{equation}
-  w_i^\text{new}:=w_i^\text{old} \operatorname{B}\left(\frac{|r_i|}{6\operatorname{mad}\left(r_1,\dots,r_n\right)}\right)
-  \label{eq:bisquare}
-\end{equation}
-where $r_i = y_i - \hat y_i$ denotes the residuals. Stop the reiteration after several steps or till the change of the values is smaller than some tolerance.
-
-Examples of such iterative fits are illustrated in fig.~\ref{fig:interpol/2x3_loess_robust}.
 \begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_loess_robust}
   \caption{The LOESS smoother \RobItPlot}
   \label{fig:interpol/2x3_loess_robust}
 \end{my_figure}
-
-\textbf{XXX Our Adjustment:} Since we usually observe outliers with negative residuals we decide to divide the negative residuals by two before updating the weights. Furthermore, we want to prevent low-weighted observations to corrupt our estimation of scale (the median) and thus we use the weighted median. This can be defined as
-$$
-  \med_\text{weighted}(r,w) := \argmin_{\lambda \in \R} \sum_{i=1}^n |r_iw_i -\lambda|
-$$
-for $r,w\in \R^n$
-
-% \footnote{A rather technical adjustment is that we give a reasonable minimal threshold to our scale estimation s.t. the weight $w_i$ wont be set to zero if $r_i<0.1$. This is done to avoid ignoring to many observations, which could lead to convergence issues or singular matrixes}
-
-
 
 \begin{my_pros_cons_table}{
     \item Flexible generalization of Savitzky-Golay
@@ -356,27 +361,31 @@ The objective function has an intuitive meaning, as to avoid lateral acceleratio
 % \end{my_pros_cons_table}
 
 
-\subsection{Other Methods to study:}
-From introduction of \cite{chenSimpleMethodReconstructing2004a}:\\
-(1) threshold-
-based methods, such as the best index slope extraction
-algorithm (BISE) (Viovy et al., 1992); (2) Fourier-based
-fitting methods (Cihlar, 1996; Roerink et al., 2000; Sellers
-et al., 1994); and (3) asymmetric function fitting methods
-such as the asymmetric Gaussian function fitting approach
-(Jonsson Eklundh, 2002) and the weighted least-squares
-linear regression approach (Swets et al., 1999).
+% \subsection{Other Methods to study:}
+% From introduction of \cite{chenSimpleMethodReconstructing2004a}:\\
+% (1) threshold-
+% based methods, such as the best index slope extraction
+% algorithm (BISE) (Viovy et al., 1992); (2) Fourier-based
+% fitting methods (Cihlar, 1996; Roerink et al., 2000; Sellers
+% et al., 1994); and (3) asymmetric function fitting methods
+% such as the asymmetric Gaussian function fitting approach
+% (Jonsson Eklundh, 2002) and the weighted least-squares
+% linear regression approach (Swets et al., 1999).
+
 
 
 \subsection*{TEMP --- Figures}
 
 
 
-
 \begin{table}
-  \input{tex/chapters/misc/table_cv-statistics_itpl-methods}
+  \begin{center}
+    \small
+    \input{tex/chapters/misc/table_cv-statistics_itpl-methods}
+    \normalsize
+    \caption{Performance comparison of different interpolation methods measured with various statistics. Considering only scl45 points, we get the out-of-bag estimates using the given interpolation method. Consequently, we compute the absolute (value of the) residuals and apply the given statistic to it.}
+  \end{center}
 \end{table}
-
 
 
 \begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_B-Splines_robust}
