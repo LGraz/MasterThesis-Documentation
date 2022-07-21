@@ -1,6 +1,6 @@
 \chapter{NDVI Correction / Improve NDVI Data}
 
-Let's remind ourselves that the data from the Sentinel-2 is equipped with a scene classification layer (SCL) and we therefore have some information of what is observed at each pixel for each sampled time (c.f. table~\ref{table:satelite/scl_classes}). In this chapter we would like to improve the observed NDVI values by using more information than just the two bands used to calculate the NDVI (B4 and B8).
+Let's remind ourselves that the data from the Sentinel-2 is equipped with a scene classification layer (SCL) and we therefore have some information of what is observed at each pixel for each sampled time (c.f. table~\ref{tab:satelite/scl_classes}). In this chapter we would like to improve the observed NDVI values by using more information than just the two bands used to calculate the NDVI (B4 and B8).
 
 \section{Considering other SCL Classes}
 In figure ~\ref{fig:ndvi_corr/residuals_scl_classes} we see for example that some blue points\footnote{The blue points correspond to the SCL-class 10: Thin cirrus clouds} follow the interpolated line closely and that they might be useful in improving an interpolation fit.
