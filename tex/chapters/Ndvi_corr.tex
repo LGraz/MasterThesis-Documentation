@@ -40,7 +40,9 @@ shall pair every observed NDVI value with its out-of-bag-estimate. Then for each
 
 
 \section{XXX Correction}
-xxx idea
+roadmap ...
+
+\subsection{xxx idea -and- stepwise plots}
 
 \subsection{xxx data-table-construction}
 xxx discussion about choosen covariates:
@@ -50,17 +52,32 @@ list of things we considered but rejected + reasoning
 
 
 
+\section{xxx Evalutation Method}
+yield estimation is a main goal. 
+Claim that yield-estimation-accuracy is a objective measure :
+    - we have not looked at the yield so far 
+    - if the one NDVI-time-series predicts the yield better than a different one, we conclude that the first time-series carries more true information about the plants
+Now: "yield ~ NDVI-TS / derived-covariates" 
+
+now we will discuss how to perform the yield estimation
+\subsection{yield estimation}
+problem: high dimensionality and unequal duration/length -> use features
+
+name approaches for yield estimation (we will use a simple but flexible one)
+
+random forest >> for evaluation out-of-bag estimates
+\subsubsection{Covariates used}
+reference to kamir et al, why we did choosed some and not others
 
 
-
-
-
-\section{evaluation}
+\section{Results}
 \begin{table}
 	\begin{center}
-		\caption{XXX}
+		\caption{XXX RMSE of yield prediction}
 		\small
 		\input{tex/chapters/misc/table_methods_vs_yieldprediction.tex}
 		\normalsize
 	\end{center}
 \end{table}
+
+\

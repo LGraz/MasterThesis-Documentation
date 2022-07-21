@@ -337,8 +337,9 @@ The objective function has an intuitive meaning, as to avoid lateral acceleratio
 \end{my_pros_cons_table}
 
 
-% \subsection{Whittaker Smoother}
-% \label{sec:whittaker}
+\subsection{XXX Whittaker Smoother}
+\label{sec:whittaker}
+XXX
 % from [HERE](https://eigenvector.com/wp-content/uploads/2020/01/WhittakerSmoother.pdf):  
 %     The Whittaker Smoother: Eiler's paper[1] introduces the following objective function
 %     $$
@@ -374,10 +375,29 @@ The objective function has an intuitive meaning, as to avoid lateral acceleratio
 
 
 
-\subsection*{TEMP --- Figures}
+\section{Tuning parameter estimation}
+lots of cross validation
+
+what is the best? RMSE is bad, since we know that outliers are present
+optimizing w.r.t different statistics
+
+?plot with different denisties for each statistic
 
 
+\section{Robustification -- Recap}
+introduced in section \ref{XXX} we want to review it
 
+robustifieng from loess -> lets try it with all. Result in figures ...
+
+issues when reiterating often (we lose some points completely)
+
+from pictures ... we get that one 
+
+\subsection{Upper Envelope Approach - Penalty for negative resiudals}
+discussion of idea, and explenation why we did no use it (arbitrary choice)
+
+
+\section{Performance Assecement}
 \begin{table}
 	\begin{center}
 		\caption{Performance comparison of different interpolation methods measured with various statistics. Considering only SCL45 points, we get the out-of-bag estimates using the given interpolation method. Consequently, we compute the absolute (value of the) residuals and apply the given statistic to it.}
@@ -387,6 +407,11 @@ The objective function has an intuitive meaning, as to avoid lateral acceleratio
 	\end{center}
 \end{table}
 
+
+
+
+
+\section*{TEMP --- Figures}
 
 \begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_B-Splines_robust}
 	\caption{B-Splines \RobItPlot}
