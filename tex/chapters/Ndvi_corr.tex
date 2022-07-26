@@ -1,73 +1,93 @@
 \chapter{NDVI Correction / Improve NDVI Data}
 
-Let's remind ourselves that the data from the Sentinel-2 is equipped with a scene classification layer (SCL) and we therefore have some information of what is observed at each pixel for each sampled time (c.f. table~\ref{tab:satelite/scl_classes}). In this chapter we would like to improve the observed NDVI values by using more information than just the two bands used to calculate the NDVI (B4 and B8).
+{
+    Let's remind ourselves that the data from the Sentinel-2 is equipped with a scene classification layer (SCL) and we therefore have some information of what is observed at each pixel for each sampled time (c.f. table~\ref{tab:satelite/scl_classes}). In this chapter we would like to improve the observed NDVI values by using more information than just the two bands used to calculate the NDVI (B4 and B8).
+}
 
-\section{Considering other SCL Classes}
-In figure ~\ref{fig:ndvi_corr/residuals_scl_classes} we see for example that some blue points\footnote{The blue points correspond to the SCL-class 10: Thin cirrus clouds} follow the interpolated line closely and that they might be useful in improving an interpolation fit.
+\section{Considering other SCL Classes}{
+    In figure ~\ref{fig:ndvi_corr/residuals_scl_classes} we see for example that some blue points\footnote{The blue points correspond to the SCL-class 10: Thin cirrus clouds} follow the interpolated line closely and that they might be useful in improving an interpolation fit.
 
-\begin{my_figure}[ht]{width=0.6\textwidth}{ndvi_corr/residuals_scl_classes}
-    \caption{A smoothing splines fit considering green and yellow points (SCL45)}
-    \label{fig:ndvi_corr/residuals_scl_classes}
-\end{my_figure}
+    \begin{my_figure}[ht]{width=0.6\textwidth}{ndvi_corr/residuals_scl_classes}
+        \caption{A smoothing splines fit considering green and yellow points (SCL45)}
+        \label{fig:ndvi_corr/residuals_scl_classes}
+    \end{my_figure}
 
-To get an impression whether there is some useful information contained in the remaining SCL-classes (all except 4 and 5) we would like to compare the observed NDVI with the true NDVI. But since we do not have any ground truth data, we will make the following assumption:
-
-
-\begin{definition}{XXXAssumption (true NDVI)}
-    The true NDVI value at time $t$ can be successfully estimated by out-of-bag interpolation using high quality observations. That is the interpolated value (using XXX) considering the points $P^{SCL45}\setminus P_t$. In the following, we will call this estimate the ``true''-NDVI
-\end{definition}
-
-shall pair every observed NDVI value with its out-of-bag-estimate. Then for each category we collect all pairs and create a scatter plot in fig~\ref{fig:ndvi_corr/scl_residuals_scatter}XXXXXXXXXXXXXX
+    To get an impression whether there is some useful information contained in the remaining SCL-classes (all except 4 and 5) we would like to compare the observed NDVI with the true NDVI. But since we do not have any ground truth data, we will make the following assumption:
 
 
+    \begin{definition}{XXXAssumption (true NDVI)}
+        The true NDVI value at time $t$ can be successfully estimated by out-of-bag interpolation using high quality observations. That is the interpolated value (using XXX) considering the points $P^{SCL45}\setminus P_t$. In the following, we will call this estimate the ``true''-NDVI
+    \end{definition}
 
-\begin{enumerate}
-    \item For each pixel and for each observation (every SCL-class):\\
-          estimate the NDVI value (via out-of-the-box interpolation\footnote{That is, we use all observations (in SCL45) but the current one.})
-    \item
-\end{enumerate}
+    shall pair every observed NDVI value with its out-of-bag-estimate. Then for each category we collect all pairs and create a scatter plot in fig~\ref{fig:ndvi_corr/scl_residuals_scatter}XXXXXXXXXXXXXX
 
 
 
+    \begin{enumerate}
+        \item For each pixel and for each observation (every SCL-class):\\
+            estimate the NDVI value (via out-of-the-box interpolation\footnote{That is, we use all observations (in SCL45) but the current one.})
+        \item
+    \end{enumerate}
 
 
 
 
-\begin{my_figure}[h]{width=1\textwidth}{ndvi_corr/scl_residuals_scatter}
-    \caption{XXX caption XXX}
-    \label{fig:ndvi_corr/scl_residuals_scatter}
-\end{my_figure}
-
-
-\section{XXX Correction}
-roadmap ...
-
-\subsection{xxx idea -and- stepwise plots}
-
-\subsection{xxx data-table-construction}
-xxx discussion about choosen covariates:
-list of things we considered but rejected + reasoning --> no weather to keep it general even though we have it implemeted
-
-\subsection{xxx ml-methods}
 
 
 
-\section{xxx Evalutation Method}
-yield estimation is a main goal. 
-Claim that yield-estimation-accuracy is a objective measure :
-    - we have not looked at the yield so far 
-    - if the one NDVI-time-series predicts the yield better than a different one, we conclude that the first time-series carries more true information about the plants
-Now: "yield ~ NDVI-TS / derived-covariates" 
-
-now we will discuss how to perform the yield estimation
-\subsection{yield estimation}
-problem: high dimensionality and unequal duration/length -> use features
-
-name approaches for yield estimation (we will use a simple but flexible one)
-
-random forest >> for evaluation out-of-bag estimates
-\subsubsection{Covariates used}
-reference to kamir et al, why we did choosed some and not others
+    \begin{my_figure}[h]{width=1\textwidth}{ndvi_corr/scl_residuals_scatter}
+        \caption{XXX caption XXX}
+        \label{fig:ndvi_corr/scl_residuals_scatter}
+    \end{my_figure}
+}
 
 
 
+\section{XXX Correction}{
+    roadmap ... (intuition, data-table, ml-methods, uncertainty, refit and evaluation)
+
+    \subsection{XXX idea -and- stepwise plots}
+    
+    \subsection{XXX data-table-construction}
+    XXX discussion about choosen covariates:
+    list of things we considered but rejected + reasoning --> no weather to keep it general even though we have it implemeted
+    
+    \subsection{XXX ml-methods}
+    
+    \subsection{XXX Uncertainty}
+    abs(residuals), train models for uncertainty, estimate residuals, get weights (via weight-function)  (problem of weight function -> we should norm the weights somehow since smoothing parameters are ``dependent'' on weights -> then, some outer points get really low weights (just because others in the middle have very little residuals and thus very high weight))
+    
+}
+
+
+
+\section{XXX Evaluation Method}{
+    {
+        yield estimation is a main goal. 
+        Claim that yield-estimation-accuracy is a objective measure :
+            - we have not looked at the yield so far 
+            - if the one NDVI-time-series predicts the yield better than a different one, we conclude that the first time-series carries more true information about the plants
+        Now: "yield ~ NDVI-TS / derived-covariates" 
+    }
+    
+    \subsection{yield estimation}{
+        problem: high dimensionality and unequal duration/length -> use features
+        
+        name approaches for yield estimation (we will use a simple but flexible one)
+        
+        random forest >> for evaluation out-of-bag estimates
+    }
+    \subsubsection{Covariates used}{
+        reference to kamir et al, why we did choosed some and not others
+    }
+    
+}
+
+
+
+%satelite/time_series_2021_P112/35_scl4_2021-06-03.png 
+%satelite/time_series_2021_P112/40_scl10_2021-06-28.png 
+%satelite/time_series_2021_P112/30_scl4_2021-05-09.png 
+%satelite/time_series_2021_P112/15_scl5_2021-02-23.png 
+%satelite/time_series_2021_P112/45_scl2_2021-07-23.png 
+%satelite/time_series_2021_P112/33_scl9_2021-05-24.png

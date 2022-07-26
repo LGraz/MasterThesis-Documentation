@@ -67,11 +67,12 @@ where $r_i = y_i - \hat y_i$ denotes the residuals. We can iterate this reweight
 Examples of such iterative fits are illustrated in the figures \ref{fig:interpol/2x3_loess_robust} \ref{fig:interpol/2x3_B-Splines_robust}, \ref{fig:interpol/2x3_DL_robust}, \ref{fig:interpol/2x3_loess_robust} and \ref{fig:interpol/2x3_SS_robust}.
 
 
-\subsection{XXX Our Adjustment:} Since we usually observe outliers with negative residuals we decide to divide the negative residuals by two before updating the weights. Furthermore, we want to prevent low-weighted observations to corrupt our estimation of scale (the median) and thus we use the weighted median. This can be defined as
+\subsection{XXX Our Adjustment:} Since we usually observe outliers with negative residuals we decide to divide the negative residuals by two(XXX) before updating the weights. Furthermore, we want to prevent low-weighted observations to corrupt our estimation of scale (the median) and thus we use the weighted median. This can be defined as
 $$
 	\med_\text{weighted}(r,w) := \argmin_{\lambda \in \R} \sum_{i=1}^n |r_iw_i -\lambda|
 $$
 for $r,w\in \R^n$
+ 
 
 \section{Parametric Regression}
 Parametric Curve estimation tries to fit a parametric function (e.g. a Gaussian function with parameter $\mu$ and $\sigma$) to a dataset. In the following, we introduce 2 such parametric approaches.

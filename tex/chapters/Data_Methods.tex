@@ -1,26 +1,81 @@
 \chapter{Problem Description}
 
+\section{Available Data}
+	{
+		XXX field region Witzwil, Data from gregor perich (ref xxx)
+		fields over 5 years 
+		cereals (not other cultures)
+	}
+	\subsection{Yieldmapping Data}{
+		XXX description of how harvester gets data, knn-interpolation and rsterization, reference to gregors paper
+		\begin{figure}
+			\centering
+			\begin{subfigure}{.5\textwidth}
+			  \centering
+			  \includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_harvester_cropped.png}
+			  \caption{A subfigure XXX}
+			%   \label{fig:sub1}
+		\end{subfigure}%
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_cropped.png}
+			  \caption{A subfigure xxx}
+			%   \label{fig:sub2}
+			\end{subfigure}
+			\caption{xxx}
+			\label{fig:test}
+		\end{figure}
+	}
 
-\begin{figure}[h]
-    \caption{XXX SCL classes}
-    \label{tab:satelite/scl_classes}
-    \center
-    \includegraphics[width=0.4\textwidth]{satelite/scl_classes.png}
-\end{figure}
+	\subsection{Sentinel 2 Satellite Image Data}{
+		\subsubsection*{General Information}{
+			DE:
+			Die ESA \footnote{XXX reference: https://sentinel.esa.int/web/sentinel/missions/sentinel-2}
+			revisit times = 5 days am Äquator
+			mittlere breitengrade 2-3 tage
+			XXX CH-grafik von LukasGraf?
+			witzwil befindet
 
-\begin{figure}[h]
-    \label{fig:satelite/sentinel-2-bands}
-    \center
-    \includegraphics[width=0.4\textwidth]{satelite/sentinel-2-bands.jpg}
-    \caption{XXX SCL classes}
-\end{figure}
+		}
 
-\begin{figure}[h]
-    \label{fig:satelite/yield-raster}
-    \center
-    \includegraphics[width=0.4\textwidth]{satelite/witzwil_2021_P112_yield_cropped.png}
-    \caption{XXX yield raster}
-\end{figure}
+		\subsubsection*{Data Description}{
+			\begin{table}[h]
+				\caption{XXX SCL classes}
+				\label{tab:satelite/scl_classes}
+				\center
+				\includegraphics[width=0.8\textwidth]{satelite/scl_classes.png}
+			\end{table}
+			
+			\begin{figure}[h]
+				\label{fig:satelite/sentinel-2-bands}
+				\center
+				\includegraphics[width=0.4\textwidth]{satelite/sentinel-2-bands.jpg}
+				\caption{XXX Sentinel 2 bands}
+			\end{figure}
+		}
+
+		\subsubsection*{Data Illustration}{
+			xxx plot beschreiben
+			% 2x3 plot
+			\input{tex/chapters/misc/2x3_satelite_ts_plot_grid.tex}
+			% Description of plot
+			In fig.~\ref{fig:witzwil_selected_satellite_images} 
+
+			DE:  
+			Die Abb.~\ref{fig:witzwil_selected_satellite_images} zeigt eine Auswahl von 6 Satelitenbildern von einer Parzelle, welche unsere Herrausvorderungen aufzeigen. Im Februar (Bild(a)) sehen wir wie erwartet keine Vegetation, sondern nackte Erde. Anfang Mai beobachten wir ein wolkenfreies dunkelgrünes feld. In (c) wird ersichtlich, dass wir bei starker Bewölkung keine Hoffnung haben nützliche information zu erhalten. Bild (d) zeigt auf, dass die SCL-Klassifizierung nicht zuverlässig ist. In (e) sehen wir ein blasses Grün. Vermutlich sehen wir durch zirrus wolken hindurch.   
+			
+			%% subfigures references:
+			% (see. \ref{fig:satelite/time_series_2021_P112/15_scl5_2021-02-23.png})
+			% (see. \ref{fig:satelite/time_series_2021_P112/30_scl4_2021-05-09.png})
+			% (see. \ref{fig:satelite/time_series_2021_P112/33_scl9_2021-05-24.png})
+			% (see. \ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png})
+			% (see. \ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png})
+			% (see. \ref{fig:satelite/time_series_2021_P112/45_scl2_2021-07-23.png})
+		}
+	}
+
+
+
 
 
 
