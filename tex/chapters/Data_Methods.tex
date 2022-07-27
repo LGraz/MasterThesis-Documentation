@@ -6,52 +6,33 @@
 		fields over 5 years 
 		cereals (not other cultures)
 	}
-	\subsection{Yieldmapping Data}{
-		XXX description of how harvester gets data, knn-interpolation and rsterization, reference to gregors paper
-		\begin{figure}
-			\centering
-			\begin{subfigure}{.5\textwidth}
-			  \centering
-			  \includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_harvester_cropped.png}
-			  \caption{A subfigure XXX}
-			%   \label{fig:sub1}
-		\end{subfigure}%
-		\begin{subfigure}{.5\textwidth}
-			\centering
-			\includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_cropped.png}
-			  \caption{A subfigure xxx}
-			%   \label{fig:sub2}
-			\end{subfigure}
-			\caption{xxx}
-			\label{fig:test}
-		\end{figure}
-	}
 
 	\subsection{Sentinel 2 Satellite Image Data}{
 		\subsubsection*{General Information}{
-			DE:
-			Die ESA \footnote{XXX reference: https://sentinel.esa.int/web/sentinel/missions/sentinel-2}
-			revisit times = 5 days am Äquator
-			mittlere breitengrade 2-3 tage
-			XXX CH-grafik von LukasGraf?
-			witzwil befindet
-
+			The European Space Agency (ESA) \footnote{REF: https://sentinel.esa.int/web/sentinel/missions/sentinel-2} freely distributes the high quality images of the two Sentinel satellites 2 (S2). Together, both satellites have a revisit time of 5 days at the equator and 2-3 at mid-latitudes. However, at our study region we only receive an image every 5 days.
+			In order to decrease the effect of atmospheric conditions like reflections and scattering, we will not work with the raw data but with the results of the Level-2A processing\footnote{REF https://sentinels.copernicus.eu/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm}\footnote{XXXREF gregor perich ``Data prior to March 2018 was only145
+			available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by ESA''}. 
 		}
 
 		\subsubsection*{Data Description}{
+			The Level-2A processed images we use contain 12 spectral bands with local resolutions up to 10 meters (see \ref{table:S2-bands}).   
+			\input{tex/chapters/misc/table_S2-bands.tex}
+			Bands which have a lower resolution (20 and 60 meters) will be scaled up to 10 meters using cubic interpolation (REF gregor perich).
+							% \begin{figure}[h]
+							% 	\label{fig:satelite/sentinel-2-bands}
+							% 	\center
+							% 	\includegraphics[width=0.4\textwidth]{satelite/sentinel-2-bands.jpg}
+							% 	\caption{XXX Sentinel 2 bands}
+							% \end{figure}
+			Additional to the spectral bands the ESA also supplies a \textbf{S}cene \textbf{C}lassification \textbf{L}ayer (\textit{SCL}) where for each location the observed subject is assigned to an \textit{SCL-class} (c.f. table~\ref{tab:satelite/scl_classes}). In chapter \ref{sec:itpl}  we will use this classification to filter out unreliable data points considering only SCL-classes 4 and 5.  
+			
+			
 			\begin{table}[h]
-				\caption{XXX SCL classes}
+				\caption{Overview: Scene Classification Layers (SCL)}
 				\label{tab:satelite/scl_classes}
 				\center
 				\includegraphics[width=0.8\textwidth]{satelite/scl_classes.png}
 			\end{table}
-			
-			\begin{figure}[h]
-				\label{fig:satelite/sentinel-2-bands}
-				\center
-				\includegraphics[width=0.4\textwidth]{satelite/sentinel-2-bands.jpg}
-				\caption{XXX Sentinel 2 bands}
-			\end{figure}
 		}
 
 		\subsubsection*{Data Illustration}{
@@ -74,8 +55,43 @@
 		}
 	}
 
+	\subsection{Yieldmapping Data}{
+		XXX description of how harvester gets data, knn-interpolation and rasterization (using linear interpolation), reference to gregors paper
+		note: discrepancy between sum of estimated raster and manually weighted yield (per field per year)
+		\begin{figure}
+			\centering
+			\begin{subfigure}{.5\textwidth}
+			  \centering
+			  \includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_harvester_cropped.png}
+			  \caption{A subfigure XXX}
+			%   \label{fig:sub1}
+			\end{subfigure}%
+			\begin{subfigure}{.5\textwidth}
+				\centering
+				\includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_cropped.png}
+			  \caption{A subfigure xxx}
+			%   \label{fig:sub2}
+			\end{subfigure}
+			\caption{xxx}
+			\label{fig:test}
+		\end{figure}
+	}
 
 
 
+	Gather Data:
+	define Pixel
 
+	scale of x axis?
+	define DAS ,define GDD --> compare (plot)  (note that gdd can be non-unique)
+	get GDD
 
+	get NDVI
+
+	DE
+	Mit den  Bändern $B4$ und $B8$ berechnen wir den bekannten \textbf{N}ormalized \textbf{D}ifference \textbf{V}egetation \textbf{I}ndex (\textit{NDVI}) anhand der Formel:
+	\begin{equation}
+		NDVI = \frac{B8 - B4}{B8 + B4}
+		\label{eq:ndvi}
+	\end{equation}
+	Bemerke, dass wir die berechneten Werte nur den \textit{observed NDVI} nennen, da wir aufgrund von wolken und schatten auf ungenauigkeiten gefasst seien müssen. 

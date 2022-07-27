@@ -1,14 +1,16 @@
 \begin{table}[!ht]
 	\centering
-	\caption[skip=10pt]{A short summary of the studied interpolation methods}
-	\begin{tabular}{p{1.6cm}p{3.3cm}p{3.3cm}p{3.3cm}p{0.4cm}p{0.4cm}p{3cm}p{3cm}p{3cm}p{3cm}p{3cm}p{3cm}|}
+	\caption[skip=10pt]{A short summary of the studied interpolation methods. Important assumtions are stated, pros/cons are listed and it is indicated weather the method supports weighted observations (w) and if the resulting interpolation is bounded w.r.t. a fixed interval (b).}
+	\small
+	\begin{tabular}{p{1.6cm}p{3.3cm}p{3.3cm}p{3.4cm}p{0.4cm}p{0.4cm}p{3cm}p{3cm}p{3cm}p{3cm}p{3cm}p{3cm}|}
+		\toprule
 		% \hline
 		~                                                                                                                                                            &
 		\textbf{assumtpions}                                                                                                                                         &
 		\textbf{pros}                                                                                                                                                &
 		\textbf{cons}                                                                                                                                                &
-		\rotatebox{90}{weights}                                                                                                                                      &
-		\rotatebox{90}{bounded}                                                                                                                                        \\ \hline
+		\textbf{w}                                                                                                                                      &
+		\textbf{b}                                                                                                                                        \\ \hline
 
 		Savitzky-Golay filter                                                                                                                                        &
 		\begin{cptitemize}
@@ -17,21 +19,21 @@
 		\begin{cptitemize} \item[--]  computationally very fast                                                                   \end{cptitemize}                   &
 		\begin{cptitemize} \item[--]  cannot deal natively with missing data (need some interpolation)                              \end{cptitemize}                 &
 		no                                                                                                                                                           &
-		mostly                                                                                                                                                         \\ %\hline%comment out?
+		(yes)                                                                                                                                                         \\ \hline%comment out?
 
-		SG + NDVI                                                                                                                                                    &
+		SG +~NDVI                                                                                                                                                    &
 		\begin{cptitemize} \item[--]  upper envelope \item[--]  vegetation cannot grow faster than some slope                                \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  biological knowledge                                                                            \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  bad ``upper envelope'' since weights are not used for the estimation itselfe                    \end{cptitemize}               &
 		(no)                                                                                                                                                         &
-		mostly                                                                                                                                                         \\ \hline%comment out?
+		(yes)                                                                                                                                                         \\ \hline%comment out?
 
 		Loess                                                                                                                                                        &
 		\begin{cptitemize} \item[--]  local  polynomial with points closer to the estimated point are more important                  \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  flexible \item[--]  generalization of SG \item[--]  weighting function makes intuitive sense                  \end{cptitemize} &
 		\begin{cptitemize} \item[--]  computationally expensive                                                                       \end{cptitemize}               &
 		yes                                                                                                                                                          &
-		mostly                                                                                                                                                         \\ \hline%comment out?
+		(yes)                                                                                                                                                         \\ \hline%comment out?
 
 		Smoothing Splines                                                                                                                                            &
 		\begin{cptitemize} \item[--]  2cd derivative of function is integrable                                                        \end{cptitemize}               &
@@ -44,7 +46,7 @@
 		\begin{cptitemize} \item[--]  function can be approximated by a linear combination of B-splines basis functions               \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  general assumtion \item[--]  flexible shape                                                            \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  unbounded \item[--]  no intuitive meaning for smoothing                                                \end{cptitemize}        &
-		~                                                                                                                                                            &
+		yes                                                                                                                                                            &
 		no                                                                                                                                                             \\ \hline%comment out?
 
 		% Penalized Regression Splines &
@@ -89,14 +91,14 @@
 		\begin{cptitemize} \item[--]  good for evergreen plants (if snow masks ndvi) \item[--] upper envelope                                \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  parameterestimation can go seriously wrong \item[--]  strange behaviour for long data-gaps             \end{cptitemize}        &
 		yes                                                                                                                                                          &
-		mostly                                                                                                                                                         \\ \hline%comment out?
+		(yes)                                                                                                                                                         \\ \hline%comment out?
 
 		Universal Kriging                                                                                                                                            &
 		\begin{cptitemize} \item[--]  function is a realization of a stationary gaussian process                                      \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  informative parameters \item[--]  flexible                                                             \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  regression to the mean \item[--]  assumptions clearly not met                                          \end{cptitemize}        &
 		yes                                                                                                                                                          &
-		mostly                                                                                                                                                         \\ \hline%comment out?
+		(yes)                                                                                                                                                         \\ %\hline%comment out?
 
 		% methodname &
 		% ~ &
@@ -104,8 +106,7 @@
 		% ~ &
 		% ~ &
 		% ~ \\ \hline%comment out?
-
-		\hline
+		\bottomrule
 	\end{tabular}
 	\label{table:pros_cons_overview}
 \end{table}
