@@ -40,12 +40,14 @@ Different assumptions on $m$ will lead to the following methods:
 
 \section{XXX DAS vs GDD}
 %example plot
+equation \ref{eq:gdd}
+
 
 \section{Robustify}
 \label{sec:loess_robustify}
 Now we discuss a general approach of how to robustify an interpolation. The main idea is to give less weight to observations which have high residuals after the initial (or if we reiterate, the last) fit.
 
-Even though the procedure is taken from the robust version of the LOESS smoother (c.f. section~\ref{sec:loess} and \cite{clevelandRobustLocallyWeighted1979}), we discuss it now because we will apply it also to other interpolation methods.
+Even though the procedure is taken from the robust version of the LOESS smoother (cf. section~\ref{sec:loess} and \cite{clevelandRobustLocallyWeighted1979}), we discuss it now because we will apply it also to other interpolation methods.
 
 
 XXX\footnote{Note that due to using the median for the normalization, we gain a breakdown point of $50 \%$ for outliers in $y$.}
@@ -97,7 +99,7 @@ The equation of the double-logistic fit is given by:
 \end{equation*}
 Where the five free parameters: $Y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Such fit can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}.
 
-Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay}) we reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations\footnote{For the details on the weights we refer to \cite{beckImprovedMonitoringVegetation2006}}.
+Similar as for the Savitzky-Golay Filter (cf. section~\ref{sec:Savitzky–Golay}) we reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations\footnote{For the details on the weights we refer to \cite{beckImprovedMonitoringVegetation2006}}.
 
 \begin{my_pros_cons_table}{
 		\item Incorporates subject specific knowledge in the case of evergreen plants covered in snow.
@@ -160,7 +162,7 @@ $$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{
 \begin{my_pros_cons_table}{
 		\item flexible due to different possible kernels
 		\item can be assigned degrees of freedom (trace of the hat-matrix)
-		\item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (XXX c.f. CompStat 3.2.2)
+		\item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (XXX cf. CompStat 3.2.2)
 	}{
 		\item if the $x \mapsto K(x)$ is not continuous, $\hat m $ isn't either
 		\item choice of bandwidth, especially if $x_i$ are not equidistant.
@@ -263,7 +265,7 @@ One notable adaptation of the Savitzky-Golay is the presented by \cite{caoSimple
 Introduced by : \cite{clevelandRobustLocallyWeighted1979}
 implemented here \cite{cappellariATLAS3DProjectXX2013}
 
-The Locally Weighted Regression (LOESS) can be understood as a generalization of the Savitzky-Golay Filter (c.f. sec.~\ref{sec:Savitzky–Golay}).
+The Locally Weighted Regression (LOESS) can be understood as a generalization of the Savitzky-Golay Filter (cf. sec.~\ref{sec:Savitzky–Golay}).
 
 Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ separately by fitting a polynomial of order $d$ by weighted least squares. The weights are (usually) defined by
 $$w_i(x_j)=\begin{cases}
