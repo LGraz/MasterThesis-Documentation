@@ -1,0 +1,146 @@
+In the following model we will not explicitly state the intercept\footnote{Without loss of generality we can assume that $\bar y = 0$ (otherwise consider the centerd version).} 
+
+%     ML-methoden: muss ich sie beschreiben? Es scheint mir wissen zu sein, was ich vorraussetzen kann. 
+    % --> ja, kurz und bündig erklären
+\subsubsection*{Ordinary Least Squaers (OLS)}{
+    The OLS is a linear model which aims to minimize the sum of the squared residuals. Let $y\in \R^n$ be the vector of responses and $X\in \R^{n\times p}$ be the design matrix, where each row corresponds to one pixel and each column consist of one covariate\footnote{Strictly speaking since SCL-classes are dummy variables }. We assume a linear relationship between $y$ and $X$ and allow for gaussian noise. That is:
+    \begin{equation}
+        \label{eq:ols}
+        y = X\beta  + \epsilon \quad \text{ where }\epsilon \overset{i.i.d.}{\sim}\mathcal{N}(0,\sigma^2)
+    \end{equation}
+    Assuming that $X$ is regular, we can estimte the regression coefficients $\beta$ by
+    \begin{equation}
+        \hat \beta = (X^TX)^{-1}X^Ty = \argmin_{\beta in \R^p}\|y - X\beta\|_2^2 
+    \end{equation}
+
+    We will train two models, one using only the SCL-classes as covariates and the other one using all covariates (which are discussed in section \ref{sec:corr_data_table}).
+
+    \begin{my_pros_cons_table}{
+        \item Simple method with good interpretability of coefficients.
+        \item Computationally cheap.
+    }{
+        \item Catches only linear relationships.
+        \item No integrated variable selection.\footnote{There is the possibility of stepwise modelselection by dropping or adding some covariates but for higher p this gets too expensive since the time complexity grows in $\mathcal{O}(np^4)$ (computing $X^TX$ requires $\mathcal{O}(np^2)$ which assuming $n>p$ dominates $\mathcal{O}(p^3) $ needed for the cholesky-decomposition of $X^TX$) % p^2 time OLS. 
+        }
+    }
+    \end{my_pros_cons_table}
+}
+\subsubsection*{LASSO}{
+    The Lasso can be similarily expressed than the OLS but adds a penalty to the minimization problem:
+    \begin{equation}
+        \hat \beta_\lambda = \argmin_{\beta \in \R^p}\|y - X\beta\|_2^2 + \lambda \|\beta\|_1 = \argmin_{\beta \in \R^p \text{ and } \|\beta\|_1<\lambda}\|y - X\beta\|_2^2.\footnote{The last two terms are equivalent by lagrangian optimization}
+        \label{eq:lasso}
+    \end{equation}
+    Even though we do not have a closed form solution for equation \ref{eq:lasso} we can solve it easily via optimization, since the function $\beta \in \{\beta\in\R^p|\|\beta\|_1<\lambda\}\|\ \mapsto \|y - X\beta\|_2^2$  is continious and convex.
+
+    \cite{tibshiraniRegressionShrinkageSelection2011} shows that the LASSO solution tends to be sparse (for not to big $\lambda$). That is $\beta_i = 0$ for most $i = 1,\dots,p$
+
+    In order to know which $\lambda$ to choose we try a huge range of possible values. For each $\beta_\lambda$ we calculate the cross-validated $RMSE_\lambda$
+    \footnote{The cross-validatet Root Mean Square Error is the mean of the RMSE's obtained for each fold (using the model trained on the remaining folds). 
+    We use the following definition of the $RMSE$: $\sqrt{\sum_{i=1}^n(y-\hat y)^2/n}$
+    } (and its standard deviation $\sigma_\lambda$ using the $k$ folds) and define the $\lambda$ with the smallest corresponding  $RMSE_\lambda$ as $\lambda_{min}$. From here we choose the largest $\lambda$ for which the $RMSE_\lambda$ is smaller than $RMSE_{\lambda_min}+\sigma_\lambda$. This yields a simpler model while keeping the $RMSE$ reasonable model.
+
+    We will apply the Lasso using the selected covariates in section \ref{sec:corr_data_table} and their second degree of interactions.\footnote{This is if our covariates are $\{a,b\}$, then we will now use $\{a,b,ab,a^2,b^2\}.$}
+    
+    \begin{my_pros_cons_table}{
+        \item Usually yields a sparse solution. This tends to give better generalizability (prediction performance on unseen data).
+        \item Successfully deals with correlation in covariates. 
+        \item Interpretable results.
+    }{
+        \item Estimate is biased.
+        \item Computationally expensive.
+    }
+    \end{my_pros_cons_table}
+}
+\subsubsection*{Random Forest}{
+    To define a random Forest introduced by \cite{breimanRandomForests2001}  we will first define what a Tree is. A \textit{(decision) Tree} is a graph $(V,E)$ without circles, a distinct root node, every node has at most two children and every leaf has a value assigned to it. At each node there is a boolean condition testing if one variable is greater than some value and a pointer to one child depending on the boolean value. To evaluate a tree we start at the root node, test the boolean expression and go to the node indicated by the resulting pointer. This we repeat until we end up at a leaf-node where we return the value assigned to it. 
+    
+    To build such a Tree we will recursively partition the covariate space using greedy splits\footnote{For computational reasons we will only use splits along one covariate. So we `cut' our covariate space into rectangles.} decreasing the RMSE\footnote{To calculate the RMSE we need a prediction. Let $P$ be the current partition, then the predicted value for some $x\in A \in P$ is the mean of the responses of all the points in $A$ (included in the training data).} each time. If the set we want to split contains less then a certain amount of training points we stop.
+    
+    To build a \textit{Random Forest} we will bootstrap-aggregate\footnote{That is we will sample (with replacement) n observations from our original data and fit a Tree to this new sample.} many such Trees\footnote{Building the Tree, this time we will not test every covariate at each node (for the RMSE minimization) but a node-specific subsample of the covariates.}. The prediction of the Random Forest for a new point $x$ is then the mean of the predictions from all the Trees. 
+    \begin{my_pros_cons_table}{
+        \item Captures non-linear relationships.
+        \item Captures all interactions and performs automatic variable selection.
+        \item Can deal with missing data.
+    }{
+        \item Resulting (prediction) function is non-continious but locally constant.
+        \item Computationally expensive.
+        \item No interpretability.
+    }
+    \end{my_pros_cons_table}
+}
+\subsubsection*{Multivariate Adaptive Regression Splines (MARS)}{
+    REF\cite{friedmanMultivariateAdaptiveRegression1991}
+
+    A MARS model can be described by 
+    \begin{equation}
+        \label{eq:mars}
+        g(x) = \sum_{m=0}^M \beta_m h_m(x),
+    \end{equation}
+    where the $h_m$ are simple functions (explained later) and the $\beta_m$ are estimated via least squares. 
+    
+    In the building procedure of a MARS model we first select many of those simple functions and later drop some of them to avoid overfitting. 
+    
+    For the construction of those simple functions define $\mathcal{B}$ be the set of pairs of `hockystick functions'
+    \begin{equation}
+        \label{eq:mars_basis_fun}
+        \mathcal{B}:=\left\{
+            \left(b_1,b_2\right) 
+            | \;
+            \left(b_1(x),b_2(x)\right) = \left(\left(x_{j}-d\right)_+,\left(d-x_{j}\right)_+\right),
+            %  x\in\R^p ,
+            d =X_{1, j},  \ldots, X_{n, j},\;
+            j=1, \ldots, p
+        \right\}
+    \end{equation}
+    and the set $\mathcal{M}=\left\{1\right\}$ of all functions currently in the model. Now, consider $\mathcal{C}$ the set of canditate functions-pairs 
+    \begin{equation}
+        \label{eq:mars_candidate}
+        \mathcal{C}:=\left\{
+            \left(h(\cdot)b_1(\cdot),  h(\cdot)b_2(\cdot) \right)
+            | \quad h\in\mathcal{M}, \; 
+            (b_1,b_2) \in \mathcal{B}
+        \right\}
+    \end{equation}
+    and select the pair (which when added to $\mathcal{M}$ and the coefficients refitted) reduces the RMSE the most. Add the selected pair to $\mathcal{M}$ and repeat until the RMSE reduction becomes insignificant.
+
+    Finally, to avoid overfitting we prune the set $\mathcal{M}$ by optimizing a generalized cross validation score (GCV).\footnote{This means that we perform an iterative procedure to reduce the number of functions in $\mathcal{M}$. For every function $h$ in $\mathcal{M}$ we compute the model using $\mathcal{M}\\\{h\}$. We discard the function which -- when excluding from $\mathcal{M}$ -- leads to the best GCV score.}  
+
+    To reduce computational complexity, we follow the recommendation from REF\cite{wrapperEarthMultivariateAdaptive2021a} and restrict $h$ in equation~\ref{eq:mars_candidate} to be of degree one (so it is also in a pair of $\mathcal{B}$). Consequently, $\mathcal{C}$ contains functions with a degree of at most 2. 
+
+    \begin{my_pros_cons_table}{
+        \item Catches non-linear relationships.
+        \item Interpretability via functions in $\mathcal{M}$ and their coefficients.
+        \item Allows for interactions with variable selection.
+    }{
+        \item Computationally expensive (can be reduced by restricting the degree of interactions).
+    }
+    \end{my_pros_cons_table}
+}
+\subsubsection*{General Additive Model (GAM)}{
+    GAMs as described in \cite{hastieGeneralizedAdditiveModels1987} are a special case of Projection Pursuit Regression, where only the $p$ directions parallel to the coordinate axes are considered. The result is different to a linear model since the coordinate functions are not restricted to be linear but are assumed to be non-parametric functions. The model can be written as:
+    \begin{equation}
+        \label{eq:gam}
+        g_{add}(x) = \mu + \sum_{i=1}^pg_j(x_j).\footnote{wher $g_j$ is a real-valued function. For identifiability we also demand $\mathbb{E}[g_j(X_{:,j})] = 0$ for $j=1,\dots,p$.}
+    \end{equation}  
+
+    To estimate the non-parametric functions we can use smoothing splines (ref sec.~\ref{sec:Natural_SS}). For this let $\mathcal{S}_j$ be the function which takes some $z\in\R^n$ and returns the smoothing splines fitted to $(X_{:,j}, z)$ where the smoothing parameter is optimized by GCV.
+    Since we cannot fit all $g_j$ simultanously we will use a strategy named backfitting. We basically cycle through the indicies $1,\dots p$ and refit $\hat g_j$ each time. The following illustrates the procedure: 
+    \begin{eqnarray*}
+        1) \quad \hat g_1 &=& \mathcal S_1(y - \mu)    \\
+        2) \quad \hat g_j &=& \mathcal S_j(y - \mu -\hat g_1(X_{:,1})-\dots -\hat g_{j-1}(X_{:,{j-1}})) \quad \text{for }j=2,\dots,p       \\
+        3) \quad \hat g_1 &=& \mathcal S_1(y - \mu -\hat g_2(X_{:,2})-\dots -\hat g_p(X_{:,p}))       \\
+        4) \quad \hat g_j &=& \mathcal S_j(y - \mu - \sum_{k\neq j}\hat g_k(X_{:,k})) \quad \text{for }j=2,\dots,p       \\
+         & \vdots        
+    \end{eqnarray*}
+    We repreat step $3)$ and $4)$ until the change falls below some tolerance.
+
+    \begin{my_pros_cons_table}{
+        \item Captures non-linearity.
+        \item Good interporetability.
+    }{
+        \item No automatic variable selection.
+        \item Computationally expensive.
+    }
+    \end{my_pros_cons_table}
+}
