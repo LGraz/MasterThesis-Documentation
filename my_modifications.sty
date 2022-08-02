@@ -22,7 +22,10 @@
 \usepackage{multirow}
 \usepackage{colortbl}
 % -----------------
-
+\usepackage{todonotes}
+% only numerate referenced equations (refrence with \eqref{key})
+\usepackage{mathtools}
+\mathtoolsset{showonlyrefs}
 
 
 \newenvironment{my_figure}[3][t]{
@@ -73,3 +76,5 @@
     \end{minipage}
     }
     
+% footnotes reference
+\newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}

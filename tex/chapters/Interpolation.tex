@@ -40,7 +40,7 @@ Different assumptions on $m$ will lead to the following methods:
 
 \section{XXX DAS vs GDD}
 %example plot
-equation \ref{eq:gdd}
+equation \eqref{eq:gdd}
 
 
 \section{Robustify}
@@ -140,6 +140,7 @@ where $\Phi=2 \pi \times(t-1) / n$.
 
 
 \section{Non-Parametric Regression}
+\todo{TODO: include Weighted versions}
 In non-parametric curve estimation, we no longer demand our curve to be fully determined by several parameters, but we allow it to also dependent on the data. That said, we might still use some tuning-parameters sometimes.
 \subsection{Kernel Regression}
 \label{sec:Kernel}
@@ -155,7 +156,7 @@ This can be done with a kernel $K$:
 $$
 	\hat{f}_{X}(x)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right)}{n h}, \hat{f}_{X, Y}(x, y)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}}
 $$
-By plugging the above into equation \ref{eq:nadaraya} we arrive at the \textit{Nadaraya-Watson} kernel estimator:
+By plugging the above into equation \eqref{eq:nadaraya} we arrive at the \textit{Nadaraya-Watson} kernel estimator:
 $$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right)}$$
 
 

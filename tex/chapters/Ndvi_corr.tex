@@ -16,6 +16,7 @@
 
 
     \begin{definition}{XXXAssumption (true NDVI)}
+        \label{true_ndvi_assumption}
         The true NDVI value at time $t$ can be successfully estimated by out-of-bag interpolation using high quality observations. That is the interpolated value (using XXX) considering the points $P^{SCL45}\setminus P_t$. In the following, we will call this estimate the ``true''-NDVI
     \end{definition}
 
@@ -44,45 +45,117 @@
 
 
 \section{XXX Correction}{
-    roadmap ... (intuition, data-table, ml-methods, uncertainty, refit and evaluation)
+    % \subsection{XXX idea -and- stepwise plots}
+    {
+        We recall the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite scl4 labeled and see fragments in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to see clouds (scl 10 - Cirrus clouds). The SCL classification is based only on a mixed model trained using the s2 bands. 
+        
+        We will improve our NDVI interpolation by not relying on the existing SCL classification, but by training our own model to estimate/correct NDVI using all S2 bands (see sections~\ref{sec:corr_data_table} and~\ref{sec:corr_methods}). After we have corrected the observed NDVI, we will find out how uncertain our corrections are and translate these uncertainties into weights (in section~\ref{sec:corr_uncertainty}). These we will use for the subsequent interpolation. This step-by-step procedure is illustrated by the REF graph in the appendix.
 
-    \subsection{XXX idea -and- stepwise plots}
-    
-    \subsection{XXX data-table-construction}
+        Finally, in section~\ref{sec:ndvi_corr_eval} we will evaluate this correction procedure, considering different interpolation methods and correction models.
+    }
+
+    \subsection{Response and Covariates}{
         \label{sec:corr_data_table}
-        XXX discussion about choosen covariates:
-        list of things we considered but rejected + reasoning --> no weather to keep it general even though we have it implemeted
 
-    \subsection{XXX ml-methods}{
+        For training a NDVI correction model, we need ground-truth (response) and informative covariates. We organize those in a table, where each row corresponds to a $P_t$ (i.e., a pixel at a time $t$). 
+        For the response we will again use the assumption \ref{true_ndvi_assumption}. There is no canonical answer to the question which covariates we should use. It is a tradeoff between simplicity/generalizability and performance (with the danger of overfitting). 
+        Our desire with the NDVI correction is to develop a product that is simple for others to understand and use. Therefore, in the subsequent we will only take the spectral data of the satellite and the observed NDVI derived from it as covariates\footnote{We do not mention the intercept explicitly, but it will also be included.}.  
+    }    
+
+    \subsection{Correction Methods}{
+        \label{sec:corr_methods}
+        In the following, we will introduce different modelling approaches, which we will use to model the relation between the response $y = y_{\text{true OOB NDVI}}\in \R^n$ and the covariates encoded in the design matrix\footnote{This is the Matrix which contains of all covariates.} $X\in\R^{n \times p}$. Furthermore, we will use the matlab `\texttt{:}' notation to indicate rows and collumns of a matrix (e.g. $X{:,3}$ is the $3$rd collumn of $X$). 
+
+        XXX Note that in order to reduce computation time only $10\%$ of the training data has been used to fit the subsequent models.
+
         \input{tex/chapters/misc/ml_models.tex}
     }
     
-    \subsection{XXX Uncertainty}
-    abs(residuals), train models for uncertainty, estimate residuals, get weights (via weight-function)  (problem of weight function -> we should norm the weights somehow since smoothing parameters are ``dependent'' on weights -> then, some outer points get really low weights (just because others in the middle have very little residuals and thus very high weight))
-    
+    \subsection{Uncertainty Estimation}{
+        \label{sec:corr_uncertainty}
+        Once we correct the NDVI using the previous section, we are left with the problem that not every correction is equally reliable.\footnote{One correction is illustrated in the figure \ref{fig:step_plot/2017-206_corr.pdf}. In this figure, the outer points (labeled as clouds) have a large scatter.}. Hence, we are interested in a measure of how uncertain an estimate is. 
+
+        We do this by replacing the response with the absolute residuals $v := \left|y -\hat y\right|$ and modeling their relationship with the covariates defined by $X$.  In this way, we obtain a model for the absolute residuals $v$ and the estimator $\hat v$.  
+    }
+
+    \subsection{Interpolation}{
+        Consider now a pixel $P$, $\hat y^{(P)}$ its corrected NDVI and $\hat v^{(P)}$ the estimated uncertainties of $\hat y^{(P)}$. In order to interpolate $\hat y^{(P)}$ we will give less weight unreliable observations. Thus, we define the weightfunction: 
+        \begin{equation}
+            w^{(P)}_\tau:=\frac{1}{R} \frac{1}{\hat v^{(P)}_\tau}, 
+            \quad \text{ for } \tau=1,\dots, n_P
+        \end{equation}  
+        where $\tau$ is an index over the satellite images and $R:=\frac{\sum_i^{n_P}\hat v^{(P)}_i}{n_P}$ a normalization constant. The normalization is needed, since for some interpolation methods inflating the sum of weights would decrease the effect of the smoothing. 
+    }
 }
 
+\section{Resulting Interpolation Stragegies}{
+    \label{sec:corr_itpl_stat}
+    We have developed the following procedure to obtain a new interpolation (keyword-wise):
+    \begin{Nenumerate}
+        \item OOB Interpolation (+ robustify?)
+        \item Correction 
+        \item Uncertainty estimation
+        \item Interpolation (+ robustify?)
+    \end{Nenumerate}
+    At each step we have a choice, more precisely:
+    \begin{Nitemize}
+        \item Interpolation: Smoothing Splines / Double Logistic
+        \item Robustify: Yes / No
+        \item Correction \& uncertainty estimation: RF / OLS -- considering only SCL-classes / OLS -- considering all selected covariates / MARS / GAM / LASSO / no correction.
+    \end{Nitemize}
+    As it is not feasible to try every possible combination, we make the following restrictions of which combinations we will consider:
+    \begin{Nitemize}
+        \item We use the same interpolation method each time.
+        \item Either we robustify both times or we do not robustify at all.
+        \item We use the same underlying method for correction and uncertainty estimation.
+    \end{Nitemize}
 
+    In this fashion, we obtain 28 distinct interpolation strategies, which we will benchmark in the next section.
+}
 
 \section{XXX Evaluation Method}{
-    {
+    \label{sec:ndvi_corr_eval}
+    In this section, we introduce the relative yield-estimation-accuracy (\textit{RYEA}) and utilize it to evaluate the interpolation strategies from section~\ref{sec:corr_itpl_stat}. 
+
+    \begin{definition}(RYEA) 
+        Let $y\in \R^n$ be the yield, $M$ be a model for estimating $y$, and $\hat y = M(X)$ where $X$ describes the data\footnote{We will use the matrixes derived in section \ref{sec:corr_yield_est}}. 
+        We define the RYEA as the relative RMSE in yield estimation. Formally expressed:
+        \begin{equation}
+            RYEA = \frac{\sqrt{\sum_{i=1}^n(y_i - \hat y_i)}}{\bar y}
+        \end{equation}
+        \label{def:ryea}
+    \end{definition}
+
+    \subsection{XXX Idea}{
         yield estimation is a main goal. 
         Claim that yield-estimation-accuracy is a objective measure :
             - we have not looked at the yield so far 
             - if the one NDVI-time-series predicts the yield better than a different one, we conclude that the first time-series carries more true information about the plants
         Now: "yield ~ NDVI-TS / derived-covariates" 
     }
+
+    \subsection{Yield Estimation}{
+        \label{sec:corr_yield_est}
+        For all the pixels, we will interpolate the NDVI time series with every interpolation strategy. From the interpolated NDVI time series, we would like to estimate the yield. However, given the high dimensionality and different lengths of the interpolation (not every time series has the same start and end point), we must first map each NDVI time series into a low dimensional vector space. For this we will use the following statistics:
+        \begin{Nitemize}
+            \item Maximum slope
+            \item Minimum slope
+            \item Integral\footnote{\label{note:integral-min} We will only consider the integral of the function $max(0, NDVI - 0.3)$, where $0.3$ is assumend to be a minimal NDVI value. REF} over all
+            \item Peak (i.e. maximal NDVI)
+            \item Peak GDD (i.e. value at which the peak is attained)
+            \item Integral\footnoteref{note:integral-min} up to the peak
+            \item Integral\footnoteref{note:integral-min} after peak
+            \item Integral\footnoteref{note:integral-min} from 0-685 GDD
+            \item Integral\footnoteref{note:integral-min} from 685-1075 GDD    
+        \end{Nitemize}
+        For the choice we were inspired by REF-kamir. However, we deliberately omit any statistic that involves the minimum (e.g. the NDVI-range), since we regard the minimum as very error-prone (clouds) and uninformative measure. 
+        
+        As a result, we obtain for each interpolation strategy a matrix in which each row corresponds to a pixel and contains both the yield and the characterizing statistics.
+        Using this matrix, we train a random forest\footnote{The choice of the modelling approach does not matter to much, as long as it is general enough (i.e. able to approximate any function) and we use the same one for each interpolation strategy.} for yield estimation, and compute the integrated OOB estimates\footnote{By the integrated OOB estimates, we denote the predictions for each pixel where only trees are used, where the pixel has not been used (as $n_{tree}$, the number of Trees, grows the fraction of trees which do not contain a certain pixel converges to $\frac{1}{e}$).} $\hat y$. Finally, for each interpoaltion strategy, we calculate the RYEA. The results are shown in table \ref{tab:methods_vs_yieldprediction}.
+    }
+
     
-    \subsection{yield estimation}{
-        problem: high dimensionality and unequal duration/length -> use features
-        
-        name approaches for yield estimation (we will use a simple but flexible one)
-        
-        random forest >> for evaluation out-of-bag estimates
-    }
-    \subsubsection{Covariates used}{
-        reference to kamir et al, why we did choosed some and not others
-    }
+    
     
 }
 

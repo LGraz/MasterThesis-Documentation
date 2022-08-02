@@ -6,3 +6,21 @@
 2. Uncertainty in Yield data through rasterization
 3. Uncertainty in satellite images through ``measurement errors'' introduced via clouds and other atmospheric effects 
 4. Uncertainty introduced by interpolating (especially when long data-gaps are present)
+
+
+Bootstrap in NDVI correction
+
+
+
+\section{NDVI Correction}{
+    \subsection{Shall We Use Additional Covariates?}{
+        \todo{where does this section belong to? Capter `NDVI Correction' or `Further Work'?}
+        In section \ref{sec:corr_data_table} we have only used the spectral data (and the observational NDVI calculated from them) as covariates. Since we have the weather data available (cf. REF-SEC), it would be a small effort to incorporate it, together with statistics collected from it (i.e. GDD or `rainfall in the last 30 days'). 
+    
+        We decided against using this data, because on the one hand we have the problem that we have practically too few observations (we observe only 5 years) and we expect the weather in our study region to be rather homogeneous \footnote{The weather data are published by Meteoswiss for a grid with a resolution of 1 km}. On the other hand, we want the underlying model not to learn improper relationships. For example, the model might automatically predict a high NDVI for a day in summer (detected by high GDD / many sunshine hours / high temperature) just because it is ``used'' to observing a lot of vegetation in summer. 
+        Including temporally (e.g., $P_{t-1}$ and $P_{t+1}$) and geographically adjacent pixels would likely improve performance. However, for simplicity, we omit it here\footnote{This is done for simplicity of understanding and using the model, since one would need to adapt to some convention of how to supply the data of adjacent pixels without redundancy (i.e. supplying $P_t$ multiple times).}.
+    }
+
+    - weight/uncertainty function 
+    (problem of weight function -> some outer points get really low weights (just because others in the middle have very little residuals and thus very high weight))
+}
