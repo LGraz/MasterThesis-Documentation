@@ -62,7 +62,7 @@ $$
 
 Now, we do something similar to what is done in iteratively reweighted least squares. After an initial interpolation, update the weights of each observation with
 \begin{equation}
-	w_i^\text{new}:=w_i^\text{old} \operatorname{B}\left(\frac{|r_i|}{6\operatorname{mad}\left(r_1,\dots,r_n\right)}\right)
+	w_i^\text{new}:=w_i^\text{old} \operatorname{B}\left(\frac{|r_i|}{6\operatorname{med}\left(|r_1|,\dots,|r_n|\right)}\right)
 	\label{eq:bisquare}
 \end{equation}
 where $r_i = y_i - \hat y_i$ denotes the residuals. We can iterate this reweighting and stop after several steps or when the change of the values is smaller than some tolerance.

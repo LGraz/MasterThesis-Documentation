@@ -78,3 +78,21 @@
     
 % footnotes reference
 \newcommand\footnoteref[1]{\protected@xdef\@thefnmark{\ref{#1}}\@footnotemark}
+
+% Assummption
+    \newtheorem*{assumption*}{\assumptionnumber}
+    \providecommand{\assumptionnumber}{}
+    \makeatletter
+    \newenvironment{assumption}[1]
+     {%
+      \renewcommand{\assumptionnumber}{Assumption #1}%
+      \begin{assumption*}%
+      \protected@edef\@currentlabel{#1}%
+     }
+     {%
+      \end{assumption*}
+     }
+    %% use:
+    %  \begin{assumption}{1}{F}\label{1F}
+    % Something
+    % \end{assumption}

@@ -1,6 +1,7 @@
 \chapter*{Notation}
 \label{c:Notation}
 
+\section*{Conventions for Variables}
 $c$: a (vector of) constant(s)
 
 $\lambda \in \R$: a scalar
@@ -23,6 +24,7 @@ $r \in \R^n$: residuals given by $y - \hat y$
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Abbreviations and Objects}
 
 Pixel: A pixel describes a specific location in a field. It has the size of 10 x 10 meters and coincides with the resolution (and location) of the sentinel-2 pixels. Such pixels are illustrated in figure~\ref{fig:satelite/yield-raster}. Additional information like yield is also attached.
 
@@ -43,6 +45,8 @@ GDD: growing degree days -- cumulative sum of ($\text{temperature}-\text{thresho
 XXX ML models and their shortnames
 
 RYEA : relative yield-estimation-accuracy. Definition \ref{def:ryea}
+
+OOB : out-of-the-box. Describes the procedure if we estimate the value for a point but not consider the point itself.
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "MasterThesisSfS"

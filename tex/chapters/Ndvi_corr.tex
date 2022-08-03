@@ -1,11 +1,11 @@
-\chapter{NDVI Correction / Improve NDVI Data}
+\chapter{NDVI Correction}
 
 {
-    Let's remind ourselves that the data from the Sentinel-2 is equipped with a scene classification layer (SCL) and we therefore have some information of what is observed at each pixel for each sampled time (cf. table~\ref{tab:satelite/scl_classes}). In this chapter we would like to improve the observed NDVI values by using more information than just the two bands used to calculate the NDVI (B4 and B8).
+    Let's remind ourselves that the data from the Sentinel-2 is equipped with a scene classification layer (\textit{SCL}) and we therefore have some information of what is observed at each pixel for each sampled time (cf. table~\ref{tab:satelite/scl_classes}). So far we have only considered cloud-free points (i.e. SCL-classes 4 and 5). In this chapter we would like to improve the NDVI interpolation by inspecting also other SCL-classes and by using more information than just the two bands used to calculate the NDVI (B4 and B8).
 }
 
 \section{Considering other SCL Classes}{
-    In figure ~\ref{fig:ndvi_corr/residuals_scl_classes} we see for example that some blue points\footnote{The blue points correspond to the SCL-class 10: Thin cirrus clouds} follow the interpolated line closely and that they might be useful in improving an interpolation fit.
+    In figure~\ref{fig:ndvi_corr/residuals_scl_classes} we notice that some blue points\footnote{The blue points correspond to the SCL-class 10: Thin cirrus clouds} follow the interpolated line closely and that they might be useful in improving an interpolation fit.
 
     \begin{my_figure}[ht]{width=0.6\textwidth}{ndvi_corr/residuals_scl_classes}
         \caption{A smoothing splines fit considering green and yellow points (SCL45)}
@@ -14,37 +14,25 @@
 
     To get an impression whether there is some useful information contained in the remaining SCL-classes (all except 4 and 5) we would like to compare the observed NDVI with the true NDVI. But since we do not have any ground truth data, we will make the following assumption:
 
-
-    \begin{definition}{XXXAssumption (true NDVI)}
+    \begin{assumption}{1}%(true NDVI)
         \label{true_ndvi_assumption}
-        The true NDVI value at time $t$ can be successfully estimated by out-of-bag interpolation using high quality observations. That is the interpolated value (using XXX) considering the points $P^{SCL45}\setminus P_t$. In the following, we will call this estimate the ``true''-NDVI
-    \end{definition}
+        The true NDVI value at time $t$ can be successfully estimated by out-of-bag interpolation using high quality observations. That is the interpolated value (using an interpolation method from chapter \ref{sec:itpl}) considering the points $P^{SCL45}\setminus P_t$. In the following, we will call this estimate the ``true''-NDVI.
+    \end{assumption}
 
-    shall pair every observed NDVI value with its out-of-bag-estimate. Then for each category we collect all pairs and create a scatter plot in fig~\ref{fig:ndvi_corr/scl_residuals_scatter}XXXXXXXXXXXXXX
-
-
-
-    \begin{enumerate}
-        \item For each pixel and for each observation (every SCL-class):\\
-            estimate the NDVI value (via out-of-the-box interpolation\footnote{That is, we use all observations (in SCL45) but the current one.})
-        \item
-    \end{enumerate}
-
-
-
-
-
-
+    We would like to get an idea if there is any hope to recover infomation from SCL-classes other than 4 and 5. For that, we will check for the other SCL-classes if there is a relation between the ``true''-NDVI\footnote{\label{footnote:truendvi} i.e. the out-of-bag (OOB) estimate using smoothing splines} and the observed NDVI. Thus, we pair each ``true''-NDVI with its observed one, collect all pairs and create a scatter plot for each SCL-class in fig~\ref{fig:ndvi_corr/scl_residuals_scatter}.
+    As expected the ``true'' and the observed NDVI seem to be highly correlated for SCL45. But we can also detect some patterns of correlation in the SCL-classes 2, 3, 7, 8 and 10.  
 
     \begin{my_figure}[h]{width=1\textwidth}{ndvi_corr/scl_residuals_scatter}
-        \caption{XXX caption XXX}
+        \caption{For each SCL class, we compare the true NDVI with the observed NDVI. (The true NDVI was estimated with OOB smoothing splines and we used all observations of 10\% of the total training pixels.)}
         \label{fig:ndvi_corr/scl_residuals_scatter}
     \end{my_figure}
+
+    It might be tempting to include some of the above SCL classes (for interpolation). But on the one hand the choice would not be objective and on the other hand the correlation seems to be weaker than for SCL45. Therefore, in the following section we shall try to correct the observed NDVI and estimate the uncertainty of each correction.  
 }
 
 
 
-\section{XXX Correction}{
+\section{Correction}{
     % \subsection{XXX idea -and- stepwise plots}
     {
         We recall the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite scl4 labeled and see fragments in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to see clouds (scl 10 - Cirrus clouds). The SCL classification is based only on a mixed model trained using the s2 bands. 
@@ -113,7 +101,7 @@
     In this fashion, we obtain 28 distinct interpolation strategies, which we will benchmark in the next section.
 }
 
-\section{XXX Evaluation Method}{
+\section{Evaluation Method}{
     \label{sec:ndvi_corr_eval}
     In this section, we introduce the relative yield-estimation-accuracy (\textit{RYEA}) and utilize it to evaluate the interpolation strategies from section~\ref{sec:corr_itpl_stat}. 
 
@@ -126,12 +114,10 @@
         \label{def:ryea}
     \end{definition}
 
-    \subsection{XXX Idea}{
-        yield estimation is a main goal. 
-        Claim that yield-estimation-accuracy is a objective measure :
-            - we have not looked at the yield so far 
-            - if the one NDVI-time-series predicts the yield better than a different one, we conclude that the first time-series carries more true information about the plants
-        Now: "yield ~ NDVI-TS / derived-covariates" 
+    \subsection{Idea}{
+        The fundamental assumption is that the closer the interpolated NDVI time series is to the true one, the better it can be used to determine crop yield. Implicitly, we believe that an NDVI time series which better models yield will incorporate more true information about the underlying vegetation. 
+        Therefore, we want to determine a comparable RYEA for each interpolation strategy and choose it as a benchmark criterion. 
+        This is an objective measure, since we have not considered crop yield in any of our previous steps. Moreover, this criterion is justified by the fact that yield estimation has been a motivation for the interpolation.
     }
 
     \subsection{Yield Estimation}{
