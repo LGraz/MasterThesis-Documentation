@@ -8,13 +8,11 @@
 \\4. Uncertainty introduced by interpolating (especially when long data-gaps are present)
 
 
-Bootstrap in NDVI correction
-
-Müssen wir test und trainingsdaten strikt nach jahr trennen?
-Zwar könnten wir damit berwerten, ob unser modell ein allgemeines muster gelernt hat oder nur die gegebenen jahre gelernt hat. Wir haben jedoch an keiner stelle (bis der evaluation) irgendwelche ground-trouth benutzt. Anstadt dessen haben wir den ``true''-NDVI mit der Annahme \ref{true_ndvi_assumption} per OOB geschätzt. Somit haben wir bootstrap-mäßig an den haaren aus den dem problem gezogen. Daher folgern wir, dass wir unsere methode auf einen neuen (vergleichbaren) datensatz anwenden können und die Korrektur wiedermals über diesen bootsrap lösen können.
 
 
 \section{NDVI Correction}{
+    \subsection{Do we need to separate test and training data strictly by year?}
+        While we could use this to evaluate whether our model learned a general pattern or only learned the given years. However, we have not used any ground-trouth at any point (until the evaluation). Instead, we estimated the ``true'' NDVI with the assumption \ref{true_ndvi_assumption} via OOB. Thus, we have bootstrapped our way out of the problem. Consequently, we reason that we can apply our method to a new (comparable) dataset and solve the correction again via this bootsrap.
     \subsection{Shall We Use Additional Covariates?}{
         \todo{where does this section belong to? Capter `NDVI Correction' or `Further Work'?}
         In section \ref{sec:corr_data_table} we have only used the spectral data (and the observational NDVI calculated from them) as covariates. Since we have the weather data available (cf. REF-SEC), it would be a small effort to incorporate it, together with statistics collected from it (i.e. GDD or `rainfall in the last 30 days'). 

@@ -11,7 +11,7 @@
 
 \chapter{Interpolation Methods} \label{sec:itpl}
 	{% Roadmap
-		In this section, we take a closer look at several interpolation methods, which will be used to interpolate and smooth the NDVI time series. 
+		In this section, we take a closer look at several interpolation methods, which will be used to interpolate and smooth the NDVI time series, while considering only SCL45 in this chapter. 
 		A brief overview over the considered interpolation methods can be found in table~\ref{table:pros_cons_overview}.
 
 		First, we define the general setting and discuss a general approach to make the interpolation more robust (i.e. reduce the impact of outliers).
@@ -68,20 +68,22 @@
 % linear regression approach (Swets et al., 1999).
 
 \section{Tuning parameter estimation}{ \label{sec:itpl_param_est}
-	Viele der in sektion \ref{sec:itpl_parametric} und \ref{sec:itpl_nonparametric} eingeführten interpolationsmethoden beinhalten einen freien parameter. Um diesen für eine spezifische interpolationmethode auszuwählen werden wir mithilfe OOB schätzung die absoluten residuen schätzen und dann anhand einer statistik den parameter optimieren. Wir klären die vorgehensweise schritt für schritt:	
-	- konstruiere eine menge $\Lambda$ von kanditat-parameter, welche den parameterraum großzügig abdeckt.
-	- betrachte $\mathcal{P}$, eine Menge von pixeln
-	- für jeden parameter $\lambda \in \Lambda$ betrachte die einzelnen pixel und berechne die leave-one-out-cross-validation (\textit{LOOCV}) für den NDVI, mit der spezifischen interpolationsmethode. D.h. $\hat y_i$ erhalten wir durch die interpolation von den punkten $\left\{ (x_j,y_j)|j\neq i \right\}$. Anschließend berechne die absoluten residuen $|y_i - \hat y_i|$ und definiere die Menge $R_\lambda$ als die menge aller residuen (aller pixel in $\mathcal{P}$).
-	- bestimme $\lambda_{optimal} = \argmin_{\lambda\in\Lambda}\operatorname{Quantile}(90)(R_\lambda)$, wobei wir mit $\operatorname{Quantile}(90)$ das 90\% quantil beschreiben.
+	Many of the interpolation methods introduced in section \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric} include a free parameter. To determine this parameter for a specific interpolation method, we will estimate the absolute residuals using OOB estimation and then optimize the parameter using statistics. We clarify the procedure step by step:	
+	\begin{Nenumerate}
+		\item Construct a set $\Lambda$ of canditate parameters that generously covers the parameter space.
+		\item Consider $\mathcal{P}$, a set of Pixels.
+		\item For each parameter $\lambda \in \Lambda$ consider the individual pixels and compute the LOOCV\footnote{For a definition of the leave-one-out-cross-validation we refer to section~\ref{sec:OOB_LOOCV}} for the absolute residuals of the specific NDVI-interpolation method for all Pixels in $\mathcal{P}$ and store them in the set $R_\lambda$. 
+		\item Determine $\lambda_{optimal} = \argmin_{\lambda\in\lambda}\operatorname{quantile}(90)(R_\lambda)$, where we describe the 90\% quantile with $\operatorname{quantile}(90)$.
+	\end{Nenumerate}
 
 	\begin{my_figure}[h]{width=1\textwidth}{interpol/statistics_SS_param_optim}
 		\caption{Smoothing splines fit with smoothing parameter optimized by minimizing the ``\dots''-quantile of the absolute leave-one-out residuals. Note that the larger the considered quantile is, the smoother the resulting curve becomes.}
 		\label{fig:interpol/statistics_SS_param_optim}
 	\end{my_figure}
 
-	Wir haben uns für $\operatorname{Quantile}(90)$ entschieden als optimierungsfunktion, wir zum einem einen anteil von 10\% an ausreißern erlauben wollen (korrupte punkte) aber zum anderen in 90\% der fälle einen akkuraten fit anstreben. 
+	We choose $\operatorname{quantile}(90)$ as optimization function, because we want to allow 10\% of outliers (corrupt points) but also aim for an accurate fit in 90\% of the cases.  
 	
-	In der Abbildung \ref{fig:interpol/statistics_SS_param_optim} sehen wir beispielhaft wie die interpolationen aussehen wenn wir zur parameterbestimmung andere quantile benutzen. Zusammengefasst kann man sagen, dass je höher das quantil desto stärker auch die glettung. 
+	The figure \ref{fig:interpol/statistics_SS_param_optim} exemplifies the effect of the optimization function (different quantiles). To summarize, we may say that the higher the quantile, the stronger the smoothing. 
 }
 
 
@@ -125,20 +127,19 @@
 			\label{fig:interpol/2x3_SS_robust}
 		\end{my_figure}
 
-		In abbildung \ref{fig:interpol/2x3_SS_robust} sehen wir exemplarisch für 6 pixel wie die mit smoothing splines interpolierte NDVI zeitreihe nach $0,1,2,3,4$ iterationen aussieht (für die analogen abbildungen der andere interpolations methoden verweisen wir auf den Anhang: \ref{fig:interpol/2x3_loess_robust}, \ref{fig:interpol/2x3_B-Splines_robust}, \ref{fig:interpol/2x3_DL_robust} and \ref{fig:interpol/2x3_loess_robust}).
+		In figure \ref{fig:interpol/2x3_SS_robust} we observe for 6 pixels how the NDVI time series interpolated with smoothing splines looks after $0,1,2,3,4$ iterations ( we refer to the appendix for the analogous figures of the other interpolation methods): \ref{fig:interpol/2x3_loess_robust}, \ref{fig:interpol/2x3_B-Splines_robust}, \ref{fig:interpol/2x3_DL_robust} and \ref{fig:interpol/2x3_loess_robust}).
 		
-		In der tat beobachten wir, wie die interpolierte zeitreihe nach jeder interation weniger durch ausreißer beinflusst wird. Den grössten unterschied beobachten wir bei der ersten iteration. Ausserdem sehen wir im plot unten links wie die Interpolation dem rechten endpukt mit jeder weiteren iteration ``entflieht'', obwohl unsere intuition diesen punkt nicht unbedingt als ausreißer identifiziert. Daher werden wir im folgenden immer nur eine iteration durchführen und dannach aufhören.
- 
+		Indeed, we observe how the interpolated time series is less affected by outliers after each interation. The biggest difference we notice in the first iteration. Furthermore, in the plot at the bottom left we see how the interpolation ``escapes'' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following we will always perform only one iteration and then stop.
+
 	} 
 	
 	\subsection{Upper Envelope Approach - Penalty for negative resiudals}
-		Wenn wir in \refeq{eq:bisquare} die negativen residuen durch multiplikation (z.B. faktor 2) künstlich erhöhen, so werden die korrespondierenden punkte in der nächsten iteration weniger gewicht erhalten. Dies ermöglicht uns eine interpolation zu erzeugen, welche einer oberen hülle gleicht. Diese obere hülle kann man sich intuitiv als ein tuch vorstellen, welches man von oben auf die punkte legt.
-		
-		Dieses vorgehen beruht der annahme , dass wir den NDVI tendenziell unterschätzen (wie in REF-savitzky-golay). Da wir eine generelle methode entwickeln wollen, welche prinzipiell nicht and den NDVI gekoppelt ist, werden wir diesen Ansatz nicht weiter verfolgen.
-
+		If we artificially increase the negative residuals in \refeq{eq:bisquare} by multiplying (e.g. factor 2), the corresponding points will get less weight in the next iteration. This allows us to create an interpolation that resembles an upper envelope. Intuitively, this upper envelope can be thought of as a sheet that is laid on top of the points.
+			
+		This approach is based on the premise that we tend to underestimate the NDVI (as in REF-savitzky-golay). Since we want to develop a general method that is in principle not related to the NDVI, we will not pursue this approach further.	
 }
 \section{Performance Assecement}{
-	Nun wollen wir die verschienden interpolationsmethoden einmal mit und einmal ohne robustifizierung benchmarken. Dafür werden wir die gleiche technik verwenden, wie wir sie bei der parameterbestimmung in sektion \label{sec:itpl_param_est}. Auf $B_\lambda$ wenden wir den RMSE und verschiedene quantile an und stellen die Ergebnisse in tabelle \ref{tab:cv-statistics_itpl-methods} dar. 
+	Next, we will benchmark the different interpolation methods with and without robustification. For this we will use the same technique as we did for the parameter determination in section \ref{sec:itpl_param_est}. On $B_\lambda$ we apply the RMSE and different quantiles and present the results in table \ref{tab:cv-statistics_itpl-methods}. 
 
 
 	\begin{table}
@@ -153,16 +154,18 @@
 }
 
 \section{XXX Evaluation}
+\todo{write out keywords}
 -- ss dominate (i.e. have better benchamrk values w.r.t. all considered statistics) b-splines (robustified and non-robustified)
 
 -- dl dominate fourier (robustified and non-robustified)
 
 -- loess slightly dominates ss, but we prefere ss because of the smoothnes guarantees (compare the figures \ref{fig:interpol/2x3_loess_robust} and \ref{fig:interpol/2x3_SS_robust}).
 
-\section*{TEMP --- Figures}
-\begin{my_figure}[h]{width=0.6\textwidth}{interpol/res_cv}
-	\caption{XXX caption XXX}
-	\label{fig:interpol/res_cv}
-\end{my_figure}
+-- use dl and ss in the following (keeping robustified and non-robustified variants)
+% \section*{TEMP --- Figures}
+% \begin{my_figure}[h]{width=0.6\textwidth}{interpol/res_cv}
+% 	\caption{XXX caption XXX}
+% 	\label{fig:interpol/res_cv}
+% \end{my_figure}
 
 
