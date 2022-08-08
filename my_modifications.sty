@@ -42,8 +42,9 @@
 }
 
 % Environment for pros and cons table
+\usepackage{float} % for H  force-here
 \newenvironment{my_pros_cons_table}[3][topsep=0pt,parsep=2pt,partopsep=0pt, leftmargin=5pt, rightmargin=-10pt]{
-  \begin{table}[h]
+  \begin{table}[H]
     \vspace{-8pt} % remove space before table
     \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
       % \toprule %makes a bar at the top

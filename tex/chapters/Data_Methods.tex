@@ -107,7 +107,31 @@
 \section{General Methods}{
 	We will only introduce general methods within this section, whereas more specific methods will be introduced in their context. We discuss interpolation methods in sections \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric} , a robustification strategy in section \ref{sec:loess_robustify}, a method how we can objectively determine the quality of an interpolation in section \ref{sec:itpl_param_est}, and in section \ref{sec:corr_correction} we present the NDVI correction with an adapted interpolation strategy.
 
-	\subsection{XXX Out-Of-Bag (\textit{OOB}) and Leave-One-Out-Cross-Validation (\textit{LOOCV})}{
+	\subsection{MATLAB Matrix Notation}{ \label{sec:MATLAB}
+		We will use the MATLAB `\texttt{:}' notation to indicate rows and columns of a matrix. That is if $X\in\R^{n\times p}$ is a matrix, then $X_{[:,3]}$ is the $3$rd column of $X$ and $X_{[2,:]}$ is the second row of X. 
+
+	}
+
+	\subsection{(Relative) RMSE}
+		\todo[inline]{definithion here and also relative}
+
+	\subsection{Out-Of-Bag (\textit{OOB}) and Leave-One-Out-Cross-Validation (\textit{LOOCV})}{
 		\label{sec:OOB_LOOCV}
+		Let 
+		$$
+			D=\{(X_{[j,:]},y_j)|\; X\in\R^{n\times p}, y\in \R^n, j=1,\dots,n\}
+		$$
+		be a dataset, $i\in \{1,\dots,n\}$ and $M^{(-i)}$ a model fitted on a subset of $D\setminus\{(X_{[i,:]},y_i)\}$. Then we call $\hat y_i:= M^{(-i)}(X_{[i,:]})$ an \textit{OOB} estimator of $y_i$. If we do this for all $i\in\{1,\dots,n\}$, we obtain $\hat y := \left(\hat y_1,\dots,\hat y_n\right)$ the OOB estimator for $y\in \R^n$.
+
+		In the bootstrap (e.g., random forest) framework, we define $\hat y_i$ to be the average of all computed and admissible $M^{(-i)}$. 
+		
+		In the case that $M^{(-i)}$ was fitted on the set $D\setminus\{(X_i,y_i)\}$ (i.e., not a true subset), we call the corresponding $\hat y_i$ also the LOOCV estimator.	
+
+		If we optimize some parameter via OOB (or LOOCV) this means that we compute 
+	}
+
+	\subsection{Generalized Cross Validation (GCV)}{
+		\todo[inline]{definithion here and explenation why (computational cheap)}
+
 	}
 }

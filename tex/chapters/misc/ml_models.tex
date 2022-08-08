@@ -56,7 +56,7 @@
     
     To build such a Tree we will recursively partition the covariate space using greedy splits\footnote{For computational reasons we will only use splits along one covariate. So we `cut' our covariate space into rectangles.} decreasing the RMSE\footnote{To calculate the RMSE we need a prediction. Let $P$ be the current partition, then the predicted value for some $x\in A \in P$ is the mean of the responses of all the points in $A$ (included in the training data).} each time. If the set we want to split contains less then a certain amount of training points we stop.
     
-    To build a \textit{Random Forest} we will bootstrap-aggregate\footnote{That is we will sample (with replacement) n observations from our original data and fit a Tree to this new sample.} many such Trees\footnote{Building the Tree, this time we will not test every covariate at each node (for the RMSE minimization) but a node-specific subsample of the covariates.}. The prediction of the Random Forest for a new point $x$ is then the mean of the predictions from all the Trees. 
+    To build a \textit{Random Forest} we will bootstrap-aggregate\footnote{That is we will sample (with replacement) several times n observations from our original data and fit a Tree to each such sample.} many such Trees\footnote{Building the Tree, this time we will not test every covariate at each node (for the RMSE minimization) but a node-specific subsample of the covariates. Thus, also the the ``second best split'' can be selected.}. The prediction of the Random Forest for a new point $x$ is then the mean of the predictions from all the Trees. 
     \begin{my_pros_cons_table}{
         \item Captures non-linear relationships.
         \item Captures all interactions and performs automatic variable selection.
@@ -69,18 +69,14 @@
     \end{my_pros_cons_table}
 }
 \subsubsection*{Multivariate Adaptive Regression Splines (\textit{MARS})}{
-    REF\cite{friedmanMultivariateAdaptiveRegression1991}
-
-    A MARS model can be described by 
+    A MARS model as introduced in \cite{friedmanMultivariateAdaptiveRegression1991} can be described by 
     \begin{equation}
         \label{eq:mars}
         g(x) = \sum_{m=0}^M \beta_m h_m(x),
     \end{equation}
     where the $h_m$ are simple functions (explained later) and the $\beta_m$ are estimated via least squares. 
     
-    In the building procedure of a MARS model we first select many of those simple functions and later drop some of them to avoid overfitting. 
-    
-    For the construction of those simple functions define $\mathcal{B}$ be the set of pairs of `hockystick functions'
+    In the building procedure of a MARS model we first select many of those simple functions and later drop some of them to avoid overfitting. For the construction of those simple functions define $\mathcal{B}$ be the set of pairs of `hockystick functions'
     \begin{equation}
         \label{eq:mars_basis_fun}
         \mathcal{B}:=\left\{
@@ -97,7 +93,7 @@
         \label{eq:mars_candidate}
         \mathcal{C}:=\left\{
             \left(h(\cdot)b_1(\cdot),  h(\cdot)b_2(\cdot) \right)
-            | \quad h\in\mathcal{M}, \; 
+            \;| \;\; h\in\mathcal{M}, \; 
             (b_1,b_2) \in \mathcal{B}
         \right\}
     \end{equation}
@@ -105,7 +101,7 @@
 
     Finally, to avoid overfitting we prune the set $\mathcal{M}$ by optimizing a generalized cross validation score (GCV).\footnote{This means that we perform an iterative procedure to reduce the number of functions in $\mathcal{M}$. For every function $h$ in $\mathcal{M}$ we compute the model using $\mathcal{M}\\\{h\}$. We discard the function which -- when excluding from $\mathcal{M}$ -- leads to the best GCV score.}  
 
-    To reduce computational complexity, we follow the recommendation from REF\cite{wrapperEarthMultivariateAdaptive2021a} and restrict $h$ in equation~\eqref{eq:mars_candidate} to be of degree one (so it is also in a pair of $\mathcal{B}$). Consequently, $\mathcal{C}$ contains functions with a degree of at most 2. 
+    To reduce computational complexity, we follow the recommendation from REF\cite{stephenEarthMultivariateAdaptive2021} and restrict $h$ in equation~\eqref{eq:mars_candidate} to be of degree one (so it is also in a pair of $\mathcal{B}$). Consequently, $\mathcal{C}$ contains functions with a degree of at most 2. 
 
     \begin{my_pros_cons_table}{
         \item Catches non-linear relationships.
@@ -127,9 +123,9 @@
     Since we cannot fit all $g_j$ simultanously we will use a strategy named backfitting. We basically cycle through the indicies $1,\dots p$ and refit $\hat g_j$ each time. The following illustrates the procedure: 
     \begin{eqnarray*}
         1) \quad \hat g_1 &=& \mathcal S_1(y - \mu)    \\
-        2) \quad \hat g_j &=& \mathcal S_j(y - \mu -\hat g_1(X_{:,1})-\dots -\hat g_{j-1}(X_{:,{j-1}})) \quad \text{for }j=2,\dots,p       \\
-        3) \quad \hat g_1 &=& \mathcal S_1(y - \mu -\hat g_2(X_{:,2})-\dots -\hat g_p(X_{:,p}))       \\
-        4) \quad \hat g_j &=& \mathcal S_j(y - \mu - \sum_{k\neq j}\hat g_k(X_{:,k})) \quad \text{for }j=2,\dots,p       \\
+        2) \quad \hat g_j &=& \mathcal S_j(y - \mu -\hat g_1(X_{[:,1]})-\dots -\hat g_{j-1}(X_{[:,{j-1}]})) \quad \text{for }j=2,\dots,p       \\
+        3) \quad \hat g_1 &=& \mathcal S_1(y - \mu -\hat g_2(X_{[:,2]})-\dots -\hat g_p(X_{[:,p]}))       \\
+        4) \quad \hat g_j &=& \mathcal S_j(y - \mu - \sum_{k\neq j}\hat g_k(X_{[:,k]})) \quad \text{for }j=2,\dots,p       \\
          & \vdots        
     \end{eqnarray*}
     We repreat step $3)$ and $4)$ until the change falls below some tolerance.

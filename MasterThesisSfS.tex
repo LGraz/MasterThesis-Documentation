@@ -1,5 +1,5 @@
 \newif\ifdraft %XXX
-\drafttrue  \draftfalse %XXX
+\drafttrue % \draftfalse %XXX
 
 %%%--- Template for master thesis at SfS
 %%%--- Modified template with more comments and examples -- SG, 11/06/09
@@ -141,8 +141,8 @@
 \submissiondate{September 18th 2022}
 \title{Interpolation and Correction \\ of \\ Multispectral Satellite Image Time Series}
 
+\maketitle%- Titelseite wird abgeschlossen
 \ifdraft \else%XXX
-  \maketitle%- Titelseite wird abgeschlossen
   \cleardoublepage
 \fi %XXX
 %%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -151,14 +151,13 @@
 %%% Insert here acknowledgements and abstract %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Dedication (optional)
-\ifdraft \else%XXX
 
-  \markright{}
-  \vspace*{\stretch{1}}
-  \begin{center}
-    To some special person
-  \end{center}
-  \vspace*{\stretch{2}}
+  % \markright{}
+  % \vspace*{\stretch{1}}
+  % \begin{center}
+  %   To some special person
+  % \end{center}
+  % \vspace*{\stretch{2}}
 
   % Preface (optional)
   \newpage
@@ -169,7 +168,6 @@
   \newpage
   \markboth{Abstract}{Abstract}
   \include{tex/misc/Abstract}
-\fi %XXX
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Table of contents and list of figures and %%%   
@@ -177,7 +175,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newpage
 \tableofcontents
-\ifdraft \else%XXX
+\listoftodos
+\ifdraft 
+\else%XXX
   % \newpage
   % \listoffigures
   % \newpage
@@ -212,9 +212,7 @@
 
 % \include{tex/example/Chapter1}
 %%\include{tex/Chapter...}
-\ifdraft \else %XXX
-  \include{tex/chapters/Summary}
-\fi %XXX
+\include{tex/chapters/Summary}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Bibliography                              %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -241,13 +239,13 @@
 % \include{tex/example/Appendix_more_R}
 
 \ifdraft \else %XXX
-  %% Epilogue (optional)
-  \addtocontents{toc}{\vspace{.5\baselineskip}}
-  \cleardoublepage
-  \phantomsection
-  \addcontentsline{toc}{chapter}{\protect\numberline{}{Epilogue}}
-  \markboth{Epilogue}{Epilogue}
-  \include{tex/misc/Epilogue}
+  % %% Epilogue (optional)
+  % \addtocontents{toc}{\vspace{.5\baselineskip}}
+  % \cleardoublepage
+  % \phantomsection
+  % \addcontentsline{toc}{chapter}{\protect\numberline{}{Epilogue}}
+  % \markboth{Epilogue}{Epilogue}
+  % \include{tex/misc/Epilogue}
 
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
