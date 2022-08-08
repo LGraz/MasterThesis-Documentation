@@ -2,7 +2,7 @@
 
 
 \textbf{High RMSE in ...:} How much can we expect to get? We have multiple sources of uncertainty in the data:
-\\1. Uncertainty in Yield data collected by the combine harverster
+\\1. Uncertainty in Yield data collected by the combine harvester
 \\2. Uncertainty in Yield data through rasterization
 \\3. Uncertainty in satellite images through ``measurement errors'' introduced via clouds and other atmospheric effects 
 \\4. Uncertainty introduced by interpolating (especially when long data-gaps are present)
@@ -12,9 +12,9 @@
 
 \section{NDVI Correction}{
     \subsection{Do we need to separate test and training data strictly by year?}
-        While we could use this to evaluate whether our model learned a general pattern or only learned the given years. However, we have not used any ground-trouth at any point (until the evaluation). Instead, we estimated the ``true'' NDVI with the assumption \ref{true_ndvi_assumption} via OOB. Thus, we have bootstrapped our way out of the problem. Consequently, we reason that we can apply our method to a new (comparable) dataset and solve the correction again via this bootsrap.
+        While we could use this to evaluate whether our model learned a general pattern or only learned the given years. However, we have not used any ground truth at any point (until the evaluation). Instead, we estimated the ``true'' NDVI with the assumption \ref{true_ndvi_assumption} via OOB. Thus, we have bootstrapped our way out of the problem. Consequently, we reason that we can apply our method to a new (comparable) dataset and solve the correction again via this bootstrap.
     \subsection{Shall We Use Additional Covariates?}{
-        \todo{where does this section belong to? Capter `NDVI Correction' or `Further Work'?}
+        \todo{where does this section belong to? Chapter `NDVI Correction' or `Further Work'?}
         In section \ref{sec:corr_data_table} we have only used the spectral data (and the observational NDVI calculated from them) as covariates. Since we have the weather data available (cf. REF-SEC), it would be a small effort to incorporate it, together with statistics collected from it (i.e. GDD or `rainfall in the last 30 days'). 
     
         We decided against using this data, because on the one hand we have the problem that we have practically too few observations (we observe only 5 years) and we expect the weather in our study region to be rather homogeneous \footnote{The weather data are published by Meteoswiss for a grid with a resolution of 1 km}. On the other hand, we want the underlying model not to learn improper relationships. For example, the model might automatically predict a high NDVI for a day in summer (detected by high GDD / many sunshine hours / high temperature) just because it is ``used'' to observing a lot of vegetation in summer. 

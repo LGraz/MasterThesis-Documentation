@@ -1,7 +1,7 @@
 \chapter{NDVI Correction}
 
 {
-    Let's remind ourselves that the data from the Sentinel-2 is equipped with a scene classification layer (\textit{SCL}) and we therefore have some information of what is observed at each pixel for each sampled time (cf. table~\ref{tab:satelite/scl_classes}). So far we have only considered cloud-free points (i.e. SCL-classes 4 and 5). In this chapter we would like to improve the NDVI interpolation by inspecting also other SCL-classes and by using more information than just the two bands used to calculate the NDVI (B4 and B8).
+    Let's remind ourselves that the data from the Sentinel-2 is equipped with a scene classification layer (\textit{SCL}) and we therefore have some information about what is observed at each pixel for each sampled time (cf. table~\ref{tab:satelite/scl_classes}). So far, we have only considered cloud-free points (i.e., SCL-classes 4 and 5). In this chapter, we would like to improve the NDVI interpolation by inspecting also other SCL-classes and by using more information than just the two bands used to calculate the NDVI (B4 and B8).
 }
 
 \section{Considering other SCL Classes}{
@@ -12,22 +12,22 @@
         \label{fig:ndvi_corr/residuals_scl_classes}
     \end{my_figure}
 
-    To get an impression whether there is some useful information contained in the remaining SCL-classes (all except 4 and 5) we would like to compare the observed NDVI with the true NDVI. But since we do not have any ground truth data, we will make the following assumption:
+    To get an impression of whether there is some useful information contained in the remaining SCL-classes (all except 4 and 5) we would like to compare the observed NDVI with the true NDVI. But since we do not have any ground truth data, we will make the following assumption:
 
     \begin{assumption}{1}%(true NDVI)
         \label{true_ndvi_assumption}
-        The true NDVI value at time $t$ can be successfully estimated by out-of-bag interpolation using high quality observations. That is the interpolated value (using an interpolation method from chapter \ref{sec:itpl}) considering the points $P^{SCL45}\setminus P_t$. In the following, we will call this estimate the ``true''-NDVI.
+        The true NDVI value at time $t$ can be successfully estimated by out-of-bag interpolation using high-quality observations. That is the interpolated value (using an interpolation method from chapter \ref{sec:itpl}) considering the points $P^{SCL45}\setminus P_t$. In the following, we will call this estimate the ``true''-NDVI.
     \end{assumption}
 
-    We would like to get an idea if there is any hope to recover infomation from SCL-classes other than 4 and 5. For that, we will check for the other SCL-classes if there is a relation between the ``true''-NDVI\footnote{\label{footnote:truendvi} i.e. the out-of-bag (OOB) estimate using smoothing splines} and the observed NDVI. Thus, we pair each ``true''-NDVI with its observed one, collect all pairs and create a scatter plot for each SCL-class in fig~\ref{fig:ndvi_corr/scl_residuals_scatter}.
+    We would like to get an idea if there is any hope to recover information from SCL-classes other than 4 and 5. For that, we will check for the other SCL-classes if there is a relation between the ``true''-NDVI\footnote{\label{footnote:truendvi} i.e. the out-of-bag (OOB) estimate using smoothing splines} and the observed NDVI. Thus, we pair each ``true''-NDVI with its observed one, collect all pairs, and create a scatter plot for each SCL-class in fig~\ref{fig:ndvi_corr/scl_residuals_scatter}.
     As expected the ``true'' and the observed NDVI seem to be highly correlated for SCL45. But we can also detect some patterns of correlation in the SCL-classes 2, 3, 7, 8 and 10.  
 
     \begin{my_figure}[h]{width=1\textwidth}{ndvi_corr/scl_residuals_scatter}
-        \caption{For each SCL class, we compare the true NDVI with the observed NDVI. (The true NDVI was estimated with OOB smoothing splines and we used all observations of 10\% of the total training pixels.)}
+        \caption{For each SCL class, we compare the true NDVI with the observed NDVI. (The true NDVI was estimated with OOB smoothing splines, and we used all observations of 10\% of the total training pixels.)}
         \label{fig:ndvi_corr/scl_residuals_scatter}
     \end{my_figure}
 
-    It might be tempting to include some of the above SCL classes (for interpolation). But on the one hand the choice would not be objective and on the other hand the correlation seems to be weaker than for SCL45. Therefore, in the following section we shall try to correct the observed NDVI and estimate the uncertainty of each correction.  
+    It might be tempting to include some of the above SCL classes (for interpolation). But on the one hand, the choice would not be objective and on the other hand, the correlation seems to be weaker than for SCL45. Therefore, in the following section, we shall try to correct the observed NDVI and estimate the uncertainty of each correction.  
 }
 
 
@@ -36,7 +36,7 @@
     \label{sec:corr_correction}
     % \subsection{XXX idea -and- stepwise plots}
     {
-        We recall the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite scl4 labeled and see fragments in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to see clouds (scl 10 - Cirrus clouds). The SCL classification is based only on a mixed model trained using the s2 bands. 
+        We recall the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite SCL4 labeled and see fragments in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to see clouds (SCL 10 - Cirrus clouds). The SCL classification is based only on a mixed model trained using the s2 bands. 
         
         We will improve our NDVI interpolation by not relying on the existing SCL classification, but by training our own model to estimate/correct NDVI using all S2 bands (see sections~\ref{sec:corr_data_table} and~\ref{sec:corr_methods}). After we have corrected the observed NDVI, we will find out how uncertain our corrections are and translate these uncertainties into weights (in section~\ref{sec:corr_uncertainty}). These we will use for the subsequent interpolation. This step-by-step procedure is illustrated by the REF graph in the appendix.
 
@@ -46,16 +46,16 @@
     \subsection{Response and Covariates}{
         \label{sec:corr_data_table}
 
-        For training a NDVI correction model, we need ground-truth (response) and informative covariates. We organize those in a table, where each row corresponds to a $P_t$ (i.e., a pixel at a time $t$). 
-        For the response we will again use the assumption \ref{true_ndvi_assumption}. There is no canonical answer to the question which covariates we should use. It is a tradeoff between simplicity/generalizability and performance (with the danger of overfitting). 
-        Our desire with the NDVI correction is to develop a product that is simple for others to understand and use. Therefore, in the subsequent we will only take the spectral data of the satellite and the observed NDVI derived from it as covariates\footnote{We do not mention the intercept explicitly, but it will also be included.}.  
+        For training an NDVI correction model, we need ground-truth (response) and informative covariates. We organize those in a table, where each row corresponds to a $P_t$ (i.e., a pixel at a time $t$). 
+        For the response, we will again use the assumption \ref{true_ndvi_assumption}. There is no canonical answer to the question of which covariates we should use. It is a tradeoff between simplicity/generalizability and performance (with the danger of overfitting). 
+        Our desire with the NDVI correction is to develop a product that is simple for others to understand and use. Therefore, in the subsequent, we will only take the spectral data of the satellite and the observed NDVI derived from it as covariates\footnote{We do not mention the intercept explicitly, but it will also be included.}.  
     }    
 
     \subsection{Correction Methods}{
         \label{sec:corr_methods}
-        In the following, we will introduce different modelling approaches, which we will use to model the relation between the response $y = y_{\text{true OOB NDVI}}\in \R^n$ and the covariates encoded in the design matrix\footnote{This is the Matrix which contains of all covariates.} $X\in\R^{n \times p}$. Furthermore, we will use the matlab `\texttt{:}' notation to indicate rows and collumns of a matrix (e.g. $X{:,3}$ is the $3$rd collumn of $X$). 
+        In the following, we will introduce different modelling approaches, which we will use to model the relation between the response $y = y_{\text{true OOB NDVI}}\in \R^n$ and the covariates encoded in the design matrix\footnote{This is the Matrix which contains all covariates.} $X\in\R^{n \times p}$. Furthermore, we will use the MATLAB `\texttt{:}' notation to indicate rows and columns of a matrix (e.g. $X{:,3}$ is the $3$rd column of $X$). 
 
-        XXX Note that in order to reduce computation time only $10\%$ of the training data has been used to fit the subsequent models.
+        XXX Note that in order to reduce computation time, only $10\%$ of the training data has been used to fit the subsequent models.
 
         \input{tex/chapters/misc/ml_models.tex}
     }
@@ -69,17 +69,17 @@
 
     \subsection{Interpolation}{
         \label{sec:corr_link}
-        Consider now a pixel $P$, $\hat y^{(P)}$ its corrected NDVI and $\hat v^{(P)}$ the estimated uncertainties of $\hat y^{(P)}$. In order to interpolate $\hat y^{(P)}$ we will give less weight unreliable observations. Thus, we define the weightfunction: 
+        Consider now a pixel $P$, $\hat y^{(P)}$ its corrected NDVI and $\hat v^{(P)}$ the estimated uncertainties of $\hat y^{(P)}$. In order to interpolate $\hat y^{(P)}$, we will give less weight to unreliable observations. Thus, we define the weight function: 
         \begin{equation}
             \label{eq:corr_link}
             w^{(P)}_\tau:=\frac{1}{R} \frac{1}{\hat v^{(P)}_\tau}, 
             \quad \text{ for } \tau=1,\dots, n_P
         \end{equation}  
-        where $\tau$ is an index over the satellite images and $R:=\frac{\sum_i^{n_P}\hat v^{(P)}_i}{n_P}$ a normalization constant. The normalization is needed, since for some interpolation methods inflating the sum of weights would decrease the effect of the smoothing. 
+        where $\tau$ is an index over the satellite images and $R:=\frac{\sum_i^{n_P}\hat v^{(P)}_i}{n_P}$ a normalization constant. The normalization is needed since for some interpolation methods inflating the sum of weights would decrease the effect of the smoothing. 
     }
 }
 
-\section{Resulting Interpolation Stragegies}{
+\section{Resulting Interpolation Strategies}{
     \label{sec:corr_itpl_stat}
     We have developed the following procedure to obtain a new interpolation (keyword-wise):
     \begin{Nenumerate}
@@ -94,7 +94,7 @@
         \item Robustify: Yes / No
         \item Correction \& uncertainty estimation: RF / OLS -- considering only SCL-classes / OLS -- considering all selected covariates / MARS / GAM / LASSO / no correction.
     \end{Nitemize}
-    As it is not feasible to try every possible combination, we make the following restrictions of which combinations we will consider:
+    As it is not feasible to try every possible combination, we make the following restrictions on which combinations we will consider:
     \begin{Nitemize}
         \item We use the same interpolation method each time.
         \item Either we robustify both times or we do not robustify at all.
@@ -125,11 +125,11 @@
 
     \subsection{Yield Estimation}{
         \label{sec:corr_yield_est}
-        For all the pixels, we will interpolate the NDVI time series with every interpolation strategy. From the interpolated NDVI time series, we would like to estimate the yield. However, given the high dimensionality and different lengths of the interpolation (not every time series has the same start and end point), we must first map each NDVI time series into a low dimensional vector space. For this we will use the following statistics:
+        For all the pixels, we will interpolate the NDVI time series with every interpolation strategy. From the interpolated NDVI time series, we would like to estimate the yield. However, given the high dimensionality and different lengths of the interpolation (not every time series has the same start and end point), we must first map each NDVI time series into a low-dimensional vector space. For this we will use the following statistics:
         \begin{Nitemize}
             \item Maximum slope
             \item Minimum slope
-            \item Integral\footnote{\label{note:integral-min} We will only consider the integral of the function $max(0, NDVI - 0.3)$, where $0.3$ is assumend to be a minimal NDVI value. REF} over all
+            \item Integral\footnote{\label{note:integral-min} We will only consider the integral of the function $max(0, NDVI - 0.3)$, where $0.3$ is assumed to be a minimal NDVI value. REF} over all
             \item Peak (i.e. maximal NDVI)
             \item Peak GDD (i.e. value at which the peak is attained)
             \item Integral\footnoteref{note:integral-min} up to the peak
@@ -140,7 +140,7 @@
         For the choice we were inspired by REF-kamir. However, we deliberately omit any statistic that involves the minimum (e.g. the NDVI-range), since we regard the minimum as very error-prone (clouds) and uninformative measure. 
         
         As a result, we obtain for each interpolation strategy a matrix in which each row corresponds to a pixel and contains both the yield and the characterizing statistics.
-        Using this matrix, we train a random forest\footnote{The choice of the modelling approach does not matter to much, as long as it is general enough (i.e. able to approximate any function) and we use the same one for each interpolation strategy.} for yield estimation, and compute the integrated OOB estimates\footnote{By the integrated OOB estimates, we denote the predictions for each pixel where only trees are used, where the pixel has not been used (as $n_{tree}$, the number of Trees, grows the fraction of trees which do not contain a certain pixel converges to $\frac{1}{e}$).} $\hat y$. Finally, for each interpoaltion strategy, we calculate the RYEA. The results are shown in table \ref{tab:methods_vs_yieldprediction}.
+        Using this matrix, we train a random forest\footnote{The choice of the modeling approach does not matter much, as long as it is general enough (i.e. able to approximate any function) and we use the same one for each interpolation strategy.} for yield estimation, and compute the integrated OOB estimates\footnote{By the integrated OOB estimates, we denote the predictions for each pixel where only trees are used, where the pixel has not been used (as $n_{tree}$, the number of Trees, grows the fraction of trees which do not contain a certain pixel converges to $\frac{1}{e}$).} $\hat y$. Finally, for each interpolation strategy, we calculate the RYEA. The results are shown in table \ref{tab:methods_vs_yieldprediction}.
     }
 
     
