@@ -67,8 +67,10 @@
     }
 
     \subsection{Interpolation}{
+        \label{sec:corr_link}
         Consider now a pixel $P$, $\hat y^{(P)}$ its corrected NDVI and $\hat v^{(P)}$ the estimated uncertainties of $\hat y^{(P)}$. In order to interpolate $\hat y^{(P)}$ we will give less weight unreliable observations. Thus, we define the weightfunction: 
         \begin{equation}
+            \label{eq:corr_link}
             w^{(P)}_\tau:=\frac{1}{R} \frac{1}{\hat v^{(P)}_\tau}, 
             \quad \text{ for } \tau=1,\dots, n_P
         \end{equation}  
