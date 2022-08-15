@@ -249,9 +249,11 @@
 	\subsection{Natural Smoothing Splines}
 		\label{sec:Natural_SS}
 		Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable) . Then the unique\footnote{Strictly speaking it is only unique for $\lambda > 0$} minimizer
-		$$
+		\begin{equation}
+			\label{eq:ss}
 			\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}w_i\left(y_{i}-{f}\left(x_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(x)^{2} dx
-		$$
+		\end{equation}
+			
 		is a natural\footnote{It is called natural since it is affine outside the data range ($\forall x\notin [x_1, x_n]:\hat m''(x) = 0$)} cubic spline (i.e. a piecewise cubic polynomial function).
 		The objective function has an intuitive meaning, as to avoid lateral acceleration it is desirable to move the steering wheel as little as possible, when driving a car.
 

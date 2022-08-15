@@ -1,4 +1,4 @@
-\chapter{NDVI Correction}
+\chapter{NDVI Correction} \label{sec:corr}
 
 {
     Let's remind ourselves that the data from the Sentinel-2 is equipped with a scene classification layer (\textit{SCL}) and we therefore have some information about what is observed at each pixel for each sampled time (cf. table~\ref{tab:satelite/scl_classes}). So far, we have only considered cloud-free points (i.e., SCL-classes 4 and 5). In this chapter, we would like to improve the NDVI interpolation by inspecting also other SCL-classes and by using more information than just the two bands used to calculate the NDVI (B4 and B8).
