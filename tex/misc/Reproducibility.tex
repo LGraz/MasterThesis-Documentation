@@ -1,0 +1,16 @@
+\chapter{Reproducibility}
+
+\section{Reproduce Results}
+For reproducibility of the whole computations we refere to our codebase at:\\ \url{https://github.com/LGraz/MasterThesis-Code}\\ In order to reproduce our computations and results, setup the directory as described in the README and execute the computations via \texttt{./shell\_scripts/reproduce.sh} and do not execute the python and R scripts by hand (unless you follow the order in \texttt{./shell\_scripts/reproduce.sh}).
+
+\section{R--Package}
+We also provide an \texttt{R} package for a general time series correction and interpolation if additional data is aviable at: \\
+\url{https://github.com/LGraz/CorrectTimeSeries} \\
+In our case we consider the NDVI time series and the additional data consists of the unused spectral bands.
+
+We recommend installing it via the \texttt{devtools} package by:\\
+\texttt{devtools::install\_github("Greeenstone/CorrectTimeSeries")}
+
+In the following we shall give a stand-alone example of how the \texttt{R} package can be used:
+
+\lstinputlisting[title= Example of how to use the \texttt{CorrectTimeSeries} package]{tex/misc/CorrectTimeSeries.R}
