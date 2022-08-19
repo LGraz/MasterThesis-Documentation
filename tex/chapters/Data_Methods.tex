@@ -1,29 +1,31 @@
 \chapter{Data and Methods}
-
+\todo[inline]{introduce SCL45}
 \section{Available Data}
 	{
 		Our study region is a farm of over 800ha, which is located in western Switzerland. From REF-gregor we acquire satellite image data (section \ref{sec:s2_img_data}), yield maps of several cereals from 2017 to 2021 (section \ref{sec:yieldmapping_data}), and meteorological data (section \ref{sec:gather_data_to_pixel}).
 	}
 
-	\subsection{Sentinel 2 Satellite Image Data}{
+	\subsection{Sentinel 2 Data}{
 		\label{sec:s2_img_data}
-		\subsubsection*{General Information}{
-			The European Space Agency (ESA) \footnote{REF: https://sentinel.esa.int/web/sentinel/missions/sentinel-2} freely distributes the high-quality images of the two Sentinel satellites 2 (S2). Together, both satellites have a revisit time of 5 days at the equator and 2-3 at mid-latitudes. However, in our study region, we only receive an image every 5 days.
-			In order to decrease the effect of atmospheric conditions like reflections and scattering, we will not work with the raw data but with the results of the Level-2A processing\footnote{REF https://sentinels.copernicus.eu/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm}\footnote{XXXREF gregor perich ``Data prior to March 2018 was only145
+		%\subsubsection*{General Information}
+		{
+			The European Space Agency (ESA) \footnote{REF: https://sentinel.esa.int/web/sentinel/missions/sentinel-2} freely distributes the high-quality images of the two Sentinel satellites 2 (S2). Together, both satellites have a revisit time of 5 days at the Equator and 2-3 days at mid-latitudes. However, in our study region, we only receive an image every 5 days.
+			In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used\footnote{REF https://sentinels.copernicus.eu/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm}\footnote{XXXREF gregor perich ``Data prior to March 2018 was only145
 			available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by ESA''}. 
 		}
 
-		\subsubsection*{Data Description}{
-			The Level-2A processed images we use contain 12 spectral bands with local resolutions up to 10 meters (see \ref{table:S2-bands}).   
+		%\subsubsection*{Data Description}
+		{
+			The S2 images contain 12 spectral bands with spatial resolutions up to 10 meters (see \ref{table:S2-bands}).   
 			\input{tex/chapters/misc/table_S2-bands.tex}
-			Bands which have a lower resolution (20 and 60 meters) will be scaled up to 10 meters using cubic interpolation (REF gregor perich).
+			Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation (REF gregor perich).
 							% \begin{figure}[h]
 							% 	\label{fig:satelite/sentinel-2-bands}
 							% 	\center
 							% 	\includegraphics[width=0.4\textwidth]{satelite/sentinel-2-bands.jpg}
 							% 	\caption{XXX Sentinel 2 bands}
 							% \end{figure}
-			Additional to the spectral bands, the ESA also supplies a Scene Classification Layer (\textit{SCL}) where for each location the observed subject is assigned to an \textit{SCL-class} (cf. table~\ref{tab:satelite/scl_classes}). In chapter \ref{sec:itpl}  we will use this classification to filter out unreliable data points, considering only SCL-classes 4 and 5.  
+			Additional to the spectral bands, the ESA also supplies a Scene Classification Layer (\textit{SCL})\todo{Hier noch erwähnen, dass die SCL das Resultat eines Algorithmus der ESA ist. Das kann in der Diskussion dann auch wieder aufgenommen werden & kritisch hinterfragt werden.} where for each location the observed subject is assigned to an \textit{SCL-class} (cf. table~\ref{tab:satelite/scl_classes}). In chapter \ref{sec:itpl}  we will use this classification to filter out unreliable data points, considering only SCL-classes 4 and 5.  
 			
 			
 			\begin{table}[h]
@@ -34,10 +36,10 @@
 			\end{table}
 		}
 
-		\subsubsection*{Data Illustration}{
-			\input{tex/chapters/misc/2x3_satelite_ts_plot_grid.tex}
+		\subsubsection*{Data Illustration XXXorXXX Challenges in S2 Data}{
+			\input{tex/chapters/misc/2x3_satelite_ts_plot_grid.tex}\todo{Hier noch eine NDVI Zeitreihe parallel dazu zeigen. Ansonsten wird nicht klar, warum wir die Interpolation überhaupt machen.}
 			% Description of plot
-			The figure ~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, which display our challenges. In February (image(a)), as expected, we see no vegetation but bare soil. At the beginning of May, we observe a cloudless dark green field. In (c) it is obvious that we have no chance to get useful information when there is a heavy cloud cover. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds. In (e) we see a pale green. This likely shimmers through cirrus clouds. 
+			The figure ~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, which display our challenges\todo{which challenges? were they introduced earlier? E.g. in the introduction?}. In February (image a), we see no vegetation but bare soil. At the beginning of May, we observe a cloudless dark green field. In (c) heavy cloud cover (SCL class 9) leads to a complete loss of plant information in this S2 observation. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds. In (e) we see a pale green. This likely shimmers through cirrus clouds. 
 			
 			%% subfigures references:
 			% (see. \ref{fig:satelite/time_series_2021_P112/15_scl5_2021-02-23.png})
@@ -49,19 +51,19 @@
 		}
 	}
 
-	\subsection{Harvest Yield Data}{
+	\subsection{Crop Yield Data}\todo{Hier bitte noch eine kleine Beschreibung der Crop-yields reinnehmen. Also was sind die Ertragswerte der Daten.}{
 		\label{sec:yieldmapping_data}
 		The crop yield data were collected using a combine harvester. Equipped with GPS, the harvester drives over the fields and continuously estimates the crop density in $t/ha$ (see fig. \ref{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}). 
-		We take the data set derived from this in REF-Gregor-Perich, where error-prone measurement points (such as during an egen curve) were removed and then the yield map was rasterized using linear interpolation (cf. fig. \ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}).    
+		We take the data set derived from this in REF-Gregor-Perich, where error-prone measurement points (such as during a tight curve of the combine harvester) were removed and then the yield map was rasterized using linear interpolation (cf. fig. \ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}).    
 
 		
-		Comparing the manually weighted yield and the sum of estimated raster (per field per year) we note a discrepancy of about $10\%$ (cf. REF-gregor). Since the relative estimation error is rather constant and we do not aim to estimate the absolute yield we will not consider this deviation.
+		Comparing the average per-field crop yield reported by the farmer with the yield estimated by the combine harvester shows that the latter overestimates crop yield by ca. $10\%$ (cf. REF-gregor). Since the relative estimation error is approximately constant and we do not aim to estimate the absolute yield, we will not consider this deviation.
 		\begin{figure}
 			\centering
 			\begin{subfigure}{.5\textwidth}
 			  \centering
 			  \includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_harvester_cropped.png}
-			  \caption{obtained by a combine harvester (cleaned)}
+			  \caption{Raw combine harvester data (cleaned)}
 			  \label{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}
 			\end{subfigure}%
 			\begin{subfigure}{.5\textwidth}
@@ -76,46 +78,43 @@
 	}
 
 
-	\subsection{Gather Data}{
+	\subsection{The Concept of a `Pixel'}{
 		\label{sec:gather_data_to_pixel}
 		Before we join all the data, we define a few concepts.
 
 		{% NDVI
-			Using bands $B4$ and $B8$, we calculate the well-known Normalized Difference Vegetation Index (\textit{NDVI}) using the formula: (???REF nötig?)
+			The well-known Normalized Difference Vegetation Index (\textit{NDVI}) introduced in \cite{rouseMonitoringVernalAdvancement1974} can be calculated using the bands $B4$ and $B8$ (table \ref{table:S2-bands}) by:
 			\begin{equation}
 				NDVI = \frac{B8 - B4}{B8 + B4}
 				\label{eq:ndvi}
 			\end{equation}
-			Note that we call the calculated values merely the \textit{observed NDVI}, as we must be aware of imprecisions due to clouds and shadows. 
+			Note that we call the calculated values merely the \textit{observed NDVI}, as we must be aware of imprecisions due to clouds and shadows\todo{Please clarify this in more detail. We used pixels flagged with SCL 4 & 5, but as can be seen in Fig. 2.1 d), this can yield erroneous NDVI values, etc.}. 
 		}
 
 		{% GDD & DAS
-			To define a timescale, we consider Days After Sowing (\textit{DAS}) and a transformed timescale, Growing Degree Days (\textit{GDD}) (\cite{mcmasterGrowingDegreedaysOne1997}). The latter are defined as the cumulative sum (since sowing) of temperature above a given base temperature $T_{base}$ \footnote{XXX For cereals we use $T_{base}=0$ }. Thus, the GGD for $n$ days after sowing will be equal to:
+			To define a timescale, we consider Days After Sowing (\textit{DAS}) and a transformed timescale, Growing Degree Days (\textit{GDD}) (\cite{mcmasterGrowingDegreedaysOne1997}REF). The latter are defined as the cumulative sum (since sowing) of temperature above a given base temperature $T_{base}$. For cereals, we use $T_{base}=0$ (REF-Gregor). Thus, the GGD for $n$ days after sowing will be equal to:\todo{Für den Leser wäre es interessant, wenn Du noch kurz die wichtigsten GDD Werte aus der Literatur beschreiben würdest (D.h. z.B. Sowing, Emergence of Plants, Anthesis, Senescence, Harvest)}
 			\begin{equation}
 				\label{eq:gdd}
 				GDD_n := \sum_{i=0}^n \max(T_i - T_{base}, 0).
 			\end{equation}
 		} 
 
-		Now we create a data set, which will contain all the necessary information. Given that we have the spectral data at a $10m \times 10m$ resolution, we introduce the concept of a Pixel. A \textit{Pixel} $P$ is associated with a $10m \times 10m$ square defined by the S2 satellites and contains all relevant information for a season and this location. More precisely, $P$ is a collection of general information (like yield and coordinates) and all associated $P_t$ of a given season. Where $P_t$ represents a tuple of the spectral data for time $t$, the NDVI calculated from it, and the associated GDD. 
-		We will call the resulting data set \textit{PIXELS} as it is the collection of all Pixels (over all seasons). 
+		Now we create a data set, which will contain all the necessary information\todo{necessary info for what? To answer the research questions asked in section XXX}. Given that we have the spectral data at a $10m \times 10m$ resolution, we introduce the concept of a Pixel. A \textit{Pixel} $P$ is associated with a $10m \times 10m$ square defined by the S2 satellites and contains all relevant information\todo{which?} for a season and this location. More precisely, $P$ is a collection of general information (like yield and coordinates) and all associated $P_t$ of a given season. Where $P_t$ represents a tuple of the spectral data for time $t$, the NDVI calculated from it, and the associated GDD. 
+		We will call the resulting data set \textit{PIXELS}, as it is the collection of all Pixels (over all seasons). 
 		
-		Finally, we split PIXELS randomly into a train ($80\%$) and test  ($20\%$) set. 
+		% Finally, we split PIXELS randomly into a train ($80\%$) and test  ($20\%$) set. 
 
 	}
 
 \section{General Methods}{
-	We will only introduce general methods within this section, whereas more specific methods will be introduced in their context. We discuss interpolation methods in sections \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric} , a robustification strategy in section \ref{sec:loess_robustify}, a method how we can objectively determine the quality of an interpolation in section \ref{sec:itpl_param_est}, and in section \ref{sec:corr_correction} we present the NDVI correction with an adapted interpolation strategy.
+	We will only introduce general methods within this section, whereas more specific methods will be introduced in their context\todo{which context? I would write: "... introduced in chapter/section XXX in more detail.}. We discuss interpolation methods in sections \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric}, a robustification strategy in section \ref{sec:loess_robustify}, a method how we can objectively determine the quality of an interpolation in section \ref{sec:itpl_param_est}, and in section \ref{sec:corr_correction} we present the NDVI correction with an adapted interpolation strategy.
 
-	\subsection{MATLAB Matrix Notation}{ \label{sec:MATLAB}
-		We will use the MATLAB `\texttt{:}' notation to indicate rows and columns of a matrix. That is if $X\in\R^{n\times p}$ is a matrix, then $X_{[:,3]}$ is the $3$rd column of $X$ and $X_{[2,:]}$ is the second row of X. 
-
-	}
 
 	\subsection{(Relative) RMSE}
 		\todo[inline]{definithion here and also relative}
 
 	\subsection{Out-Of-Bag (\textit{OOB}) and Leave-One-Out-Cross-Validation (\textit{LOOCV})}{
+	    \todo[inline]{Hier fehlt mir eine kurze Erklärung, was OOB und LOOCV sind.}
 		\label{sec:OOB_LOOCV}
 		Let 
 		$$
@@ -131,7 +130,7 @@
 	}
 
 	\subsection{Generalized Cross Validation (GCV)}{
-		\todo[inline]{definithion here and explenation why (computational cheap)}
+		\todo[inline]{definition here and explanation why (computational cheap)}
 
 	}
 }

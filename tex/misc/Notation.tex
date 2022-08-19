@@ -1,7 +1,8 @@
-\chapter*{Notation}
+\chapter*{Notations}
 \label{c:Notation}
 
-\section*{Conventions for Variables}
+\section*{Variables}
+\todo[inline]{Hier u.U. nach dem Doppelpunkt ein Absatz/Tab einführen, s.d. die definition und die Erklärung räumlich separiert sind?}
 $c$: a (vector of) constant(s)
 
 $\lambda \in \R$: a scalar
@@ -18,7 +19,7 @@ $y\in \R^n$: response in 1-dim interpolation setting
 
 $\hat y\in \R^n$: estimate of $y$
 
-$\bar y\in \R$: mean of $y$
+$\bar y\in \R$: sample mean of $y$
 
 $r \in \R^n$: residuals given by $y - \hat y$
 
@@ -26,19 +27,19 @@ $r \in \R^n$: residuals given by $y - \hat y$
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Abbreviations and Objects}
 
-Pixel: A pixel describes a specific location in a field. It has the size of 10 x 10 meters and coincides with the resolution (and location) of the sentinel-2 pixels. Such pixels are illustrated in figure~\ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}. Additional information like yield is also attached.
+Pixel: A pixel originates of an image pixel and describes a square of 10 x 10 meters in the field which coincides with the resolution (and location) of the Sentinel-2 pixels. Such pixels are illustrated in figure~\ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}. Additional information like yield is also attached.
 
 $P_t$: this describes the observed data (weather and spectral bands) at time $t$ and the location of one pixel. 
 
 $P$: a pixel. We see it as a collection of all the observations at the specified location within one season. More formally, $P := \left\{P_t | t\text{ is a valid sample time within a defined season}\right\}$
 
-SCL: scene classification layer. This indicates what one can expect at a pixel at a sampled time. For an overview cf. table~\ref{tab:satelite/scl_classes}
+SCL: Scene Classification Layer provided by the European Space Agency (ESA) that gives an estimation of the land cover class of each pixel. It indicates what one can expect at a pixel at a sampled time. For an overview, c.f. table~\ref{tab:satelite/scl_classes}
 
 $P^{SCL45}$: similar to $P$ but we only consider observations which belong to the classes 4 and 5. This is used done to get a subset of observations which are less contaminated by clouds and shadows.
 
-NDVI: normalized vegetation difference index
+NDVI: Normalized Difference Vegetation Index \citep{rouseMonitoringVernalAdvancement1974}
 
-DAS: days after sowing
+DAS: Days After Sowing
 
 GDD: growing degree days -- cumulative sum of ($\text{temperature}-\text{threshold})^+$
 
@@ -47,6 +48,13 @@ XXX ML models and their shortnames
 RYEA : relative yield-estimation-accuracy. Definition \ref{def:ryea}
 
 OOB : out-of-box. Describes the procedure if we estimate the value for a point but not consider the point itself (cf. section \ref{sec:OOB_LOOCV})
+
+
+\subsection*{MATLAB Matrix Notation}{ \label{sec:MATLAB}
+		We will use the MATLAB `\texttt{:}' notation to indicate rows and columns of a matrix. That is if $X\in\R^{n\times p}$ is a matrix, then $X_{[:,3]}$ is the $3$rd column of $X$ and $X_{[2,:]}$ is the second row of X. 
+}
+
+
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "MasterThesisSfS"

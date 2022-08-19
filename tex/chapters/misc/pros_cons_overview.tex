@@ -1,14 +1,15 @@
 \begin{table}[!ht]
 	\centering
-	\caption[skip=10pt]{A short summary of the studied interpolation methods. Important assumtions are stated, pros/cons are listed and it is indicated weather the method supports weighted observations (w) and if the resulting interpolation is bounded w.r.t. a fixed interval (b).}
+	\todo[inline]{add fourier  and fix order to match chapters}
+	\caption[skip=10pt]{Summary of the studied interpolation methods containing important assumptions, advantages and disadvantages and whether the method supports weighted observations (w) and if the resulting interpolation is bounded w.r.t. a fixed interval (b).}
 	\small
 	\begin{tabular}{p{1.6cm}p{3.3cm}p{3.3cm}p{3.4cm}p{0.4cm}p{0.4cm}p{3cm}p{3cm}p{3cm}p{3cm}p{2.7cm}p{3cm}|}
 		\toprule
 		% \hline
 		~                                                                                                                                                            &
-		\textbf{assumtpions}                                                                                                                                         &
-		\textbf{pros}                                                                                                                                                &
-		\textbf{cons}                                                                                                                                                &
+		\textbf{Assumptions}                                                                                                                                         &
+		\textbf{Advantages}                                                                                                                                                &
+		\textbf{Disadvantages}                                                                                                                                                &
 		\textbf{w}                                                                                                                                      &
 		\textbf{b}                                                                                                                                        \\ \hline
 
@@ -28,7 +29,7 @@
 		(No)                                                                                                                                                         &
 		(Yes)                                                                                                                                                         \\ \hline%comment out?
 
-		Loess                                                                                                                                                        &
+		LOESS                                                                                                                                                        &
 		\begin{cptitemize} \item[--]  Local  polynomial with points closer to the estimated point are more important                  \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  Flexible \item[--]  Generalization of SG \item[--]  Weighting function makes intuitive sense                  \end{cptitemize} &
 		\begin{cptitemize} \item[--]  Computationally expensive                                                                       \end{cptitemize}               &
@@ -44,7 +45,7 @@
 
 		B-Splines (Smoothed)                                                                                                                                         &
 		\begin{cptitemize} \item[--]  Function can be approximated by a linear combination of B-splines basis functions               \end{cptitemize}               &
-		\begin{cptitemize} \item[--]  General assumtion \item[--]  Flexible shape                                                            \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  General assumption \item[--]  Flexible shape                                                            \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Unbounded \item[--]  No intuitive meaning for smoothing                                                \end{cptitemize}        &
 		Yes                                                                                                                                                            &
 		No                                                                                                                                                             \\ \hline%comment out?
@@ -73,9 +74,9 @@
 		% ~                                                                                                                                                              \\ \hline%comment out?
 
 		(Gaussian) Kernel Smoothing                                                                                                                                  &
-		\begin{cptitemize} \item[--]  Close points are related to each other via a kernel funtion \end{cptitemize}                                                                                                                                                            &
+		\begin{cptitemize} \item[--]  Close points are related to each other via a kernel function \end{cptitemize}                                                                                                                                                            &
 		\begin{cptitemize} \item[--]  Simple \item[--]  General assumptions                                                                  \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Bandwidh: failes if there are big data-gaps                                                     \end{cptitemize}               &
+		\begin{cptitemize} \item[--]  Bandwidth: fails if there are big data-gaps                                                     \end{cptitemize}               &
 		Yes                                                                                                                                                          &
 		Yes                                                                                                                                                            \\ \hline%comment out?
 
@@ -88,13 +89,13 @@
 
 		Double-Logistic                                                                                                                                              &
 		\begin{cptitemize} \item[--]  Function first increases then decreases \item[--]  Ndvi has a minimal value                            \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Good for evergreen plants (if snow masks ndvi) \item[--]  Upper envelope                                \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Parameterestimation can go seriously wrong \item[--]  Strange behaviour for long data-gaps             \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Good for evergreen plants (if snow masks NDVI) \item[--]  Upper envelope                                \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Parameter estimation can go seriously wrong \item[--]  Strange behavior for long data-gaps             \end{cptitemize}        &
 		Yes                                                                                                                                                          &
 		(Yes)                                                                                                                                                         \\ \hline%comment out?
 
 		Universal Kriging                                                                                                                                            &
-		\begin{cptitemize} \item[--]  Function is a realization of a stationary gaussian process                                      \end{cptitemize}               &
+		\begin{cptitemize} \item[--]  Function is a realization of a stationary Gaussian process                                      \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  Informative parameters \item[--]  Flexible                                                             \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Regression to the mean \item[--]  Assumptions clearly not met                                          \end{cptitemize}        &
 		Yes                                                                                                                                                          &

@@ -1,11 +1,11 @@
-\chapter{Summary}
-\label{s:Summary}
+\chapter{Conclustion}
+\label{s:Conclusion}
 \begin{verbatim}
     
 - itpl methods, 
     parametric dl 
     non-param 
-        discarted 
+        discarded 
             kernel methods because of strong bias  
             kriging because assumptions and highdim parameters
             savitzky-golay filter since we will investigate the LOESS which can be thought as its generalization 
@@ -15,7 +15,7 @@
 - robustifying useful?
 
 \end{verbatim}
-XXX Summarize the presented work. Why is it useful to the research field or institute?
+XXX draw your conclusion to which you came during this thesis
 
 
 
@@ -36,9 +36,9 @@ XXX Summarize the presented work. Why is it useful to the research field or inst
         During this project, we also noticed some minor issues that we would have liked to investigate further if more resources were available. The most relevant of these are:
         \begin{Nitemize}
             \item \textbf{Data:}
-            Method how data has been extrapolated to the grid could possibly be improved
+            Method how data\todo{which data? I assume the combine harvester point data?} has been extrapolated to the grid could possibly be improved
             \item \textbf{Data:}
-            For computational reasons we mostly considered all years and split the data (on the pixel level) randomly into a train/test set. A leave one year out cross validation might yield more accurate results.
+            For computational reasons, we mostly considered all years and split the data (on the pixel level) randomly into a train/test set. A leave one year out cross validation might yield more accurate results.
             \item \textbf{Data:}
             We have not included the spectral bands which have a resolution of 60m. But precisely these seem to be promising for cloud correction, since they are a proxy of the water (content and form) in the atmosphere.
             % \item \textbf{Interpolation:}
