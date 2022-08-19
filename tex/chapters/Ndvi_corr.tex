@@ -126,8 +126,8 @@
 
     \subsection{Yield Estimation}{
         \label{sec:corr_yield_est}
-        For all the pixels, we will interpolate the NDVI time series with every interpolation strategy. From the interpolated NDVI time series, we would like to estimate the yield. However, given the high dimensionality and different lengths of the interpolation (not every time series has the same start and end point), we must first map each NDVI time series into a low-dimensional vector space. For this, we will use the following statistics:
-        \begin{Nitemize}\todo{tabelle wäre sauberer}
+        For all the pixels, we will interpolate the NDVI time series with every interpolation strategy. From the interpolated NDVI time series, we would like to estimate the yield. However, given the high dimensionality and different lengths of the interpolation (not every time series has the same start and end point), we must first map each NDVI time series into a low-dimensional vector space. For this, we will use the following statistics:\todo{tabelle wäre sauberer}
+        \begin{Nitemize}
             \item Maximum slope
             \item Minimum slope
             \item Integral\footnote{\label{note:integral-min} We will only consider the integral of the function $max(0, NDVI - 0.3)$, where $0.3$ is assumed to be a minimal NDVI value. REF} over all

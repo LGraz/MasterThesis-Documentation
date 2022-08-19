@@ -25,7 +25,7 @@
 							% 	\includegraphics[width=0.4\textwidth]{satelite/sentinel-2-bands.jpg}
 							% 	\caption{XXX Sentinel 2 bands}
 							% \end{figure}
-			Additional to the spectral bands, the ESA also supplies a Scene Classification Layer (\textit{SCL})\todo{Hier noch erwähnen, dass die SCL das Resultat eines Algorithmus der ESA ist. Das kann in der Diskussion dann auch wieder aufgenommen werden & kritisch hinterfragt werden.} where for each location the observed subject is assigned to an \textit{SCL-class} (cf. table~\ref{tab:satelite/scl_classes}). In chapter \ref{sec:itpl}  we will use this classification to filter out unreliable data points, considering only SCL-classes 4 and 5.  
+			Additional to the spectral bands, the ESA also supplies a Scene Classification Layer (\textit{SCL})\todo{Hier noch erwähnen, dass die SCL das Resultat eines Algorithmus der ESA ist. Das kann in der Diskussion dann auch wieder aufgenommen werden \& kritisch hinterfragt werden.} where for each location the observed subject is assigned to an \textit{SCL-class} (cf. table~\ref{tab:satelite/scl_classes}). In chapter \ref{sec:itpl}  we will use this classification to filter out unreliable data points, considering only SCL-classes 4 and 5.  
 			
 			
 			\begin{table}[h]
@@ -88,7 +88,7 @@
 				NDVI = \frac{B8 - B4}{B8 + B4}
 				\label{eq:ndvi}
 			\end{equation}
-			Note that we call the calculated values merely the \textit{observed NDVI}, as we must be aware of imprecisions due to clouds and shadows\todo{Please clarify this in more detail. We used pixels flagged with SCL 4 & 5, but as can be seen in Fig. 2.1 d), this can yield erroneous NDVI values, etc.}. 
+			Note that we call the calculated values merely the \textit{observed NDVI}, as we must be aware of imprecisions due to clouds and shadows\todo{Please clarify this in more detail. We used pixels flagged with SCL 4 \& 5, but as can be seen in Fig. 2.1 d), this can yield erroneous NDVI values, etc.}. 
 		}
 
 		{% GDD & DAS
