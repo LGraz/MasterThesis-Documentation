@@ -1,17 +1,17 @@
 \chapter{Further Material}
 
 \section{Interpolation}
-\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_loess_robust}
+\begin{my_figure}[!h]{width=1\textwidth}{interpol/2x3_loess_robust}
 	\caption{The LOESS smoother \RobItPlot}
 	\label{fig:interpol/2x3_loess_robust}
 \end{my_figure}
 
-\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_B-Splines_robust}
+\begin{my_figure}[!h]{width=1\textwidth}{interpol/2x3_B-Splines_robust}
 	\caption{B-Splines \RobItPlot}
 	\label{fig:interpol/2x3_B-Splines_robust}
 \end{my_figure}
 
-\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_DL_robust}
+\begin{my_figure}[!h]{width=1\textwidth}{interpol/2x3_DL_robust}
 	\caption{A Double Logistic curve \RobItPlot}
 	\label{fig:interpol/2x3_DL_robust}
 \end{my_figure}
@@ -20,5 +20,9 @@
 
 
 \section{NDVI correction}
+\todo[inline]{page breaks}
 
 \input{tex/misc/4x2_stepwise-plots.tex}
+
+\lstinputlisting[title= R Summary of the NDVI correction model (c.f. equation \refeq{eq:corr_lm})]{tex/chapters/misc/lm_scl.txt}
+\lstinputlisting[title= R Summary of the NDVI correction model (c.f. equation \refeq{eq:corr_lm_res})]{tex/chapters/misc/lm_scl_res.txt}

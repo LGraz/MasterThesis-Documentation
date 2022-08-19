@@ -1,0 +1,28 @@
+Call:
+lm(formula = (paste(response, " ~ ", "ndvi_observed + scl_class")), 
+    data = ndvi_df)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.7997 -0.0717  0.0039  0.0695  0.6632 
+
+Coefficients:
+              Estimate Std. Error t value Pr(>|t|)    
+(Intercept)    0.21465    0.00230   93.46  < 2e-16 ***
+ndvi_observed  0.71116    0.00346  205.65  < 2e-16 ***
+scl_class3     0.02205    0.00356    6.20  5.8e-10 ***
+scl_class4    -0.00431    0.00251   -1.72    0.085 .  
+scl_class5    -0.09875    0.00234  -42.15  < 2e-16 ***
+scl_class6    -0.05301    0.01104   -4.80  1.6e-06 ***
+scl_class7     0.11245    0.00274   41.09  < 2e-16 ***
+scl_class8     0.25963    0.00253  102.57  < 2e-16 ***
+scl_class9     0.35994    0.00236  152.47  < 2e-16 ***
+scl_class10    0.09091    0.00308   29.54  < 2e-16 ***
+scl_class11    0.29784    0.00392   76.06  < 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.146 on 124978 degrees of freedom
+Multiple R-squared:  0.532,     Adjusted R-squared:  0.532 
+F-statistic: 1.42e+04 on 10 and 124978 DF,  p-value: <2e-16
+
