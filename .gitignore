@@ -281,7 +281,7 @@ TSWLatexianTemp*
 out/
 .vscode/
 __latexindent_temp.tex
-
+MasterThesisSfS.pdf
 
 ### negate exclusion ###################
 !out/MasterThesisSfS.pdf
