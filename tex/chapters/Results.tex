@@ -5,7 +5,7 @@
 \section{Robustification and NDVI-Correction}
 \begin{table}
 	\begin{center}
-		\caption{XXX RMSE of yield prediction}
+		\caption{XXX RMSE of yield prediction. For the relative RMSE and the coefficient of determination (R\textsuperscript{2}) see table \ref{tab:methods_vs_yieldprediction_relative} and \ref{tab:methods_vs_yieldprediction_r2}}.
 		\small
 		\input{tex/chapters/misc/table_methods_vs_yieldprediction.tex}
 		\label{tab:methods_vs_yieldprediction}
@@ -13,52 +13,43 @@
 	\end{center}
 \end{table}
 
-\begin{table}
-	\begin{center}
-		\caption{XXX RMSE of yield prediction}
-		\small
-		\input{tex/chapters/misc/table_methods_vs_yieldprediction_relative.tex}
-		\label{tab:methods_vs_yieldprediction}
-		\normalsize
-	\end{center}
-\end{table}
 
-\begin{table}
-	\begin{center}
-		\caption{XXX RMSE of yield prediction}
-		\small
-		\input{tex/chapters/misc/table_methods_vs_yieldprediction_r2.tex}
-		\label{tab:methods_vs_yieldprediction}
-		\normalsize
-	\end{center}
-\end{table}
 
-var(yield) 4.034559
-
-Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-0.1066  6.1855  7.5595  7.3592  8.7564 13.3508
 
 
 \begin{equation}\label{eq:corr_lm}
 	\begin{aligned}		
 		\widehat{\operatorname{NDVI}}_{\text{corr}}  = &
-		0.711 \operatorname{NDVI}_\text{observed}  + 0.215 \mathbbm 1_{{SCL = 2}} + 0.237 \mathbbm 1_{{SCL = 3}} + 0.210 \mathbbm 1_{{SCL = 4}} \\ &
-		+ 0.116 \mathbbm 1_{{SCL = 5}} + 0.162 \mathbbm 1_{{SCL = 6}} + 0.327 \mathbbm 1_{{SCL = 7}} + 0.474 \mathbbm 1_{{SCL = 8}} \\ &
-		 + 0.575 \mathbbm 1_{{SCL = 9}} + 0.306 \mathbbm 1_{{SCL = 10}} + 0.512 \mathbbm 1_{{SCL = 11}} 
+		0.711 \operatorname{NDVI}_\text{observed}  
+		+ \mathbbm 1_{{SCL = 2}} 0.215 
+		+ \mathbbm 1_{{SCL = 3}} 0.237 
+		+ \mathbbm 1_{{SCL = 4}} 0.210 \\ &
+		+ \mathbbm 1_{{SCL = 5}} 0.116 
+		+ \mathbbm 1_{{SCL = 6}} 0.162 
+		+ \mathbbm 1_{{SCL = 7}} 0.327 
+		+ \mathbbm 1_{{SCL = 8}} 0.474 \\ &
+		+ \mathbbm 1_{{SCL = 9}} 0.575 
+		+ \mathbbm 1_{{SCL = 10}} 0.306 
+		+ \mathbbm 1_{{SCL = 11}} 0.512 
 	\end{aligned}
 \end{equation}
+- strong upwards correction for SCL classes 8, 9 and 11 (correspond to `medium probability clouds', `high probability clouds' and `thin cirrus clouds').
 
 \begin{equation}\label{eq:corr_lm_res}
 	\begin{aligned}		
 		\widehat{\operatorname{abs}}\left({\operatorname{NDVI}_\text{``true''} - \operatorname{NDVI}}_{\text{corr}}\right)  = &
-		-0.133 \operatorname{NDVI}_\text{observed}  + 0.186 \mathbbm 1_{{SCL = 2}} + 0.185 \mathbbm 1_{{SCL = 3}} \\ &
-		+ 0.146 \mathbbm 1_{{SCL = 4}} 
-		+ 0.089 \mathbbm 1_{{SCL = 5}} 
-		+ 0.167 \mathbbm 1_{{SCL = 6}} \\ &
-		+ 0.203 \mathbbm 1_{{SCL = 7}} 
-		+ 0.181 \mathbbm 1_{{SCL = 8}}  
-		+ 0.173 \mathbbm 1_{{SCL = 9}} \\ &
-		+ 0.180 \mathbbm 1_{{SCL = 10}} 
-		+ 0.172 \mathbbm 1_{{SCL = 11}} 
+		-0.133 \operatorname{NDVI}_\text{observed}  
+		+ \mathbbm 1_{{SCL = 2}} 0.186 
+		+ \mathbbm 1_{{SCL = 3}} 0.185 \\ &
+		+ \mathbbm 1_{{SCL = 4}} 0.146 
+		+ \mathbbm 1_{{SCL = 5}} 0.089 
+		+ \mathbbm 1_{{SCL = 6}} 0.167 \\ &
+		+ \mathbbm 1_{{SCL = 7}} 0.203 
+		+ \mathbbm 1_{{SCL = 8}} 0.181  
+		+ \mathbbm 1_{{SCL = 9}} 0.173 \\ &
+		+ \mathbbm 1_{{SCL = 10}} 0.180 
+		+ \mathbbm 1_{{SCL = 11}} 0.172 
 	\end{aligned}
 \end{equation}
+- the higher the observed NDVI the lower the estimated absolute residual.
+- estimated absolute resiudals are the smalles for SCL classes 4 and 5.  

@@ -1,98 +1,88 @@
-\chapter{Data and Methods}
-\todo[inline]{introduce SCL45}
-\section{Available Data}
+\chapter{Data and Methods}\label{sec:data_methods}
+{
+	We will start by describing the available data and the challenges associated with it.
+	Our study region is a farm of over 800ha, which is located in western Switzerland. From \cite{perichPixelbasedYieldMapping2022a} we acquire satellite image data (section \ref{sec:s2_img_data}), yield maps of several cereals from 2017 to 2021 (section \ref{sec:yieldmapping_data}), and meteorological data (section \ref{sec:gather_data_to_pixel}).
+	Afterwards, we will introduce general methods in section \ref{sec:general_methods}, which will be used in the remaining chapters.
+}
+
+
+\section{Sentinel 2 Data}{
+	\label{sec:s2_img_data}
+	%\subsection*{General Information}
 	{
-		Our study region is a farm of over 800ha, which is located in western Switzerland. From REF-gregor we acquire satellite image data (section \ref{sec:s2_img_data}), yield maps of several cereals from 2017 to 2021 (section \ref{sec:yieldmapping_data}), and meteorological data (section \ref{sec:gather_data_to_pixel}).
-	}
-
-	\subsection{Sentinel 2 Data}{
-		\label{sec:s2_img_data}
-		%\subsubsection*{General Information}
-		{
-			The European Space Agency (ESA) \footnote{REF: https://sentinel.esa.int/web/sentinel/missions/sentinel-2} freely distributes the high-quality images of the two Sentinel satellites 2 (S2). Together, both satellites have a revisit time of 5 days at the Equator and 2-3 days at mid-latitudes. However, in our study region, we only receive an image every 5 days.
-			In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used\footnote{REF https://sentinels.copernicus.eu/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm}\footnote{XXXREF gregor perich ``Data prior to March 2018 was only145
-			available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by ESA''}. 
-		}
-
-		%\subsubsection*{Data Description}
-		{
-			The S2 images contain 12 spectral bands with spatial resolutions up to 10 meters (see \ref{table:S2-bands}).   
-			\input{tex/chapters/misc/table_S2-bands.tex}
-			Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation (REF gregor perich).
-							% \begin{figure}[h]
-							% 	\label{fig:satelite/sentinel-2-bands}
-							% 	\center
-							% 	\includegraphics[width=0.4\textwidth]{satelite/sentinel-2-bands.jpg}
-							% 	\caption{XXX Sentinel 2 bands}
-							% \end{figure}
-			Additional to the spectral bands, the ESA also supplies a Scene Classification Layer (\textit{SCL})\todo{Hier noch erwähnen, dass die SCL das Resultat eines Algorithmus der ESA ist. Das kann in der Diskussion dann auch wieder aufgenommen werden \& kritisch hinterfragt werden.} where for each location the observed subject is assigned to an \textit{SCL-class} (cf. table~\ref{tab:satelite/scl_classes}). In chapter \ref{sec:itpl}  we will use this classification to filter out unreliable data points, considering only SCL-classes 4 and 5.  
-			
-			
-			\begin{table}[h]
-				\caption{Overview: Scene Classification Layers (SCL)}
-				\label{tab:satelite/scl_classes}
-				\center
-				\includegraphics[width=0.8\textwidth]{satelite/scl_classes.png}
-			\end{table}
-		}
-
-		\subsubsection*{Data Illustration XXXorXXX Challenges in S2 Data}{
-			\input{tex/chapters/misc/2x3_satelite_ts_plot_grid.tex}\todo{Hier noch eine NDVI Zeitreihe parallel dazu zeigen. Ansonsten wird nicht klar, warum wir die Interpolation überhaupt machen.}
-			% Description of plot
-			The figure ~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, which display our challenges\todo{which challenges? were they introduced earlier? E.g. in the introduction?}. In February (image a), we see no vegetation but bare soil. At the beginning of May, we observe a cloudless dark green field. In (c) heavy cloud cover (SCL class 9) leads to a complete loss of plant information in this S2 observation. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds. In (e) we see a pale green. This likely shimmers through cirrus clouds. 
-			
-			%% subfigures references:
-			% (see. \ref{fig:satelite/time_series_2021_P112/15_scl5_2021-02-23.png})
-			% (see. \ref{fig:satelite/time_series_2021_P112/30_scl4_2021-05-09.png})
-			% (see. \ref{fig:satelite/time_series_2021_P112/33_scl9_2021-05-24.png})
-			% (see. \ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png})
-			% (see. \ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png})
-			% (see. \ref{fig:satelite/time_series_2021_P112/45_scl2_2021-07-23.png})
-		}
-	}
-
-	\subsection{Crop Yield Data}\todo{Hier bitte noch eine kleine Beschreibung der Crop-yields reinnehmen. Also was sind die Ertragswerte der Daten.}{
-		\label{sec:yieldmapping_data}
-		The crop yield data were collected using a combine harvester. Equipped with GPS, the harvester drives over the fields and continuously estimates the crop density in $t/ha$ (see fig. \ref{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}). 
-		We take the data set derived from this in REF-Gregor-Perich, where error-prone measurement points (such as during a tight curve of the combine harvester) were removed and then the yield map was rasterized using linear interpolation (cf. fig. \ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}).    
-
 		
-		Comparing the average per-field crop yield reported by the farmer with the yield estimated by the combine harvester shows that the latter overestimates crop yield by ca. $10\%$ (cf. REF-gregor). Since the relative estimation error is approximately constant and we do not aim to estimate the absolute yield, we will not consider this deviation.
-		\begin{figure}
-			\centering
-			\begin{subfigure}{.5\textwidth}
-			  \centering
-			  \includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_harvester_cropped.png}
-			  \caption{Raw combine harvester data (cleaned)}
-			  \label{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}
-			\end{subfigure}%
-			\begin{subfigure}{.5\textwidth}
-				\centering
-				\includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_cropped.png}
-			  \caption{rasterized to Sentinel 2 resolution.}
-			  \label{fig:satelite/witzwil_2021_P112_yield_cropped.png}
-			\end{subfigure}
-			\caption{Crop yield density map of a field. Ranges from 0.1 t/ha (black) to 5.35 t/ha (white) }
-			\label{fig:satelite_witzwil_yield}
-		\end{figure}
+		The European Space Agency (ESA)\footnote{REF: https://sentinel.esa.int/web/sentinel/missions/sentinel-2} freely distributes the high-quality images of the two Sentinel satellites (S2). Together, both satellites have a revisit time of 5 days at the Equator and 2-3 days at mid-latitudes. However, in our study region, we only receive an image every 5 days.
+		
+		\input{tex/chapters/misc/table_S2-bands.tex}
+		
+		The S2 images contain 12 spectral bands with spatial resolutions up to 10 meters (see \ref{table:S2-bands}). Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation (\cite{perichPixelbasedYieldMapping2022a}). In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used\footnote{According to \cite{perichPixelbasedYieldMapping2022a}: ``Data prior to March 2018 was only available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by ESA''}. 
+		The ESA also supplies an algorithm\footnote{REF https://sentinels.copernicus.eu/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm} produces Scene Classification Layer (\textit{SCL}) where for each location the observed subject is assigned to one of 11 SCL-classes (c.f. table~\ref{tab:satelite/scl_classes}). 
+		In this thesis,  we will use this classification to filter out data points, which we belive to be less informative. That are all observations which SCL-class does not correspond to vegetation or bare soils (classes 4 and 5). For convenience, we define the set SCL45 as the observations which belong to SCL-class 4 or 5.
+		
+		% \begin{figure}[h]
+		% 	\label{fig:satelite/sentinel-2-bands}
+		% 	\center
+		% 	\includegraphics[width=0.4\textwidth]{satelite/sentinel-2-bands.jpg}
+		% 	\caption{XXX Sentinel 2 bands}
+		% \end{figure}
+		\input{tex/chapters/misc/table_scl_classes.tex}
+		
+
 	}
+}
+
+\section{Crop Yield Data}{
+	\label{sec:yieldmapping_data}
+	The crop yield data were collected using a combine harvester. Equipped with GPS, the harvester drives over the fields and continuously estimates the dry crop yield density in $t/ha$ (see fig. \ref{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}). 
+	We take the data set derived in \cite{perichPixelbasedYieldMapping2022a}, where error-prone measurement points (such as during a tight curve of the combine harvester) were removed and then the yield map was rasterized using linear interpolation (c.f. fig. \ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}). We summarize the rasterized dry-yield values by the following statistics:
+
+	% tabelle anstadt histogramm, da schon zu viele figuren ``herumschwirren'' und es so kompakter ist.
+	\begin{tabular}{l l l l l l l} 
+		Minimum & 1st Quartile & Median & Mean  & 3rd Quartile & Maximum & Variance \\
+		0.107   & 6.186        & 7.560  & 7.359 & 8.756        & 13.35   & 4.035
+	\end{tabular}    
+
+	Comparing the average per-field crop yield reported by the farmer with the yield estimated by the combine harvester shows that the latter overestimates crop yield by ca. $10\%$ (c.f. \cite{perichPixelbasedYieldMapping2022a}). Since the relative estimation error is approximately constant and we do not aim for an accurate yield prediction, we will not consider this deviation. 
 
 
-	\subsection{The Concept of a `Pixel'}{
+
+	\begin{figure}
+		\centering
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_harvester_cropped.png}
+			\caption{Raw combine harvester data (cleaned)}
+			\label{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}
+		\end{subfigure}%
+		\begin{subfigure}{.5\textwidth}
+			\centering
+			\includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_cropped.png}
+			\caption{rasterized to Sentinel 2 resolution.}
+			\label{fig:satelite/witzwil_2021_P112_yield_cropped.png}
+		\end{subfigure}
+		\caption{Crop yield density map of a field. Ranges from 0.1 t/ha (black) to 5.35 t/ha (white) }
+		\label{fig:satelite_witzwil_yield}
+	\end{figure}
+
+}
+
+
+
+\section{The Concept of a `Pixel'}{
 		\label{sec:gather_data_to_pixel}
 		Before we join all the data, we define a few concepts.
 
-		{% NDVI
-			The well-known Normalized Difference Vegetation Index (\textit{NDVI}) introduced in \cite{rouseMonitoringVernalAdvancement1974} can be calculated using the bands $B4$ and $B8$ (table \ref{table:S2-bands}) by:
-			\begin{equation}
-				NDVI = \frac{B8 - B4}{B8 + B4}
-				\label{eq:ndvi}
-			\end{equation}
-			Note that we call the calculated values merely the \textit{observed NDVI}, as we must be aware of imprecisions due to clouds and shadows\todo{Please clarify this in more detail. We used pixels flagged with SCL 4 \& 5, but as can be seen in Fig. 2.1 d), this can yield erroneous NDVI values, etc.}. 
-		}
+	\subsection{Normalized Difference Vegetation Index (NDVI)}{% NDVI
+		The well-known  (\textit{NDVI}) introduced in \cite{rouseMonitoringVernalAdvancement1974} can be calculated using the bands $B4$ and $B8$ (table \ref{table:S2-bands}) by:
+		\begin{equation}
+			NDVI = \frac{B8 - B4}{B8 + B4}
+			\label{eq:ndvi}
+		\end{equation}
+		Note that we call the calculated values merely the \textit{observed NDVI}, as we must be aware of imprecisions due to clouds and shadows\todo{Please clarify this in more detail. We used pixels flagged with SCL 4 \& 5, but as can be seen in Fig. 2.1 d), this can yield erroneous NDVI values, etc.}. 
+	}
 
 		{% GDD & DAS
-			To define a timescale, we consider Days After Sowing (\textit{DAS}) and a transformed timescale, Growing Degree Days (\textit{GDD}) (\cite{mcmasterGrowingDegreedaysOne1997}REF). The latter are defined as the cumulative sum (since sowing) of temperature above a given base temperature $T_{base}$. For cereals, we use $T_{base}=0$ (REF-Gregor). Thus, the GGD for $n$ days after sowing will be equal to:\todo{Für den Leser wäre es interessant, wenn Du noch kurz die wichtigsten GDD Werte aus der Literatur beschreiben würdest (D.h. z.B. Sowing, Emergence of Plants, Anthesis, Senescence, Harvest)}
+			To define a timescale, we consider Days After Sowing (\textit{DAS}) and a transformed timescale, Growing Degree Days (\textit{GDD}) (\cite{mcmasterGrowingDegreedaysOne1997}REF). The latter are defined as the cumulative sum (since sowing) of temperature above a given base temperature $T_{base}$. For cereals, we use $T_{base}=0$ (\cite{perichPixelbasedYieldMapping2022a}). Thus, the GGD for $n$ days after sowing will be equal to:\todo{Für den Leser wäre es interessant, wenn Du noch kurz die wichtigsten GDD Werte aus der Literatur beschreiben würdest (D.h. z.B. Sowing, Emergence of Plants, Anthesis, Senescence, Harvest)}
 			\begin{equation}
 				\label{eq:gdd}
 				GDD_n := \sum_{i=0}^n \max(T_i - T_{base}, 0).
@@ -103,20 +93,37 @@
 		We will call the resulting data set \textit{PIXELS}, as it is the collection of all Pixels (over all seasons). 
 		
 		% Finally, we split PIXELS randomly into a train ($80\%$) and test  ($20\%$) set. 
-
+	\subsection{Challenges in S2 Data}{
+			\input{tex/chapters/misc/2x3_satelite_ts_plot_grid.tex}\todo{Hier noch eine NDVI Zeitreihe parallel dazu zeigen. Ansonsten wird nicht klar, warum wir die Interpolation überhaupt machen.}
+			% Description of plot
+			The figure~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, which display our challenges\todo{which challenges? were they introduced earlier? E.g. in the introduction?}. In February (image a), we see no vegetation but bare soil. At the beginning of May, we observe a cloudless dark green field. In (c) heavy cloud cover (SCL class 9) leads to a complete loss of plant information in this S2 observation. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds. In (e) we see a pale green. This likely shimmers through cirrus clouds. 
+			
+			%% subfigures references:
+			% (see. \ref{fig:satelite/time_series_2021_P112/15_scl5_2021-02-23.png})
+			% (see. \ref{fig:satelite/time_series_2021_P112/30_scl4_2021-05-09.png})
+			% (see. \ref{fig:satelite/time_series_2021_P112/33_scl9_2021-05-24.png})
+			% (see. \ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png})
+			% (see. \ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png})
+			% (see. \ref{fig:satelite/time_series_2021_P112/45_scl2_2021-07-23.png})
 	}
+}
 
-\section{General Methods}{
-	We will only introduce general methods within this section, whereas more specific methods will be introduced in their context\todo{which context? I would write: "... introduced in chapter/section XXX in more detail.}. We discuss interpolation methods in sections \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric}, a robustification strategy in section \ref{sec:loess_robustify}, a method how we can objectively determine the quality of an interpolation in section \ref{sec:itpl_param_est}, and in section \ref{sec:corr_correction} we present the NDVI correction with an adapted interpolation strategy.
+\section{General Methods}{\label{sec:general_methods}
+	Here we will only introduce Methods which will accure in several places. For interpolation methods we refer to sections \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric}, for a robustification strategy to section \ref{sec:loess_robustify}. In section \ref{sec:itpl_param_est} we describe a method to objectively determine the quality of an interpolation, and in section \ref{sec:corr_correction} we present the NDVI correction together with an adapted interpolation strategy.
 
 
-	\subsection{(Relative) RMSE}
-		\todo[inline]{definithion here and also relative}
-
-	\subsection{Out-Of-Bag (\textit{OOB}) and Leave-One-Out-Cross-Validation (\textit{LOOCV})}{
-	    \todo[inline]{Hier fehlt mir eine kurze Erklärung, was OOB und LOOCV sind.}
-		\label{sec:OOB_LOOCV}
-		Let 
+	\subsection{Root Mean Square Error (RMSE)}
+		In this section we describe different criteria to evaluate models. Hence, given a vector $y\in \R^n$ and its estimator $\hat y$ (estimated using the model), we define the RMSE as:
+		\begin{equation}
+			\label{eq:rmse}
+			 \sqrt{\frac{1}{n}\sum_{i=1}^n (y_i - \hat y_i)^2}
+		\end{equation}
+		% keine definition für R2 und relative RMSE da diese nur im appendix verwendet werden. Die definition nehmen wir dort vor.
+		
+		\subsection{Out-Of-Bag (\textit{OOB}) and Leave-One-Out-Cross-Validation (\textit{LOOCV})}{ \label{sec:OOB_LOOCV}
+		The rationale for OOB and LOOCV is that we intend to evaluate a model $M$ with unseen data. That is, if $D$ describes the entire dataset and we train a model on a subset of $D$, we can use the remaining data to evaluate the model. 
+		
+		To formally introduce this, let:
 		$$
 			D=\{(X_{[j,:]},y_j)|\; X\in\R^{n\times p}, y\in \R^n, j=1,\dots,n\}
 		$$
@@ -129,8 +136,4 @@
 		If we optimize some parameter via OOB (or LOOCV) this means that we search for the parameter that minimizes some loss function which takes the OOB (or LOOCV) residuals. Usually we approximate this parameter by searching on a grid. 
 	}
 
-	\subsection{Generalized Cross Validation (GCV)}{
-		\todo[inline]{definition here and explanation why (computational cheap)}
-
-	}
 }

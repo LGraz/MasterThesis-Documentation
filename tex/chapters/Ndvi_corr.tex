@@ -1,7 +1,7 @@
 \chapter{NDVI Correction} \label{sec:corr}
 
 {
-    Let's remind ourselves that the data from the S2 is distributed  with an SCL and we therefore have some information about what is observed at each pixel for each sampled time (cf. table~\ref{tab:satelite/scl_classes}). So far, we have only considered cloud-free points (i.e., SCL-classes 4 and 5). In this chapter, we would like to improve the NDVI interpolation by inspecting also other SCL-classes and by using more information than just the two bands used to calculate the NDVI (B4 and B8).
+    Let's remind ourselves that the data from the S2 is distributed  with an SCL and we therefore have some information about what is observed at each pixel for each sampled time (c.f. table~\ref{tab:satelite/scl_classes}). So far, we have only considered cloud-free points (i.e., SCL-classes 4 and 5). In this chapter, we would like to improve the NDVI interpolation by inspecting also other SCL-classes and by using more information than just the two bands used to calculate the NDVI (B4 and B8).
 }
 
 \section{Considering other SCL Classes}{
@@ -36,7 +36,7 @@
     \label{sec:corr_correction}
     % \subsection{XXX idea -and- stepwise plots}
     {
-        We recall the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite SCL4 labeled and see fragments in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to see clouds (SCL 10 - Cirrus clouds). The SCL classification is based only on a mixed model trained using the s2 bands.\todo{hier könnte man auch wieder bezug nehmen auf die originale Sektion, wo man SCL einführt. dort fehlt momentan auch die Erklärung, dass SCL ein model output ist}
+        We recall the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite SCL4 labeled and see fragments in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to see clouds (SCL 10 - Cirrus clouds). The SCL classification is based only on a mixed model trained using the S2 bands.\todo{hier könnte man auch wieder bezug nehmen auf die originale Sektion, wo man SCL einführt. dort fehlt momentan auch die Erklärung, dass SCL ein model output ist}
         
         We will improve our NDVI interpolation by not relying on the existing SCL classification, but by training our own model to estimate/correct NDVI using all S2 bands (see sections~\ref{sec:corr_data_table} and~\ref{sec:corr_methods}). After we have corrected the observed NDVI, we will assess the uncertainty of our corrections and translate it into weights (in section~\ref{sec:corr_uncertainty}). These will be used for the subsequent interpolation. This step-by-step procedure is illustrated by the REF graph in the appendix.
 

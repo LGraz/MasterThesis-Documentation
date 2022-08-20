@@ -22,7 +22,7 @@
 		\end{equation*}
 		Where the five free parameters: $y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Such fit can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}.
 
-		Similar as for the Savitzky-Golay Filter (cf. section~\ref{sec:Savitzky–Golay}) we reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations\footnote{For the details on the weights we refer to \cite{beckImprovedMonitoringVegetation2006}}.
+		Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay}) we reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations\footnote{For the details on the weights we refer to \cite{beckImprovedMonitoringVegetation2006}}.
 
 		\begin{my_pros_cons_table}{
 				\item Incorporates subject specific knowledge in the case of evergreen plants covered in snow.
@@ -30,7 +30,7 @@
 			}{
 				\item Strong shape assumptions on the NDVI curve.
 				\item Parameter optimization might go wrong. This can be mitigated to some extent to provide bounds for the parameters
-				\item Strange behavior in regions with little observations. (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
+				\item Strange behavior in regions with little observations. (c.f. figure~\ref{fig:interpol/fourier_dl_comparison})
 			}
 		\end{my_pros_cons_table}
 
@@ -49,7 +49,7 @@
 				\item Assumption of periodicity can be helpful if we are modelling multiyear grow cycles
 				\item Flexible curve shape
 			}{
-				\item Bad behavior in regions with little data (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
+				\item Bad behavior in regions with little data (c.f. figure~\ref{fig:interpol/fourier_dl_comparison})
 				\item Hard to interpret estimated parameters
 				\item Parameter estimation can go wrong. Introducing bounds can help.
 			}
@@ -90,7 +90,7 @@
 		\begin{my_pros_cons_table}{
 				\item flexible due to different possible kernels
 				\item can be assigned degrees of freedom (trace of the hat-matrix)
-				\item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (REF cf. CompStat 3.2.2)
+				\item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (REF c.f. CompStat 3.2.2)
 			}{
 				\item if the $x \mapsto K(x)$ is not continuous, $\hat m $ isn't either
 				\item choice of bandwidth, especially if $x_i$ are not equidistant.
@@ -197,7 +197,7 @@
 		% Introduced by : \cite{clevelandRobustLocallyWeighted1979}
 		% implemented here \cite{cappellariATLAS3DProjectXX2013}
 
-		The Locally Weighted Regression (LOESS) introduced by \cite{clevelandRobustLocallyWeighted1979} can be understood as a generalization of the SG Filter (cf. sec.~\ref{sec:Savitzky–Golay}).
+		The Locally Weighted Regression (LOESS) introduced by \cite{clevelandRobustLocallyWeighted1979} can be understood as a generalization of the SG Filter (c.f. sec.~\ref{sec:Savitzky–Golay}).
 
 		Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ separately by fitting a polynomial of order $d$ by weighted least squares. The weights are (usually) defined by
 		$$w_i(x_j)=\begin{cases}

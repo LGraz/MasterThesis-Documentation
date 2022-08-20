@@ -99,7 +99,7 @@
     \end{equation}
     and select the pair (which when added to $\mathcal{M}$ and the coefficients refitted) reduces the RMSE the most. Add the selected pair to $\mathcal{M}$ and repeat until the RMSE reduction becomes insignificant.
 
-    Finally, to avoid overfitting, we prune the set $\mathcal{M}$ by optimizing a generalized cross validation score (GCV).\footnote{This means that we perform an iterative procedure to reduce the number of functions in $\mathcal{M}$. For every function $h$ in $\mathcal{M}$, we compute the model using $\mathcal{M}\\\{h\}$. We discard the function which -- when excluding from $\mathcal{M}$ -- leads to the best GCV score.}  
+    Finally, to avoid overfitting, we prune the set $\mathcal{M}$ by optimizing a LOOCV score.\footnote{This means that we perform an iterative procedure to reduce the number of functions in $\mathcal{M}$. For every function $h$ in $\mathcal{M}$, we compute the model using $\mathcal{M}\\\{h\}$. We discard the function which -- when excluding from $\mathcal{M}$ -- leads to the best LOOCV score.}  
 
     To reduce computational complexity, we follow the recommendation from REF\cite{stephenEarthMultivariateAdaptive2021} and restrict $h$ in equation~\eqref{eq:mars_candidate} to be of degree one (so it is also in a pair of $\mathcal{B}$). Consequently, $\mathcal{C}$ contains functions with a degree of at most 2. 
 

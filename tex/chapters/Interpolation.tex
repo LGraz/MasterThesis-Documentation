@@ -30,7 +30,7 @@
 
 \section{DAS vs. GDD}{\todo{put section in methods / data}
 	%example plot
-	Prior to interpolating the NDVI time series, we should decide on a timescale. We can choose between DAS and GDD\todo{Findet man hier noch Literatur, in welcher ähnliches diskutiert wurde, die man zitieren kann?} (cf. section \ref{sec:gather_data_to_pixel} and equation \ref{eq:gdd}). In figure \ref{fig:interpol/das_vs_gdd} we see an example for comparison of the two. Here we see that the first 120 DAS are compressed to just 500 GDD. 
+	Prior to interpolating the NDVI time series, we should decide on a timescale. We can choose between DAS and GDD\todo{Findet man hier noch Literatur, in welcher ähnliches diskutiert wurde, die man zitieren kann?} (c.f. section \ref{sec:gather_data_to_pixel} and equation \ref{eq:gdd}). In figure \ref{fig:interpol/das_vs_gdd} we see an example for comparison of the two. Here we see that the first 120 DAS are compressed to just 500 GDD. 
 	This has several advantages. First, it makes the scales comparable (in terms of plant growth) because the plants are not concerned with the month of the year but the current temperature. Second, in winter we tend to have higher cloud cover and thus fewer SCL45 observations. Hence, this gap in observations is compressed. Therefore, we will only use GDD in the subsequent.
 
 	\begin{my_figure}[h]{width=0.8\textwidth}{interpol/das_vs_gdd}
@@ -92,7 +92,7 @@
 	{ % Intro
 		Now we discuss a general approach of how to make an interpolation more robust against outliers. The main idea is to give less weight to observations that have high residuals after the initial (or if we reiterate, the previous) fit.
 
-		Even though the procedure is taken from the robust version of the LOESS smoother (cf. section~\ref{sec:loess} and \cite{clevelandRobustLocallyWeighted1979}), we can apply it to every interpolation method that allows for prior weighting of observations.
+		Even though the procedure is taken from the robust version of the LOESS smoother (c.f. section~\ref{sec:loess} and \cite{clevelandRobustLocallyWeighted1979}), we can apply it to every interpolation method that allows for prior weighting of observations.
 	}
 	
 	{	
