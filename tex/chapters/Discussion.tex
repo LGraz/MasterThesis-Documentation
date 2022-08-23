@@ -3,11 +3,20 @@
 
     SCL is prone to errors as can be seen in figure~\ref{fig:witzwil_selected_satellite_images}. A machine learning approach like the one developed in \cite{raiyaniSentinel2ImageScene2021} could be used instead.
 
-\section{Interpolation Methods}{
-    \todo[inline]{You already capture the "main" structure of your thesis with the interpolation and the NDVi correction sections. Can you combine them both in a "synthesis" subsection at the end of the discussion?}
+\section{Data Gaps}\label{sec:discussion_itpl_data_gaps}
+fourier schlecht bei wenigen beobachtungen, siehe rob in \ref{tab:cv-statistics_itpl-methods}
+
+Strange behaviour of LOESS 
+prefer ss because of the smoothness guarantees (compare the figures \ref{fig:interpol/2x3_loess_robust} and \ref{fig:interpol/2x3_SS_robust})
+
+\section{Interpolation Methods}{ \label{sec:discussion_itpl}Given that DL convinces regarding most of the selected score functions in table \ref{tab:cv-statistics_itpl-methods} we will certainly investigate this method in chapter \ref{sec:corr}. Moreover, we see that the robustification mostly improved the score regarding the 50, 75, 85, and 90 \% Quantiles. Only for the outlier-sensitive score functions (RMSE and q95)\footnote{For the RMSE one outlier is enough to take away the usefulness of the statics, in the case of q95 it is enough if 5\% of the data are corrupt to break the statics.} we notice significant worsening ( we consider the robust fourier separately in section \ref{sec:discussion_itpl_data_gaps}). Consequently, we will also use the robustification in section \ref{sec:corr}.
+Not wanting to rely on the form assumptions of the DL, we further choose a non-parametric method for further consideration. Despite the LOESS slightly dominating the SS in table \ref{tab:cv-statistics_itpl-methods}, we choose the SS. This is due to the strange behavior of the LOESS in case of data gaps (see section \ref{sec:discussion_itpl_data_gaps}) and the good interpretability of the SS using the minimization function \refeq{eq:ss}.
+
+
+
 }
 
-XXX discuss results from table \label{tab:methods_vs_yieldprediction}
+XXX discuss results from table \ref{tab:methods_vs_yieldprediction}
 
 \section{NDVI Correction}{
     \subsection{Bootstrap}
@@ -33,3 +42,5 @@ XXX discuss results from table \label{tab:methods_vs_yieldprediction}
         \end{Nenumerate}
     }
 }
+
+\todo[inline]{You already capture the "main" structure of your thesis with the interpolation and the NDVi correction sections. Can you combine them both in a "synthesis" subsection at the end of the discussion?}

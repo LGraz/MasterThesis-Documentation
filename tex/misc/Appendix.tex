@@ -1,5 +1,28 @@
 \chapter{Further Material}
 
+\section{Data and Methods}{
+	\subsection{GDD}\label{app:gdd_examples}
+		\cite{baileyUsingGrowingDegree2018} tabulates the corresponding GDD for each stage of wheat.
+		\begin{table}[H]
+			\centering
+			\small
+			\begin{tabular}{p{0.2\linewidth} p{0.57\linewidth}  p{0.13\linewidth}} 
+				\toprule
+				Stage  & Description    & GDD \\
+				\hline Emergence & Leaf tip just emerging from above-ground coleoptyle. & $125-160$ \\
+				\hline Leaf development & Two leaves unfolded. & $169-208$ \\
+				\hline Tillering & First tiller visible  & $369-421$ \\
+				\hline Stem elongation & First node detectable. & $592-659$ \\
+				\hline Anthesis & Flowering commences; first anthers of cereals are visible. & $807-901$ \\
+				\hline Seed fill & Seed fill begins. Caryopsis of cereals watery ripe (first grains have reached half of their final size). & $1068-1174$ \\
+				\hline Dough stage & Soft dough stage, grain contents soft but dry, fingernail impression does not hold. & $1434-1556$ \\
+				\hline Maturity complete & Grain is fully mature and drydown begins. Ready for harvest when dry. & $1538-1665$ \\
+				\bottomrule
+			\end{tabular}
+		\end{table}
+}
+
+
 \section{Interpolation}
 \begin{my_figure}[!h]{width=1\textwidth}{interpol/2x3_loess_robust}
 	\caption{The LOESS smoother \RobItPlot}
@@ -16,7 +39,11 @@
 	\label{fig:interpol/2x3_DL_robust}
 \end{my_figure}
 
-
+% \subsection{Skewness of LOOCV residuals}
+% \begin{my_figure}[h]{width=0.6\textwidth}{interpol/res_cv}
+% 	\caption{XXX caption XXX}
+% 	\label{fig:interpol/res_cv}
+% \end{my_figure}
 
 
 \section{NDVI correction}
@@ -50,3 +77,4 @@
 
 
 \todo[inline]{replace space before ref by tilda}
+\todo[inline]{check quantile definitions}

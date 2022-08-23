@@ -1,8 +1,24 @@
 \chapter{Results}
-\section{XXX small recap from ``Interpolation Methods''}
-\todo[inline]{shoud w write 1:1 the sam es in the end of section \ref{sec:itpl}}
 
-\section{Robustification and NDVI-Correction}
+\section{Goodness of Fit for Selected Interpolation Methods}{
+	\label{sec:results_itpl}
+	Table \ref{tab:cv-statistics_itpl-methods} benchmarks the interpolation methods (on $P^{SCL45}$) with respect to various score functions. The score functions take the absolute values of the LOOCV residuals and summarize them in a number (the smaller the better). For each of the 5 selected interpolation methods, we consider the basic version and the robustified (see section \ref{sec:loess_robustify}) version.
+
+	\begin{table}[h]
+		\begin{center}
+			\caption{Comparing the goodness of fit for different interpolation methods (on $P^{SCL45}$) measured with the score functios (which take the LOOCV residuals as input) listed in the left column. $q_X$ denotes here the $X\%$ quantile.}
+			\scriptsize
+			\input{tex/chapters/misc/table_cv-statistics_itpl-methods}
+			\normalsize
+			\label{tab:cv-statistics_itpl-methods}
+		\end{center}
+	\end{table}
+	
+	DL is the best among both robustified and non-robustified with respect to most of the score functions used (all except q95) and is especially superior to the other parametric approach, which is Fourier interpolation. Especially the robust Fourier interpolation performs poorly. The LOESS dominates (i.e. is superior on every score function) all other non-prametric methods, but is closely followed by the SS. The BSPL, on the other hand, is the worst non-parametric method tested here. 
+}
+
+
+\section{Robustification and NDVI-Correction} \label{sec:results_ndvi_corr}
 \begin{table}
 	\begin{center}
 		\caption{XXX RMSE of yield prediction. For the relative RMSE and the coefficient of determination (R\textsuperscript{2}) see table \ref{tab:methods_vs_yieldprediction_relative} and \ref{tab:methods_vs_yieldprediction_r2}}.

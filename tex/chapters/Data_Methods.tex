@@ -10,13 +10,13 @@
 	\label{sec:s2_img_data}
 	%\subsection*{General Information}
 	{
-		
-		The European Space Agency (ESA)\footnote{REF: https://sentinel.esa.int/web/sentinel/missions/sentinel-2} freely distributes the high-quality images of the two Sentinel satellites (S2). Together, both satellites have a revisit time of 5 days at the Equator and 2-3 days at mid-latitudes. However, in our study region, we only receive an image every 5 days.
+		% wie zitiere ich diese url's am besten? BibTex schlägt fehl, da der Autor-name nicht eindeutig ist ('die ESA'?)
+		The European Space Agency (ESA)\footnote{\url{https://sentinel.esa.int/web/sentinel/missions/sentinel-2}} freely distributes the high-quality images of the two Sentinel satellites (S2). Together, both satellites have a revisit time of 5 days at the Equator and 2-3 days at mid-latitudes. However, in our study region, we only receive an image every 5 days.
 		
 		\input{tex/chapters/misc/table_S2-bands.tex}
 		
 		The S2 images contain 12 spectral bands with spatial resolutions up to 10 meters (see \ref{table:S2-bands}). Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation (\cite{perichPixelbasedYieldMapping2022a}). In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used\footnote{According to \cite{perichPixelbasedYieldMapping2022a}: ``Data prior to March 2018 was only available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by ESA''}. 
-		The ESA also supplies an algorithm\footnote{REF https://sentinels.copernicus.eu/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm} produces Scene Classification Layer (\textit{SCL}) where for each location the observed subject is assigned to one of 11 SCL-classes (c.f. table~\ref{tab:satelite/scl_classes}). 
+		The ESA also supplies an algorithm\footnote{\url{https://sentinels.copernicus.eu/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm}} produces Scene Classification Layer (\textit{SCL}) where for each location the observed subject is assigned to one of 11 SCL-classes (c.f. table~\ref{tab:satelite/scl_classes}). 
 		In this thesis,  we will use this classification to filter out data points, which we belive to be less informative. That are all observations which SCL-class does not correspond to vegetation or bare soils (classes 4 and 5). For convenience, we define the set SCL45 as the observations which belong to SCL-class 4 or 5.
 		
 		% \begin{figure}[h]
@@ -66,50 +66,82 @@
 
 }
 
+\section{Normalized Difference Vegetation Index (NDVI)}{% NDVI
+	The well-known  (\textit{NDVI}) introduced in \cite{rouseMonitoringVernalAdvancement1974} is used to measure vegetation in remote sensing. It utilizes a large jump of reflectancy between red and infrared and can be calculated using the bands $B4$ and $B8$ (table \ref{table:S2-bands}) by:
+	\begin{equation}
+		NDVI = \frac{B8 - B4}{B8 + B4}
+		\label{eq:ndvi}
+	\end{equation}
+	Since we measure the NDVI via the S2 satelites from space we can not expect to measure the true NDVI. This is especially true if we do not see the ground because of clouds or the ground signal is disturbed by cloud shadows. Even if we only use SCL45 observations we still encouter issues as will be described in section \ref{sec:s2_challangges}. Therefore, we call the calculated values merely the \textit{observed NDVI}. In the following chapters, we will study the resulting NDVI time series (for one location and one season) extensively. Such a time series is shown in figure \ref{interpol/ndvi_ts_das_grey.pdf}.
+	\begin{figure}[!h]
+		\centering
+		\begin{subfigure}{.47\textwidth}
+			% \centering
+			\includegraphics[height=.75\linewidth]{interpol/ndvi_ts_das_grey.pdf}
+			\caption{Days After Sowing (DAS)}
+			\label{interpol/ndvi_ts_das_grey.pdf}
+		\end{subfigure}%
+		\hfill
+		\begin{subfigure}{.47\textwidth}
+			% \centering
+			\includegraphics[height=.75\linewidth]{interpol/ndvi_ts_gdd_grey.pdf}
+			\caption{Growing Degree Days (GDD)}
+			\label{interpol/ndvi_ts_gdd_grey.pdf}
+		\end{subfigure}
+		\caption{NDVI time series plotted against DAS and GDD. GDD are introduced in section \ref{sec:gdd_def}.}
+		\label{fig:raw_ndvi_ts}
+	\end{figure}
+}
+% \section{DAS vs. GDD}{
+% %example plot
+% Prior to interpolating the NDVI time series, we should decide on a timescale. We can choose between DAS and GDD\todo{Findet man hier noch Literatur, in welcher ähnliches diskutiert wurde, die man zitieren kann?} (c.f. section \ref{sec:gather_data_to_pixel} and equation \ref{eq:gdd}). 
+% This has several advantages. First, it makes the scales comparable (in terms of plant growth) because the plants are not concerned with the month of the year but the current temperature. Second, in winter we tend to have higher cloud cover and thus fewer SCL45 observations. 
 
-
-\section{The Concept of a `Pixel'}{
-		\label{sec:gather_data_to_pixel}
-		Before we join all the data, we define a few concepts.
-
-	\subsection{Normalized Difference Vegetation Index (NDVI)}{% NDVI
-		The well-known  (\textit{NDVI}) introduced in \cite{rouseMonitoringVernalAdvancement1974} can be calculated using the bands $B4$ and $B8$ (table \ref{table:S2-bands}) by:
+% \begin{my_figure}[h]{width=0.8\textwidth}{interpol/das_vs_gdd}
+% 	\caption{The same NDVI time-series, on the left with DAS as the timescale, on the right GDD is the timescale. SCL45 are colored black. Non-SCL45 (clouds and shadows) are colored in gray.}
+% 	\label{fig:interpol/das_vs_gdd}
+% \end{my_figure}
+\section{Timescale Transformation}\label{sec:gdd_def}
+	{% GDD & DAS
+		Regarding the Days After Sowing (DAS) time scale shown in fig. \ref{interpol/ndvi_ts_das_grey.pdf}, we detect two drawbacks. First, this scale makes it difficult to compare two NDVI time series because wheat is not always sown on the same day of the year and in some years plants begin to emerge earlier. Second, because there are only few SCL45 observations in the winter, we face significant data gaps in this period. The time scale transformation introduced in \cite{mcmasterGrowingDegreedaysOne1997} fixes both problems. The resulting Growing Degree Days (\textit{GDD}) are defined as the cumulative sum since sowing of temperature above a given base temperature $T_{base}$. For cereals, we use $T_{base}=0$ (\cite{perichPixelbasedYieldMapping2022a}). Thus, the GGD for $n$ days after sowing will be equal to:
 		\begin{equation}
-			NDVI = \frac{B8 - B4}{B8 + B4}
-			\label{eq:ndvi}
+			\label{eq:gdd}
+			GDD_n := \sum_{i=0}^n \max(T_i - T_{base}, 0).
 		\end{equation}
-		Note that we call the calculated values merely the \textit{observed NDVI}, as we must be aware of imprecisions due to clouds and shadows\todo{Please clarify this in more detail. We used pixels flagged with SCL 4 \& 5, but as can be seen in Fig. 2.1 d), this can yield erroneous NDVI values, etc.}. 
-	}
+		Important plant growth stages and their corresponding GDD values are tabultaed in \ref{app:gdd_examples}
 
-		{% GDD & DAS
-			To define a timescale, we consider Days After Sowing (\textit{DAS}) and a transformed timescale, Growing Degree Days (\textit{GDD}) (\cite{mcmasterGrowingDegreedaysOne1997}REF). The latter are defined as the cumulative sum (since sowing) of temperature above a given base temperature $T_{base}$. For cereals, we use $T_{base}=0$ (\cite{perichPixelbasedYieldMapping2022a}). Thus, the GGD for $n$ days after sowing will be equal to:\todo{Für den Leser wäre es interessant, wenn Du noch kurz die wichtigsten GDD Werte aus der Literatur beschreiben würdest (D.h. z.B. Sowing, Emergence of Plants, Anthesis, Senescence, Harvest)}
-			\begin{equation}
-				\label{eq:gdd}
-				GDD_n := \sum_{i=0}^n \max(T_i - T_{base}, 0).
-			\end{equation}
-		} 
+		In figure \ref{fig:raw_ndvi_ts} we see an example for comparison of the DAS and GDD timescale. Here we see that the first 120 DAS are compressed to just 500 GDD and hence the gap in observations was succesfully compressed. Due to the reasons mentioned above, from now on we will only consider GDD.
+	} 
 
-		Now we create a data set, which will contain all the necessary information\todo{necessary info for what? To answer the research questions asked in section XXX}. Given that we have the spectral data at a $10m \times 10m$ resolution, we introduce the concept of a Pixel. A \textit{Pixel} $P$ is associated with a $10m \times 10m$ square defined by the S2 satellites and contains all relevant information\todo{which?} for a season and this location. More precisely, $P$ is a collection of general information (like yield and coordinates) and all associated $P_t$ of a given season. Where $P_t$ represents a tuple of the spectral data for time $t$, the NDVI calculated from it, and the associated GDD. 
-		We will call the resulting data set \textit{PIXELS}, as it is the collection of all Pixels (over all seasons). 
+\section{The Concept of a `Pixel'}{ \label{sec:gather_data_to_pixel}
+	Now we create a new data structure that we call Pixel. This originates from the pixels of the S2 satellite images. It will contain all the information needed to confront the tasks in the following chapters. 
+		
+		Consider a 10 by 10 meter square that coinsides with a S2 image pixel and $T$ the GDD values for which S2 images are avialable in a given season. For $t\in T$ let $P_t$ be a tupel of all the spectral bands, the observed NDVI and the SCL class (at the considered location at time $t$). Then, define $P$ as the collection of all the $P_t$ and the estimated dry-yield for this square.
+		Analogously to $P$, define $P^{SCL45}$ by only considering $P_t$ with SCL-class 4 or 5 (vegetation and soil).  
+}
+
+		% We will call the resulting data set \textit{PIXELS}, as it is the collection of all Pixels (over all seasons). 
 		
 		% Finally, we split PIXELS randomly into a train ($80\%$) and test  ($20\%$) set. 
-	\subsection{Challenges in S2 Data}{
-			\input{tex/chapters/misc/2x3_satelite_ts_plot_grid.tex}\todo{Hier noch eine NDVI Zeitreihe parallel dazu zeigen. Ansonsten wird nicht klar, warum wir die Interpolation überhaupt machen.}
-			% Description of plot
-			The figure~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, which display our challenges\todo{which challenges? were they introduced earlier? E.g. in the introduction?}. In February (image a), we see no vegetation but bare soil. At the beginning of May, we observe a cloudless dark green field. In (c) heavy cloud cover (SCL class 9) leads to a complete loss of plant information in this S2 observation. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds. In (e) we see a pale green. This likely shimmers through cirrus clouds. 
-			
-			%% subfigures references:
-			% (see. \ref{fig:satelite/time_series_2021_P112/15_scl5_2021-02-23.png})
-			% (see. \ref{fig:satelite/time_series_2021_P112/30_scl4_2021-05-09.png})
-			% (see. \ref{fig:satelite/time_series_2021_P112/33_scl9_2021-05-24.png})
-			% (see. \ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png})
-			% (see. \ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png})
-			% (see. \ref{fig:satelite/time_series_2021_P112/45_scl2_2021-07-23.png})
-	}
+\section{Challenges in S2 Data}{\label{sec:s2_challangges}
+	\input{tex/chapters/misc/2x3_satelite_ts_plot_grid.tex}
+	% Description of plot
+	Now, we shall illustrate with an example pixel the challenges, we will confront in the coming chapters. The figure~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, one selected Pixel and the NDVI time series of that pixel. 		
+	In February (image a), we see no vegetation but bare soil and thus also a low NDVI. At the beginning of May (b), we observe a cloudless dark green field with a high NDVI. In (c) heavy cloud cover (SCL class 9) leads to a complete loss of plant information in this S2 observation. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds which is also reflected in a sudden NDVI drop. Even though SCL indicates that (e) are thin cirrus clouds, we see a pale green and we also note a NDVI.
+
+	So in conclusion, we remark that some SCL45 observations are not accurate and even though a few non-SCL45 observations contain useful information, most of them are too unreliable (e.g. all SCL 9 observations). Thus, we aim to substitute the unreliable ones with interpolated versions and correct corrupt ones.
+		
+		%% subfigures references:
+		% (see. \ref{fig:satelite/time_series_2021_P112/15_scl5_2021-02-23.png})
+		% (see. \ref{fig:satelite/time_series_2021_P112/30_scl4_2021-05-09.png})
+		% (see. \ref{fig:satelite/time_series_2021_P112/33_scl9_2021-05-24.png})
+		% (see. \ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png})
+		% (see. \ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png})
+		% (see. \ref{fig:satelite/time_series_2021_P112/45_scl2_2021-07-23.png})
 }
 
 \section{General Methods}{\label{sec:general_methods}
-	Here we will only introduce Methods which will accure in several places. For interpolation methods we refer to sections \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric}, for a robustification strategy to section \ref{sec:loess_robustify}. In section \ref{sec:itpl_param_est} we describe a method to objectively determine the quality of an interpolation, and in section \ref{sec:corr_correction} we present the NDVI correction together with an adapted interpolation strategy.
+	Here we will only introduce Methods which will accure in several places. For interpolation methods we refer to sections \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric}, for a robust interpolation strategy to section \ref{sec:loess_robustify}. In section \ref{sec:itpl_param_est} we describe a method to objectively determine the quality of an interpolation, and in chapter \ref{sec:corr} we present the NDVI correction together with an adapted interpolation strategy.
 
 
 	\subsection{Root Mean Square Error (RMSE)}

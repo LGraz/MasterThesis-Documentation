@@ -1,6 +1,5 @@
 \begin{table}[!ht]
 	\centering
-	\todo[inline]{add fourier  and fix order to match chapters}
 	\caption[skip=10pt]{Summary of the studied interpolation methods containing important assumptions, advantages and disadvantages and whether the method supports weighted observations (w) and if the resulting interpolation is bounded w.r.t. a fixed interval (b).}
 	\small
 	\begin{tabular}{p{1.6cm}p{3.3cm}p{3.3cm}p{3.4cm}p{0.4cm}p{0.4cm}p{3cm}p{3cm}p{3cm}p{3cm}p{2.7cm}p{3cm}|}
@@ -13,10 +12,37 @@
 		\textbf{w}                                                                                                                                      &
 		\textbf{b}                                                                                                                                        \\ \hline
 
+		Double-Logistic                                                                                                                                              &
+		\begin{cptitemize} \item[--]  Function first increases then decreases \item[--]  Ndvi has a minimal value                            \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Good for evergreen plants (if snow masks NDVI) \item[--]  Upper envelope                                \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Parameter estimation can be very difficult \item[--]  Strange behavior for long data-gaps             \end{cptitemize}        &
+		Yes                                                                                                                                                          &
+		(Yes)                                                                                                                                                         \\ \hline%comment out?
+
+		Fourier Approximation                                                                                                                                              &
+		\begin{cptitemize} \item[--]  NDVI can be approximated by a 2cd order fourier series.                            \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Incorporates periodical growth-cycles                                 \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Parameter estimation can be very difficult \item[--]  Curve easily exceeds bounds of the NDVI             \end{cptitemize}        &
+		Yes                                                                                                                                                          &
+		No                                                                                                                                                         \\ \hline%comment out?
+
+		(Gaussian) Kernel Smoothing                                                                                                                                  &
+		\begin{cptitemize} \item[--]  Close points are related to each other via a kernel function \end{cptitemize}                                                                                                                                                            &
+		\begin{cptitemize} \item[--]  Simple  \item[--]  Computationally very fast                                                             \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Biased, especially at `peaks' and `valleys'   \item[--]  Bandwidth: fails if there are big data-gaps                                                     \end{cptitemize}               &
+		Yes                                                                                                                                                          &
+		Yes                                                                                                                                                            \\ \hline%comment out?
+
+		Universal Kriging                                                                                                                                            &
+		\begin{cptitemize} \item[--]  Function is a realization of a stationary Gaussian process                                      \end{cptitemize}               &
+		\begin{cptitemize} \item[--]  Informative parameters \item[--]  Flexible                                                             \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Regression to the mean \item[--]  Assumptions clearly not met                                          \end{cptitemize}        &
+		Yes                                                                                                                                                          &
+		(Yes)                \\ \hline%comment out?                                                                                                                                         \\ %\hline%comment out?
+
 		Savitzky-Golay filter                                                                                                                                        &
 		\begin{cptitemize}
-			\item[--]  High frequencies are noise (Low-Pass-Filter) \item[--]  Equidistant points \item[--]  Local polynomials
-		\end{cptitemize}                                              &
+			\item[--]  High frequencies are noise (Low-Pass-Filter) \item[--]  Equidistant points \item[--]  Local polynomials\end{cptitemize}                                              &
 		\begin{cptitemize} \item[--]  Computationally very fast                                                                   \end{cptitemize}                   &
 		\begin{cptitemize} \item[--]  Cannot deal natively with missing data (need some interpolation)                              \end{cptitemize}                 &
 		No                                                                                                                                                           &
@@ -36,21 +62,20 @@
 		Yes                                                                                                                                                          &
 		(Yes)                                                                                                                                                         \\ \hline%comment out?
 
-		Smoothing Splines                                                                                                                                            &
-		\begin{cptitemize} \item[--]  2cd derivative of function is integrable                                                        \end{cptitemize}               &
-		\begin{cptitemize} \item[--]  Intuitive meaning of penalty \item[--]  General assumptions \item[--]  Flexible shape                         \end{cptitemize} &
-		\begin{cptitemize} \item[--]  Unbounded                                                                                       \end{cptitemize}               &
-		Yes                                                                                                                                                          &
-		No                                                                                                                                                             \\ \hline%comment out?
-
 		B-Splines (Smoothed)                                                                                                                                         &
 		\begin{cptitemize} \item[--]  Function can be approximated by a linear combination of B-splines basis functions               \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  General assumption \item[--]  Flexible shape                                                            \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Unbounded \item[--]  No intuitive meaning for smoothing                                                \end{cptitemize}        &
 		Yes                                                                                                                                                            &
-		No                                                                                                                                                             \\ \hline%comment out?
+		No                                            \\ \hline%comment out?
 
-		% Penalized Regression Splines &
+		Smoothing Splines                                                                                                                                            &
+		\begin{cptitemize} \item[--]  2cd derivative of function is integrable                                                        \end{cptitemize}               &
+		\begin{cptitemize} \item[--]  Intuitive meaning of penalty \item[--]  General assumptions \item[--]  Flexible shape                         \end{cptitemize} &
+		\begin{cptitemize} \item[--]  Choice of smoothing parameter                                                                                       \end{cptitemize}               &
+		Yes                                                                                                                                                          &
+        No \\                                                                         
+% Penalized Regression Splines &
 		% \begin{itemize}
 		%     \item[--]  High
 		%     \item[--]  Bs
@@ -73,33 +98,12 @@
 		% ~                                                                                                                                                            &
 		% ~                                                                                                                                                              \\ \hline%comment out?
 
-		(Gaussian) Kernel Smoothing                                                                                                                                  &
-		\begin{cptitemize} \item[--]  Close points are related to each other via a kernel function \end{cptitemize}                                                                                                                                                            &
-		\begin{cptitemize} \item[--]  Simple \item[--]  General assumptions                                                                  \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Bandwidth: fails if there are big data-gaps                                                     \end{cptitemize}               &
-		Yes                                                                                                                                                          &
-		Yes                                                                                                                                                            \\ \hline%comment out?
-
 		% Fourier                                                                                 &
 		% ~                                                                                       &
 		% ~                                                                                       &
 		% ~                                                                                       &
 		% ~                                                                                       &
 		% ~                                                                                             \\ \hline%comment out?
-
-		Double-Logistic                                                                                                                                              &
-		\begin{cptitemize} \item[--]  Function first increases then decreases \item[--]  Ndvi has a minimal value                            \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Good for evergreen plants (if snow masks NDVI) \item[--]  Upper envelope                                \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Parameter estimation can go seriously wrong \item[--]  Strange behavior for long data-gaps             \end{cptitemize}        &
-		Yes                                                                                                                                                          &
-		(Yes)                                                                                                                                                         \\ \hline%comment out?
-
-		Universal Kriging                                                                                                                                            &
-		\begin{cptitemize} \item[--]  Function is a realization of a stationary Gaussian process                                      \end{cptitemize}               &
-		\begin{cptitemize} \item[--]  Informative parameters \item[--]  Flexible                                                             \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Regression to the mean \item[--]  Assumptions clearly not met                                          \end{cptitemize}        &
-		Yes                                                                                                                                                          &
-		(Yes)                                                                                                                                                         \\ %\hline%comment out?
 
 		% methodname &
 		% ~ &

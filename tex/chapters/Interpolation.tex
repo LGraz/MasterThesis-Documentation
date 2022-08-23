@@ -11,16 +11,11 @@
 
 \chapter{Interpolation Methods} \label{sec:itpl}\todo{verdeutliche dem leser, dass ein auftrag das findne von interpolationmethoden war}
 	{% Roadmap
-		In this section, we take a closer look at several interpolation methods, which will be used to interpolate and smooth the NDVI time series, while considering only SCL45 in this chapter. 
-		A brief overview of the considered interpolation methods can be found in table~\ref{table:pros_cons_overview}.
+		In section \ref{sec:s2_challangges} we have established the need for interpolating the NDVI time series. In this chapter we first specify a setting for the interpolation and divide the interpolation methods into those that make fundamental shape assumptions (parametric) and those that are more flexible (non-parametric). We give an introduction for each method with an compact definition, highlight adjustments or give remarks where appropriate, and then point out strengths and weaknesses of each method. Additionally, a brief overview of the considered interpolation methods is provided in table~\ref{table:pros_cons_overview}.
+		% In this section, we take a closer look at several interpolation methods, which will be used to interpolate and smooth the NDVI time series, while considering only SCL45 in this chapter. First, we define the general setting and discuss a general approach to make the interpolation more robust (i.e. reduce the impact of outliers). Afterwards, we introduce and discuss each method.
+		Afterwards, we extract an robustification strategy from the one interpolation method and generalize it so we can use it for all methods that allow for a priori weighted observations. Finally, using LOOCV, we tune the parameters (where necessary) and get a first idea of the performance of each method.
 
-		First, we define the general setting and discuss a general approach to make the interpolation more robust (i.e. reduce the impact of outliers).
 
-		Afterwards, we introduce and discuss each method.
-
-		Then, we try to extract the main ingredients of each method to construct a new one with all benefits.
-
-		Finally, using LOOCV, we tune the parameters (where necessary) and get a first idea of the performance of each method.
 	}
 	{% pros & cons table
 		\footnotesize
@@ -28,26 +23,19 @@
 		\normalsize
 	}
 
-\section{DAS vs. GDD}{\todo{put section in methods / data}
-	%example plot
-	Prior to interpolating the NDVI time series, we should decide on a timescale. We can choose between DAS and GDD\todo{Findet man hier noch Literatur, in welcher ähnliches diskutiert wurde, die man zitieren kann?} (c.f. section \ref{sec:gather_data_to_pixel} and equation \ref{eq:gdd}). In figure \ref{fig:interpol/das_vs_gdd} we see an example for comparison of the two. Here we see that the first 120 DAS are compressed to just 500 GDD. 
-	This has several advantages. First, it makes the scales comparable (in terms of plant growth) because the plants are not concerned with the month of the year but the current temperature. Second, in winter we tend to have higher cloud cover and thus fewer SCL45 observations. Hence, this gap in observations is compressed. Therefore, we will only use GDD in the subsequent.
 
-	\begin{my_figure}[h]{width=0.8\textwidth}{interpol/das_vs_gdd}
-		\caption{The same NDVI time-series, on the left with DAS as the timescale, on the right GDD is the timescale. SCL45 are colored black. Non-SCL45 (clouds and shadows) are colored in gray.}
-		\label{fig:interpol/das_vs_gdd}
-	\end{my_figure}
-}
 
-\section{Interpolation Setup}{
-	We are given data in the form of $\left(x_{i}, Y_{i}\right)$ for $i=1, \ldots, n$. Assume that it can be represented by
+\section{Interpolation Setup}{\label{sec:itpl_setup}
+	In this chapter we will only consider SCL45 observations, since they are more reliably. Hence, data in the form of $\left(t_{i}, y_{i}\right)$ for $i=1, \ldots, n$ is given, where $t_i$ is the time in GDD and $y_i$ denotes the NDVI at time $t_i$. Assume that it can be represented by
 	$$
-		y_{i}=m\left(x_{i}\right)+\varepsilon_{i},
+		y_{i}=m\left(t_{i}\right)+\varepsilon_{i},
 	$$
-	where $\varepsilon_i$ is some noise and $m: \R \rightarrow \R$ is some (parametric or non-parametric) function. If we assume that $\varepsilon_{1}, \ldots, \varepsilon_{n}$ i.i.d. with $\mathbb{E}\left[\varepsilon_{i}\right]=0$ then $$m(x)=\mathbb{E}[y \mid x]$$
-	We will introduce parametric and non-parametric approaches to estimate $m$ in section \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric}.
-
-	Furthermore, in the subsequent, we denote $w\in \R^n$ as the vector of weights such that $w_i$ corresponds to the weight that $(x_i, Y_i)$ should have in the interpolation. 
+	where $\varepsilon_i$ is some noise and $m: \R \rightarrow \R$ is some (parametric or non-parametric) function. If we assume that $\varepsilon_{1}, \ldots, \varepsilon_{n}$ i.i.d. with $\mathbb{E}\left[\varepsilon_{i}\right]=0$ then 
+	$$
+		m(t)=\mathbb{E}[y \mid t]
+	$$
+	We will introduce parametric and non-parametric approaches to estimate $m$ in section \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric}
+	Furthermore, in the subsequent, we denote $w\in \R^n$ as the vector of weights such that $w_i$ corresponds to the weight that $(t_i, y_i)$ should have in the interpolation. 
 }
 
 
@@ -96,30 +84,44 @@
 	}
 	
 	{	
-		Before we describe the procedure, we define a function that will determine the weight given to each observation, such that observations with large-scaled residuals will have less weight. That is the bisquare function B:
-		$$
-			B(x):=\begin{cases}
-				\left(1-x^{2}\right)^{2}, & \text{if } |x|<1 \\
-				0,                        & \text{else }
-			\end{cases}
-		$$
-
-		Now, we do something similar to what is done in iteratively reweighted least squares. After an initial interpolation, update the weights of each observation with
+		After an initial fit we calculate the resiudals $r_i := y_i - \hat y_i$ and obtain $\tilde r_i$ by scaling with the median of the absolute residuals: 
 		\begin{equation}
-			w_i^\text{new}:=w_i^\text{old} \operatorname{B}\left(\frac{|r_i|}{6\operatorname{med}\left(|r_1|,\dots,|r_n|\right)}\right);\quad
-			r_i := y_i - \hat y_i
+			\tilde r_i := \frac{r_i}{6\operatorname{med}\left(|r_1|,\dots,|r_n|\right)}
+		\end{equation}
+		Next, we compute new weights by
+		\begin{equation}
+			w_i^\text{new}:=w_i^\text{old} \begin{cases}
+				\left(1-\tilde r_i^{2}\right)^{2}, & \text{if } |\tilde r_i|<1 \\
+				0,                        & \text{else }
+			\end{cases};\quad
 			\label{eq:bisquare}
 		\end{equation}
-		and interpolate again using the new weights. We can iterate this reweighting and stop after several steps or when the change of the values is smaller than some tolerance.
+		Using the new weights, we can re-interpolate. This reweighting can be iterate for several steps or till the change of the values is smaller than some tolerance.
+
+	% Old more complicated version
+		% Before we describe the procedure, we define a function that will determine the weight given to each observation, such that observations with large-scaled residuals will have less weight. That is the bisquare function B:
+		% 	$$
+		% 		B(x):=\begin{cases}
+		% 			\left(1-x^{2}\right)^{2}, & \text{if } |x|<1 \\
+		% 			0,                        & \text{else }
+		% 		\end{cases}
+		% 	$$ 
+		% 	Now, we do something similar to what is done in iteratively reweighted least squares. After an initial interpolation, update the weights of each observation with
+		% 	\begin{equation}
+		% 		w_i^\text{new}:=w_i^\text{old} \operatorname{B}\left(     \right);\quad
+		% 		r_i := y_i - \hat y_i
+		% 		\label{eq:bisquare}
+		% 	\end{equation}
+		% 	and interpolate again using the new weights. We can iterate this reweighting and stop after several steps or when the change of the values is smaller than some tolerance.
 	}
 
 	Note that this procedure is indeed robust since we use the median for the normalization which has a breakdown point\footnote{Intuitively, the breakdown point denotes the fraction of observations a ``vicious'' player can replace without breaking the estimator. For example, the median has a breakdown point of $50 \%$.} of $50 \%$.\footnote{The breakdown point relates only to outliers in the $y$ values. Note that we do not require the interpolation methods to be robust, since the residual for an outlier will  still be larger than for non-outliers and thus will be down weighted more and more in each iteration (because for the next iteration the residual of the outlier will be even larger, since we gave less weight to it).}
-	\subsection{Our Adjustment:}{ 
-		In the case that we would like to apply prior weights, we want to prevent low-weighted observations to corrupt our estimation of scale (the median) and thus we use the weighted median. This can be defined as
+	\subsection{Our Adjustment:}{
+		During the iterations or when supplyieng prior weights low-weighted observations can corrupt our estimation of scale (the median of absolute residuals). Thus, we introduce the weighted median as
 		$$
 			\med_\text{weighted}(r,w) := \argmin_{\lambda \in \R} \sum_{i=1}^n |r_iw_i -\lambda|
 		$$
-		for $r,w\in \R^n$. \footnote{This adjustment is also necessary to keep the scale estimation meaningful during the iterations.}
+		for $r,w\in \R^n$. 
 	}
 	\subsection{Examples and Conclusions}{
 		\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_SS_robust}
@@ -127,45 +129,19 @@
 			\label{fig:interpol/2x3_SS_robust}
 		\end{my_figure}
 
-		In figure \ref{fig:interpol/2x3_SS_robust} we observe for six pixels how the NDVI time series interpolated with smoothing splines looks after $0,1,2,3,4$ iterations (See appendix figures \ref{fig:interpol/2x3_loess_robust}, \ref{fig:interpol/2x3_B-Splines_robust}, \ref{fig:interpol/2x3_DL_robust} and \ref{fig:interpol/2x3_loess_robust} for the analogous figures of the other interpolation methods).
-		
-		Indeed, we observe how the interpolated time series is less affected by outliers after each iteration. We notice the biggest difference in the first iteration. Furthermore, in the plot at the bottom left\todo{ consider naming the sub-plots} we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always perform only one iteration and then stop.
-
+		Examples of the first four iterative fits using smoothing splines are shown in figure \ref{fig:interpol/2x3_SS_robust} for six pixels. For the analogous figures of the other interpolation methods c.f. figures \ref{fig:interpol/2x3_loess_robust}, \ref{fig:interpol/2x3_B-Splines_robust}, \ref{fig:interpol/2x3_DL_robust} and \ref{fig:interpol/2x3_loess_robust}.
+		Indeed, we observe how the interpolated time series is less affected by outliers after each iteration. We notice the biggest difference in the first iteration. Furthermore, in the plot at the bottom left\todo{ consider naming the sub-plots} we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always stop after one iteration.
 	} 
 	
 	\subsection{Upper Envelope Approach - Penalty for Negative Residuals}
 		If we artificially increase the negative residuals in \refeq{eq:bisquare} by multiplying (e.g. factor 2), the corresponding points will get less weight in the next iteration. This allows us to create an interpolation that resembles an upper envelope. Intuitively, this upper envelope can be thought of as a sheet that is laid on top of the points.
 			
-		This approach is based on the premise that we tend to underestimate the NDVI (as in REF-savitzky-golay). Since we want to develop a general method that is in principle not related to the NDVI, we will not pursue this approach further.	
+		This approach is based on the premise that we tend to underestimate the NDVI (as argued in \cite{caoSimpleMethodImprove2018b}). Since we want to develop a general method that is in principle not related to the NDVI, we will not pursue this approach further.	
 }
 \section{Performance Assessment}{
-	Next, we will benchmark the different interpolation methods with and without robustification. For this, we will use the same technique as we did for the parameter determination in section \ref{sec:itpl_param_est}. On $B_\lambda$ we apply the RMSE and different quantiles and present the results in table \ref{tab:cv-statistics_itpl-methods}. 
+	Next, we will benchmark the different interpolation methods with and without robustification. For this, we will use the same technique as we did for the parameter determination in section \ref{sec:itpl_param_est}. On $B_\lambda$ we apply the RMSE and different quantiles.  
 
-
-	\begin{table}
-		\begin{center}
-			\caption{Comparing the goodness of fit for different interpolation methods measured with the statistics listed in the left column. Considering only SCL45 points, we get the out-of-bag estimates using the given interpolation method (TODO XXX:{ link to table explaining the methods?}). Consequently, we compute the absolute (value of the) residuals and apply the given statistic to it.}
-			\scriptsize
-			\input{tex/chapters/misc/table_cv-statistics_itpl-methods}
-			\normalsize
-			\label{tab:cv-statistics_itpl-methods}
-		\end{center}
-	\end{table}
+	The results are presented in section \ref{sec:results_itpl} and are discussed in section \ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method and form the non-parametric methods we choose the smoothing splines.
 }
-
-\section{XXX Evaluation}
-\todo{write out keywords, after final results}
--- ss dominate (i.e. have better benchmark values w.r.t. all considered statistics) b-splines (robustified and non-robustified)
-
--- dl dominate Fourier (robustified and non-robustified)
-
--- loess slightly dominates ss, but we prefer ss because of the smoothness guarantees (compare the figures \ref{fig:interpol/2x3_loess_robust} and \ref{fig:interpol/2x3_SS_robust}).
-
--- use dl and ss in the following (keeping robustified and non-robustified variants)
-% \section*{TEMP --- Figures}
-% \begin{my_figure}[h]{width=0.6\textwidth}{interpol/res_cv}
-% 	\caption{XXX caption XXX}
-% 	\label{fig:interpol/res_cv}
-% \end{my_figure}
 
 
