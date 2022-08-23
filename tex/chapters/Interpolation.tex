@@ -26,7 +26,7 @@
 
 
 \section{Interpolation Setup}{\label{sec:itpl_setup}
-	In this chapter we will only consider SCL45 observations, since they are more reliably. Hence, data in the form of $\left(t_{i}, y_{i}\right)$ for $i=1, \ldots, n$ is given, where $t_i$ is the time in GDD and $y_i$ denotes the NDVI at time $t_i$. Assume that it can be represented by
+	In this chapter, we will only consider SCL45 observations, since they are more reliably. Hence, data in the form of $\left(t_{i}, y_{i}\right)$ for $i=1, \ldots, n$ is given, where $t_i$ is the time in GDD and $y_i$ denotes the NDVI at time $t_i$. Assume that it can be represented by
 	$$
 		y_{i}=m\left(t_{i}\right)+\varepsilon_{i},
 	$$
@@ -60,7 +60,7 @@
 	\begin{Nenumerate}
 		\item Construct a set $\Lambda$ of candidate parameters that generously covers the parameter space.
 		\item Consider $\mathcal{P}$, a set of Pixels.
-		\item For each parameter $\lambda \in \Lambda$ consider the individual pixels and compute the LOOCV\footnote{For a definition of the leave-one-out-cross-validation we refer to section~\ref{sec:OOB_LOOCV}} for the absolute residuals of the specific NDVI-interpolation method for all Pixels in $\mathcal{P}$ and store them in the set $R_\lambda$. 
+		\item For each parameter $\lambda \in \Lambda$ consider the individual pixels and compute the LOOCV\footnote{For a definition of the leave-one-out-cross-validation we refer to section~\ref{sec:OOB_LOOCV}} for the absolute residuals of the specific NDVI interpolation method for all Pixels in $\mathcal{P}$ and store them in the set $R_\lambda$. 
 		\item Determine $\lambda_{optimal} = \argmin_{\lambda\in\lambda}q_{90}(R_\lambda)$, where we describe the 90\% quantile with $q_{90}$.
 	\end{Nenumerate}
 
@@ -84,7 +84,7 @@
 	}
 	
 	{	
-		After an initial fit we calculate the resiudals $r_i := y_i - \hat y_i$ and obtain $\tilde r_i$ by scaling with the median of the absolute residuals: 
+		After an initial fit we calculate the residuals $r_i := y_i - \hat y_i$ and obtain $\tilde r_i$ by scaling with the median of the absolute residuals: 
 		\begin{equation}
 			\tilde r_i := \frac{r_i}{6\operatorname{med}\left(|r_1|,\dots,|r_n|\right)}
 		\end{equation}
@@ -96,7 +96,7 @@
 			\end{cases};\quad
 			\label{eq:bisquare}
 		\end{equation}
-		Using the new weights, we can re-interpolate. This reweighting can be iterate for several steps or till the change of the values is smaller than some tolerance.
+		Using the new weights, we can re-interpolate. This reweighting can be iterated for several steps or till the change of the values is smaller than some tolerance.
 
 	% Old more complicated version
 		% Before we describe the procedure, we define a function that will determine the weight given to each observation, such that observations with large-scaled residuals will have less weight. That is the bisquare function B:
@@ -117,7 +117,7 @@
 
 	Note that this procedure is indeed robust since we use the median for the normalization which has a breakdown point\footnote{Intuitively, the breakdown point denotes the fraction of observations a ``vicious'' player can replace without breaking the estimator. For example, the median has a breakdown point of $50 \%$.} of $50 \%$.\footnote{The breakdown point relates only to outliers in the $y$ values. Note that we do not require the interpolation methods to be robust, since the residual for an outlier will  still be larger than for non-outliers and thus will be down weighted more and more in each iteration (because for the next iteration the residual of the outlier will be even larger, since we gave less weight to it).}
 	\subsection{Our Adjustment:}{
-		During the iterations or when supplyieng prior weights low-weighted observations can corrupt our estimation of scale (the median of absolute residuals). Thus, we introduce the weighted median as
+		During the iterations or when supplying prior weights, low-weighted observations can corrupt our estimation of scale (the median of absolute residuals). Thus, we introduce the weighted median as
 		$$
 			\med_\text{weighted}(r,w) := \argmin_{\lambda \in \R} \sum_{i=1}^n |r_iw_i -\lambda|
 		$$
@@ -141,7 +141,7 @@
 \section{Performance Assessment}{
 	Next, we will benchmark the different interpolation methods with and without robustification. For this, we will use the same technique as we did for the parameter determination in section \ref{sec:itpl_param_est}. On $B_\lambda$ we apply the RMSE and different quantiles.  
 
-	The results are presented in section \ref{sec:results_itpl} and are discussed in section \ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method and form the non-parametric methods we choose the smoothing splines.
+	The results are presented in section \ref{sec:results_itpl} and are discussed in section \ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method and from the non-parametric methods we choose the smoothing splines.
 }
 
 

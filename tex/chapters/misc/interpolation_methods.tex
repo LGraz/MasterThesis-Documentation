@@ -14,7 +14,7 @@
 		Where the five free parameters: $y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Such fit can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}.
 
 		\subsubsection*{Robustification}
-		Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay}) one can reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations. For the details on the choice of the weights we refer to \cite{beckImprovedMonitoringVegetation2006}. We wont apply this reestimation but rather the robustification introduced later in section \ref{sec:loess_robustify}.
+		Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay}) one can reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations. For the details on the choice of the weights we refer to \cite{beckImprovedMonitoringVegetation2006}. We will not apply this reestimation but rather the robustification introduced later in section \ref{sec:loess_robustify}.
 
 		\begin{my_pros_cons_table}{
 				\item Incorporates subject specific knowledge in the case of evergreen plants covered in snow.
@@ -33,7 +33,7 @@
 		$$
 			\operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}  \right)
 		$$
-		where $\Phi=2 \pi \times(t-1) / n$. Thus, we assume an periodacal behavior. If we would set the period to match one year this would coinced with the nothion that plans grow every year. Example fits can be seen in figure \ref{fig:interpol/fourier_dl_comparison}
+		where $\Phi=2 \pi \times(t-1) / n$. Thus, we periodical behavior. If we would set the period to match one year this would coinced with the nothion that plans grow every year. Example fits can be seen in figure \ref{fig:interpol/fourier_dl_comparison}
 
 		% \cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
 
@@ -235,7 +235,7 @@
 
 	\subsection{Natural Smoothing Splines}
 		\label{sec:Natural_SS}
-		Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable) . Then the unique\footnote{Strictly speaking it is only unique for $\lambda > 0$} minimizer
+		Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the unique\footnote{Strictly speaking it is only unique for $\lambda > 0$} minimizer
 		\begin{equation}
 			\label{eq:ss}
 			\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}w_i\left(y_{i}-{f}\left(x_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(x)^{2} dx

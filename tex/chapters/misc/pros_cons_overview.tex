@@ -13,14 +13,14 @@
 		\textbf{b}                                                                                                                                        \\ \hline
 
 		Double-Logistic                                                                                                                                              &
-		\begin{cptitemize} \item[--]  Function first increases then decreases \item[--]  Ndvi has a minimal value                            \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Function first increases then decreases \item[--]  NDVI has a minimal value                            \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Good for evergreen plants (if snow masks NDVI) \item[--]  Upper envelope                                \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Parameter estimation can be very difficult \item[--]  Strange behavior for long data-gaps             \end{cptitemize}        &
 		Yes                                                                                                                                                          &
 		(Yes)                                                                                                                                                         \\ \hline%comment out?
 
 		Fourier Approximation                                                                                                                                              &
-		\begin{cptitemize} \item[--]  NDVI can be approximated by a 2cd order fourier series.                            \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  NDVI can be approximated by a 2cd order Fourier series.                            \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Incorporates periodical growth-cycles                                 \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Parameter estimation can be very difficult \item[--]  Curve easily exceeds bounds of the NDVI             \end{cptitemize}        &
 		Yes                                                                                                                                                          &
@@ -40,7 +40,7 @@
 		Yes                                                                                                                                                          &
 		(Yes)                \\ \hline%comment out?                                                                                                                                         \\ %\hline%comment out?
 
-		Savitzky-Golay filter                                                                                                                                        &
+		SG Filter                                                                                                                                        &
 		\begin{cptitemize}
 			\item[--]  High frequencies are noise (Low-Pass-Filter) \item[--]  Equidistant points \item[--]  Local polynomials\end{cptitemize}                                              &
 		\begin{cptitemize} \item[--]  Computationally very fast                                                                   \end{cptitemize}                   &
