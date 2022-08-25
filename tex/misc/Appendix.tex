@@ -51,20 +51,20 @@
 
 \input{tex/misc/4x2_stepwise-plots.tex}
 
-
 \begin{table}
 	\begin{center}
-		\caption{XXX RMSE of yield prediction}
+		\caption{Non-relative RMSE for yield prediction}.
 		\small
-		\input{tex/chapters/misc/table_methods_vs_yieldprediction_relative.tex}
-		\label{tab:methods_vs_yieldprediction_relative}
+		\input{tex/chapters/misc/table_methods_vs_yieldprediction.tex}
+		\label{tab:methods_vs_yieldprediction}
 		\normalsize
 	\end{center}
 \end{table}
 
+
 \begin{table}
 	\begin{center}
-		\caption{XXX RMSE of yield prediction}
+		\caption{Coefficient of determination (R\textsuperscript{2}) of yield prediction}
 		\small
 		\input{tex/chapters/misc/table_methods_vs_yieldprediction_r2.tex}
 		\label{tab:methods_vs_yieldprediction_r2}
@@ -72,9 +72,11 @@
 	\end{center}
 \end{table}
 
+\subsection{OLS-SCL Model Outputs}
 \lstinputlisting[title= R Summary of the NDVI correction model (c.f. equation \refeq{eq:corr_lm})]{tex/chapters/misc/lm_scl.txt}
 \lstinputlisting[title= R Summary of the NDVI correction model (c.f. equation \refeq{eq:corr_lm_res})]{tex/chapters/misc/lm_scl_res.txt}
 
 
 \todo[inline]{replace space before ref by tilda}
 \todo[inline]{check quantile definitions}
+\todo[inline]{schwarz weiss färbung der IS tabelle korrigieren}

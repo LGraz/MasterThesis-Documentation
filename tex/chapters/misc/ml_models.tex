@@ -2,17 +2,17 @@
 %     ML-methoden: muss ich sie beschreiben? Es scheint mir wissen zu sein, was ich vorraussetzen kann. 
     % --> ja, kurz und bündig erklären
 \subsection{Ordinary Least Squaers (\textit{OLS})}{
-    The OLS is a linear model which aims to minimize the sum of the squared residuals. Let $y\in \R^n$ be the vector of responses and $X\in \R^{n\times p}$ be the design matrix, where each row corresponds to one pixel and each column consist of one covariate\footnote{Strictly speaking, since SCL-classes are dummy variables }. We assume a linear relationship between $y$ and $X$ and allow for Gaussian noise. That is:
+    The OLS is a linear model which aims to minimize the sum of the squared residuals. We assume a linear relationship between $y$ and $X$ and allow for Gaussian noise. That is:
     \begin{equation}
         \label{eq:ols}
         y = X\beta  + \epsilon \quad \text{ where }\epsilon \overset{i.i.d.}{\sim}\mathcal{N}(0,\sigma^2)
     \end{equation}
-    Assuming that $X$ is regular, we can estimate the regression coefficients $\beta$ by
+    Assuming that $(X^TX)$ is regular, we can estimate the regression coefficients $\beta$ by
     \begin{equation}
         \hat \beta = (X^TX)^{-1}X^Ty = \argmin_{\beta in \R^p}\|y - X\beta\|_2^2 
     \end{equation}
 
-    We will train two models, one using only the SCL-classes as covariates and the other one using all covariates (which are discussed in section \ref{sec:corr_data_table}).
+    We will train two models, one using all covariates discussed above and one using only the SCL-classes and the observed NDVI. 
 
     \begin{my_pros_cons_table}{
         \item Simple method with good interpretability of coefficients.
@@ -32,14 +32,14 @@
     \end{equation}
     Even though we do not have a closed form solution for equation \eqref{eq:lasso} we can solve it easily via optimization, since the function $\beta \in \{\beta\in\R^p|\|\beta\|_1<\lambda\}\|\ \mapsto \|y - X\beta\|_2^2$  is continuous and convex.
 
-    \cite{tibshiraniRegressionShrinkageSelection2011} shows that the LASSO solution tends to be sparse (for moderate $\lambda$). That is $\beta_i = 0$ for most $i = 1,\dots,p$
+    \cite{tibshiraniRegressionShrinkageSelection2011} shows that the LASSO solution tends to be sparse. That is $\beta_i = 0$ for most $i = 1,\dots,p$. The larger $\lambda$, the more $\beta_i = 0$ and hence the simpler the resulting model.
 
     In order to know which $\lambda$ to choose, we try a huge range of possible values. For each $\beta_\lambda$, we calculate the cross-validated $RMSE_\lambda$
-    \footnote{The cross validated Root Mean Square Error is the mean of the RMSE's obtained for each fold (using the model trained on the remaining folds). 
-    We use the following definition of the $RMSE$: $\sqrt{\sum_{i=1}^n(y-\hat y)^2/n}$
+    \footnote{The cross validated Root Mean Square Error is the mean of the RMSE's obtained for each fold using the model trained on the remaining folds. 
+    %We use the following definition of the $RMSE$: $\sqrt{\sum_{i=1}^n(y-\hat y)^2/n}$
     } (and its standard deviation $\sigma_\lambda$ using the $k$ folds) and define the $\lambda$ with the smallest corresponding  $RMSE_\lambda$ as $\lambda_{min}$. From here we choose the largest $\lambda$ for which the $RMSE_\lambda$ is smaller than $RMSE_{\lambda_{min}}+\sigma_\lambda$. This yields a simpler model while keeping the $RMSE$ reasonable model.
 
-    We will apply the LASSO using the selected covariates in section \ref{sec:corr_data_table} and their second degree of interactions.\footnote{This is if our covariates are $\{a,b\}$, then we will now use $\{a,b,ab,a^2,b^2\}.$}
+    We will apply the LASSO using the selected covariates in section \ref{sec:corr_data_table} and their second degree of interactions.\footnote{This is if our covariates are $\{1,a,b\}$, then we will now use $\{1,a,b,ab,a^2,b^2\}.$}
     
     \begin{my_pros_cons_table}{
         \item Usually yields a sparse solution. This tends to give better generalizability (prediction performance on unseen data).
@@ -51,6 +51,35 @@
     }
     \end{my_pros_cons_table}
 }
+
+\subsection{General Additive Model (\textit{GAM})}{
+    GAMs as described in \cite{hastieGeneralizedAdditiveModels1987} are a special case of Projection Pursuit Regression, where only the $p$ directions parallel to the coordinate axes are considered. The result is different to a linear model since the coordinate functions are not restricted to be linear but are assumed to be non-parametric functions. The model can be written as:
+    \begin{equation}
+        \label{eq:gam}
+        g_{add}(x) = \mu + \sum_{i=1}^pg_j(x_j).\footnote{wher $g_j$ is a real-valued function. For identifiability we also demand $\mathbb{E}[g_j(X_{:,j})] = 0$ for $j=1,\dots,p$.}
+    \end{equation}  
+
+    To estimate the non-parametric functions, we can use smoothing splines (ref sec.~\ref{sec:Natural_SS}). For this let $\mathcal{S}_j$ be the function which takes some $z\in\R^n$ and returns the smoothing splines fitted to $(X_{:,j}, z)$ where the smoothing parameter is optimized by GCV.
+    Since we cannot fit all $g_j$ simultaneously, we will use a strategy named Backfitting. We basically cycle through the indices $1,\dots p$ and refit $\hat g_j$ each time. The following illustrates the procedure: 
+    \begin{eqnarray*}
+        1) \quad \hat g_1 &=& \mathcal S_1(y - \mu)    \\
+        2) \quad \hat g_j &=& \mathcal S_j(y - \mu -\hat g_1(X_{[:,1]})-\dots -\hat g_{j-1}(X_{[:,{j-1}]})) \quad \text{for }j=2,\dots,p       \\
+        3) \quad \hat g_1 &=& \mathcal S_1(y - \mu -\hat g_2(X_{[:,2]})-\dots -\hat g_p(X_{[:,p]}))       \\
+        4) \quad \hat g_j &=& \mathcal S_j(y - \mu - \sum_{k\neq j}\hat g_k(X_{[:,k]})) \quad \text{for }j=2,\dots,p       \\
+         & \vdots        
+    \end{eqnarray*}
+    We repeat step $3)$ and $4)$ until the change falls below some tolerance.
+
+    \begin{my_pros_cons_table}{
+        \item Captures non-linearity.
+        \item Good interpretability.
+    }{
+        \item No automatic variable selection.
+        \item Computationally expensive.
+    }
+    \end{my_pros_cons_table}
+}
+
 \subsection{Random Forest (\textit{RF})}{
     To define a random Forest introduced by \cite{breimanRandomForests2001}  we will first define what a Tree is. A \textit{(decision) Tree} is a graph $(V,E)$ without circles, a distinct root node, every node has at most two children and every leaf has a value assigned to it. At each node there is a boolean condition testing if one variable is greater than some value and a pointer to one child depending on the boolean value. To evaluate a tree we start at the root node, test the boolean expression and go to the node indicated by the resulting pointer. This we repeat until we end up at a leaf-node, where we return the value assigned to it. 
     
@@ -101,7 +130,7 @@
 
     Finally, to avoid overfitting, we prune the set $\mathcal{M}$ by optimizing a LOOCV score.\footnote{This means that we perform an iterative procedure to reduce the number of functions in $\mathcal{M}$. For every function $h$ in $\mathcal{M}$, we compute the model using $\mathcal{M}\\\{h\}$. We discard the function which -- when excluding from $\mathcal{M}$ -- leads to the best LOOCV score.}  
 
-    To reduce computational complexity, we follow the recommendation from REF\cite{stephenEarthMultivariateAdaptive2021} and restrict $h$ in equation~\eqref{eq:mars_candidate} to be of degree one (so it is also in a pair of $\mathcal{B}$). Consequently, $\mathcal{C}$ contains functions with a degree of at most 2. 
+    To reduce computational complexity, we follow the recommendation from \cite{stephenEarthMultivariateAdaptive2021} and restrict $h$ in equation~\eqref{eq:mars_candidate} to be of degree one (so it is also in a pair of $\mathcal{B}$). Consequently, $\mathcal{C}$ contains functions with a degree of at most 2. 
 
     \begin{my_pros_cons_table}{
         \item Catches non-linear relationships.
@@ -109,33 +138,6 @@
         \item Allows for interactions with variable selection.
     }{
         \item Computationally expensive (can be reduced by restricting the degree of interactions).
-    }
-    \end{my_pros_cons_table}
-}
-\subsection{General Additive Model (\textit{GAM})}{
-    GAMs as described in \cite{hastieGeneralizedAdditiveModels1987} are a special case of Projection Pursuit Regression, where only the $p$ directions parallel to the coordinate axes are considered. The result is different to a linear model since the coordinate functions are not restricted to be linear but are assumed to be non-parametric functions. The model can be written as:
-    \begin{equation}
-        \label{eq:gam}
-        g_{add}(x) = \mu + \sum_{i=1}^pg_j(x_j).\footnote{wher $g_j$ is a real-valued function. For identifiability we also demand $\mathbb{E}[g_j(X_{:,j})] = 0$ for $j=1,\dots,p$.}
-    \end{equation}  
-
-    To estimate the non-parametric functions, we can use smoothing splines (ref sec.~\ref{sec:Natural_SS}). For this let $\mathcal{S}_j$ be the function which takes some $z\in\R^n$ and returns the smoothing splines fitted to $(X_{:,j}, z)$ where the smoothing parameter is optimized by GCV.
-    Since we cannot fit all $g_j$ simultaneously, we will use a strategy named Backfitting. We basically cycle through the indices $1,\dots p$ and refit $\hat g_j$ each time. The following illustrates the procedure: 
-    \begin{eqnarray*}
-        1) \quad \hat g_1 &=& \mathcal S_1(y - \mu)    \\
-        2) \quad \hat g_j &=& \mathcal S_j(y - \mu -\hat g_1(X_{[:,1]})-\dots -\hat g_{j-1}(X_{[:,{j-1}]})) \quad \text{for }j=2,\dots,p       \\
-        3) \quad \hat g_1 &=& \mathcal S_1(y - \mu -\hat g_2(X_{[:,2]})-\dots -\hat g_p(X_{[:,p]}))       \\
-        4) \quad \hat g_j &=& \mathcal S_j(y - \mu - \sum_{k\neq j}\hat g_k(X_{[:,k]})) \quad \text{for }j=2,\dots,p       \\
-         & \vdots        
-    \end{eqnarray*}
-    We repeat step $3)$ and $4)$ until the change falls below some tolerance.
-
-    \begin{my_pros_cons_table}{
-        \item Captures non-linearity.
-        \item Good interpretability.
-    }{
-        \item No automatic variable selection.
-        \item Computationally expensive.
     }
     \end{my_pros_cons_table}
 }

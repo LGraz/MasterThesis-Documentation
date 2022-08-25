@@ -2,11 +2,12 @@
 
 \section{Goodness of Fit for Selected Interpolation Methods}{
 	\label{sec:results_itpl}
-	Table \ref{tab:cv-statistics_itpl-methods} benchmarks the interpolation methods (on $P^{SCL45}$) with respect to various score functions. The score functions take the absolute values of the LOOCV residuals and summarize them in a number (the smaller, the better). For each of the 5 selected interpolation methods, we consider the basic version and the robustified (see section \ref{sec:loess_robustify}) version.
+	Table \ref{tab:cv-statistics_itpl-methods} benchmarks the selected\footnote{\label{note:selected-IM} For the discussion which methods have been selected c.f. section \ref{sec:itpl_preselection}.} interpolation methods (on $P^{SCL45}$) with respect to various score functions. The score functions take the absolute values of the LOOCV residuals and summarize them in a number (the smaller, the better). For each of the 5 selected interpolation methods, we consider the basic and the robustified (see section \ref{sec:loess_robustify}) version.
 
 	\begin{table}[h]
 		\begin{center}
-			\caption{Comparing the goodness of fit for different interpolation methods (on $P^{SCL45}$) measured with the score functions (which take the LOOCV residuals as input) listed in the left column. $q_X$ denotes here the $X\%$ quantile.}
+			\caption{Comparing the goodness of fit for selected%\footnoteref{note:selected-IM} % not working :-(
+			interpolation methods (on $P^{SCL45}$) measured with the score functions (which take the LOOCV residuals as input) listed in the left column. $q_X$ denotes here the $X\%$ quantile.}
 			\scriptsize
 			\input{tex/chapters/misc/table_cv-statistics_itpl-methods}
 			\normalsize
@@ -18,24 +19,37 @@
 }
 
 
-\section{Robustification and NDVI-Correction} \label{sec:results_ndvi_corr}
+\section{XXX (Robustification and) NDVI-Correction} \label{sec:results_ndvi_corr}
+\todo[inline]{defiition of RYEA, it is not an accuracy but an error}
+	The RYEA for the 28 (in section \ref{sec:corr_itpl_stat}) chosen interpolation strategies is given in table \ref{tab:methods_vs_yieldprediction_relative}. 
+
+	Robustification in the interpolation strategies, does not improve the quality of the fit (measured via the RYEA) in most cases. 
+
+	Abgesehen von einer ausnahme sind SS (rob) besser als DL(rob) hinsichtlich der RYEA.
+
+	Die Interpolations strategie, welche die niedrigste RYEA hervorbringt ist OLS-SCL mit SS. Da die OLS-SCL modelle eine sehr gute interpretierbarkeit haben präsentieren wir im folgenden auch die Regressionsgleichungen. Der korrigierten NDVI wird berechnet anhand von EQUATION, wo $\mathbbm 1_{{SCL = 2}}$ gleich eins ist, falls die aktuelle beobachtung der SCL Klasse 2 entspricht und null andernfalls.\footnote{$\mathbbm 1$ wird in der Mathematik auch als indikatorfunktion oder charakteristische funktion bezeichent.} Die geschätzen absoluten residuen erhalten wir hingegen durch: EQUATION  
+	Für den R-output der summary funktion der beiden modelle verweisen wir auf den Anhang 
+
+	Für die conflusion:
+	Wir wollen die in kapitel \ref{sec:corr} eingeführe interpolationsstrategie nochmals zusammenfassen: Wir schätzen den echten NDVI anhand von SS via LOOCV, dann erhalten wir den corrigierten NDVI mit dem OLS-SCL modell. Anschließend schätzen wir den absoluten fehler mit dem OLS-SCL modell und erhalten somit gewichte, welche die zuverlässigkeit der korrigerten NDVI wiederspiegeln sollen. Zum schluss führen wir eine gewichtete interpolation mit SS durch.
+
+
+
 \begin{table}
 	\begin{center}
-		\caption{XXX RMSE of yield prediction. For the relative RMSE and the coefficient of determination (R\textsuperscript{2}) see table \ref{tab:methods_vs_yieldprediction_relative} and \ref{tab:methods_vs_yieldprediction_r2}}.
+		\caption{RYEA. For the non-relative RMSE and the coefficient of determination (R\textsuperscript{2}) see table \ref{tab:methods_vs_yieldprediction} and \ref{tab:methods_vs_yieldprediction_r2}.}
 		\small
-		\input{tex/chapters/misc/table_methods_vs_yieldprediction.tex}
-		\label{tab:methods_vs_yieldprediction}
+		\input{tex/chapters/misc/table_methods_vs_yieldprediction_relative.tex}
+		\label{tab:methods_vs_yieldprediction_relative}
 		\normalsize
 	\end{center}
 \end{table}
 
 
 
-
-
 \begin{equation}\label{eq:corr_lm}
 	\begin{aligned}		
-		\widehat{\operatorname{NDVI}}_{\text{corr}}  = &
+		{\operatorname{NDVI}}_{\text{corr}}  = &
 		0.711 \operatorname{NDVI}_\text{observed}  
 		+ \mathbbm 1_{{SCL = 2}} 0.215 
 		+ \mathbbm 1_{{SCL = 3}} 0.237 

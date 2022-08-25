@@ -71,9 +71,10 @@
 		\end{equation}
 		where $f_{Y \mid X}, f_{X, Y}, f_{X}$ denote the conditional, joint and marginal densities.
 		This can be done with a kernel $K$:
-		$$
+		\begin{equation}
 			\hat{f}_{X}(x)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right)}{n h}, \quad \hat{f}_{X, Y}(x, y)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}},
-		$$
+			\label{eq:kernel_with_bandwidt}
+		\end{equation}
 		where $h$, the bandwidth, symbolizes the windowsize of to consider. By using the above function in equation \eqref{eq:nadaraya} we arrive at the \textit{Nadaraya-Watson} kernel estimator:
 		$$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right)}$$
 

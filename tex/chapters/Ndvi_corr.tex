@@ -1,14 +1,14 @@
 \chapter{NDVI Correction} \label{sec:corr}
 
 {
-    Let's remind ourselves that the data from the S2 satellites is distributed  with an SCL and we therefore have some evidence about what is observed at each pixel for each sampled time (c.f. table~\ref{tab:satelite/scl_classes}). So far, we have only considered points, labeled as cloud- and shadow-free (SCL45). However, we remind ourselves that the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite the `vegetation' label and see fragments in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to see cirrus clouds.
+    Let's remind ourselves that the data from the S2 satellites is distributed  with an SCL and we therefore have some evidence about what is observed at each pixel for each sampled time (c.f. table~\ref{tab:satelite/scl_classes}). So far, we have only considered points, labeled as cloud- and shadow-free (SCL45). However, we remind ourselves of the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite the `vegetation' label and see vegetation in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to observe `cirrus clouds'.
     
     % In this chapter, we would like to improve the NDVI interpolation by inspecting also other SCL-classes and by using more than just the two bands used to calculate the NDVI (B4 and B8). 
 
 
     % The SCL classification is only on a mixed model based on the S2 bands.
     
-    In this chapter, we will try to improve our NDVI interpolation by not relying only on the observed NDVI, but by training our own model to correct the NDVI using all S2 bands. For this, we introduce several statistical modelling approaches and discuss the strengths and weaknesses for each of them. After correcting the observed NDVI, we will assess the uncertainties of our corrections and translate them into weights (in section~\ref{sec:corr_uncertainty}). These will be used for the subsequent interpolation. This step-by-step procedure is illustrated by the figure \ref{fig:step_plot_ndvi_corr} in the appendix. Finally, we will evaluate which combination of interpolation methods and correction method performs the best.
+    In this chapter, we will try to improve our NDVI interpolation by not relying only on the observed NDVI, but by training our own model to correct the NDVI using all S2 bands. For this, we introduce several statistical modelling approaches and discuss the strengths and weaknesses for each of them. After correcting the observed NDVI, we will assess the uncertainties of our corrections and translate them into weights. These will be used for the subsequent interpolation. This step-by-step procedure is illustrated by the figure \ref{fig:step_plot_ndvi_corr} in the appendix. Finally, we will evaluate which combination of interpolation methods and correction model performs the best.
 }
 
 \section{Considering other SCL Classes}{
@@ -34,33 +34,30 @@
         \label{fig:ndvi_corr/scl_residuals_scatter}
     \end{my_figure}
 
-    It might be tempting to include some of the above SCL classes (for interpolation). But on the one hand, the choice would not be objective and on the other hand, the correlation seems to be weaker than for SCL45. Therefore, in the following section, we will correct the observed NDVI and estimate the uncertainty of each correction.  
+    It might be tempting to just include some of the mentioned SCL classes for  interpolation. But on the one hand, the choice would not be objective and on the other hand, the correlation seems to be weaker than for SCL45. Therefore, in the following section, we will correct the observed NDVI and estimate the uncertainty of each correction.  
 }
 
 
-\section{Response and Covariates}{
-    \label{sec:corr_data_table}
+% \section{Response and Covariates}{
+\section{Correction Models}{
+        \label{sec:corr_data_table}
+        \label{sec:corr_methods}
 
-    For training an NDVI correction model, we need ground-truth (response) and informative covariates. We organize those in a table, where each row corresponds to a $P_t$ (i.e., a pixel at a time $t$). 
-    Since ground-truth NDVI data is not available, we will again use the assumption \ref{true_ndvi_assumption} and use the ``true'' NDVI instead. There is no canonical answer to the question of which covariates we should use. It is a tradeoff between simplicity, generalizability and performance (with the danger of overfitting). 
-    Our desire with the NDVI correction is to develop a product that is simple for others to understand and use. Therefore, in the subsequent, we will only take the spectral data of the satellite (i.e. all the bands) and the observed NDVI derived from it as covariates. 
-}    
+    For training an NDVI correction model, we require ground-truth data which we will aim to model using informative covariates. Since ground-truth NDVI data is not available, we will again use the assumption \ref{true_ndvi_assumption} and use the ``true'' NDVI instead. There is no canonical answer to the question of which covariates we should use. It is a tradeoff between simplicity, generalizability and performance (with the danger of overfitting). 
+    Our desire with the NDVI correction is to develop a product that is simple to use and understand. Therefore, in the subsequent, we will only take the spectral data of the satellite (i.e. all the bands) and the observed NDVI derived from it as covariates. We organize the choosen covariats in the desing matrix $X$\footnote{Strictly speaking, we include also the intercept and introduce one dummy variable for each SCL-class}, where each row corresponds to a $P_t$ (i.e., a pixel at a time $t$) and each column to one covariate.    
 
-\section{Correction Methods}{
-    \label{sec:corr_methods}
-    In the following, we will introduce different modelling approaches, which we will use to model the relation between the response $y = y_{\text{true OOB NDVI}}\in \R^n$ and the covariates encoded in the design matrix $X\in\R^{n \times p}$ which contains all covariates. 
-    % Furthermore, we remind ourselves of the MATLAB notation discussed in section~\ref{sec:MATLAB}
+    In the following, we will introduce different approaches, to model the relationship between the response $y:=\operatorname{NDVI}_\text{``true''}\in \R^n$ and the design matrix $X\in\R^{n \times p}$. First, we will study the basic OLS. Second, we look at the LASSO, an penalized adaptation of the OLS which is known to successfully deal with highly correlated covariates. Afterwards, GAMs are introduced which model the response similar to OLS but allow for non-linear relations. Last but not least, we discuss RF and MARS, which are both flexible modelling approaches since only weak assumptions on the relationship between the response and covariates are made. 
 
-    Note that in order to reduce computation time, only $10\%$ of the training data has been used to fit the subsequent models, which are still more than 120'000 observations. 
+    Note that in order to reduce computation time, only $10\%$ of the data has been used to fit the subsequent models, which are still more than 120'000 observations. 
     
-    \input{tex/chapters/misc/ml_models.tex}\todo{Ich finde die sections, in denen Du die Modelle erklärst, gut. Allerdings fehlt mir die Überleitung/Einleitung, warum die Modelle gebraucht werden}
+    \input{tex/chapters/misc/ml_models.tex}
 }
 
 \section{Uncertainty Estimation}{
     \label{sec:corr_uncertainty}
-    Once we correct the NDVI using the models described in the previous section, we are left with the problem that not every correction is equally reliable.\footnote{One correction is illustrated in the figure \ref{fig:step_plot/2017-206_corr.pdf}. In this figure, the outer points (labeled as clouds) have a large scatter.}. Hence, we are interested in a measure of how uncertain an estimate is. 
+    Once we corrected the NDVI using the models described in the previous section, we are left with the problem that not every correction is equally reliable.\footnote{One correction is illustrated in the figure \ref{fig:step_plot/2017-206_corr.pdf}. In this figure, the outer points (labeled as clouds) have a large scatter.}. Hence, we are interested in a measure of how uncertain an estimate is. 
 
-    We do this by replacing the response with the absolute residuals $v := \left|y -\hat y\right|$ and modeling their relationship with the covariates defined by $X$.  In this way, we obtain a model for the absolute residuals $v$ and the estimator $\hat v$.  
+    We achive this analogously as we corrected the NDVI, by replacing the response ($\operatorname{NDVI}_\text{``true''}$) with the absolute residuals $v := \left|y -\hat y\right|$ and modeling their relationship with the covariates defined by $X$.  In this way, we obtain a model for the absolute residuals $v$ and the estimator $\hat v$.  
 }
 
 \section{Interpolation}{
@@ -79,7 +76,7 @@
     \label{sec:corr_itpl_stat}
     We have developed the following procedure to obtain a new interpolation (keyword-wise):
     \begin{Nenumerate}
-        \item OOB Interpolation (+ robustify?)
+        \item LOOCV Interpolation (+ robustify?) to get ``true'' NDVI
         \item Correction 
         \item Uncertainty estimation
         \item Interpolation (+ robustify?)
@@ -102,7 +99,7 @@
 
 \section{Evaluation Method}{
     \label{sec:ndvi_corr_eval}
-    In this section, we introduce the relative yield-estimation-accuracy (\textit{RYEA}) and utilize it to evaluate the interpolation strategies from section~\ref{sec:corr_itpl_stat}. 
+    In this section, we introduce the relative yield-estimation-accuracy (\textit{RYEA}) and utilize it to evaluate the 28 interpolation strategies from section~\ref{sec:corr_itpl_stat}. 
     % idea
     The fundamental assumption is that the closer the interpolated NDVI time series is to the true one, the better it can be used to determine crop yield. Implicitly, we believe that an NDVI time series which better models yield will incorporate more true information about the underlying vegetation. 
     Therefore, we want to determine a comparable RYEA for each interpolation strategy and choose it as a benchmark criterion. 
