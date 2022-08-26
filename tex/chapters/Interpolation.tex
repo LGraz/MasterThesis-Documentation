@@ -39,7 +39,6 @@
 }
 
 
-\todo[inline]{gewichte einfügen}
 
 \input{tex/chapters/misc/interpolation_methods.tex}
 
@@ -138,8 +137,8 @@
 			
 		This approach is based on the premise that we tend to underestimate the NDVI (as argued in \cite{caoSimpleMethodImprove2018b}). Since we want to develop a general method that is in principle not related to the NDVI, we will not pursue this approach further.	
 }
-\section{Performance Assessment}{
-	Next, we will benchmark the different interpolation methods with and without robustification. For this, we will use the same technique as we did for the parameter determination in section \ref{sec:itpl_param_est}. On $B_\lambda$ we apply the RMSE and different quantiles.  
+\section{Performance Assessment}{\label{sec:itpl_perfomance_assessment}
+	Next, we will benchmark the in section \ref{sec:itpl_preselection} preselected interpolation methods with and without robustification. For this, we will use the same technique as we did for the parameter determination in section \ref{sec:itpl_param_est}. On $B_\lambda$ we apply the RMSE and different quantiles.  
 
 	The results are presented in section \ref{sec:results_itpl} and are discussed in section \ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method and from the non-parametric methods we choose the smoothing splines.
 }

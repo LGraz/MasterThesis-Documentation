@@ -7,17 +7,17 @@
     non-param 
         discarded 
             kernel methods because of strong bias  
-            kriging because assumptions and highdim parameters
+            kriging because assumptions not met and ML parameter erstimation issiues
             savitzky-golay filter since we will investigate the LOESS which can be thought as its generalization 
-            loess slightly best performing itpl method but we notice non-smooth behaviour if data gaps are present
+            LOESS slightly best performing itpl method but we notice non-smooth behaviour if data gaps are present
         loess > ss > bspl
         choose ss because of its meaningful definition (minimizing the integral of the second derivative squared (\refeq{eq:ss}))
-- robustifying useful?
+- robustifying apparently not responsible for big improvements
 
 \end{verbatim}
 XXX draw your conclusion to which you came during this thesis
 
-
+Let us recapitulate the interpolation strategy introduced in chapter \ref{sec:corr}: We estimate the true NDVI using SS via LOOCV, then obtain the corrected NDVI using the OLS-SCL model. Subsequently, we estimate the absolute error with the OLS-SCL model and thereby obtain weights that are supposed to reflect the reliability of the corrected NDVI. Finally, we perform a weighted interpolation with SS.
 
 \section{Future Work}{
     \label{ss:FutureWork}
@@ -40,14 +40,14 @@ XXX draw your conclusion to which you came during this thesis
             \item \textbf{Data:}
             For computational reasons, we mostly considered all years and split the data (on the pixel level) randomly into a train/test set. A leave one year out cross validation might yield more accurate results.
             \item \textbf{Data:}
-            We have not included the spectral bands which have a resolution of 60 m. But precisely these seem to be promising for cloud correction, since they are a proxy of the water (content and form) in the atmosphere.
+            We have not included the spectral bands which have a resolution of 60 m. But precisely these seem to be promising for cloud correction, since they are a proxy of the water (content and form) in the atmosphere.
+            \item \textbf{Data:}
+            \cite{raiyaniSentinel2ImageScene2021} presents an Machine Learing approach that supposedly improves the SCL and thus could improve our results which are based on the SCL.
             % \item \textbf{Interpolation:}
             % Penalized Regressions as described in ... are similar to smoothing splines (c.f. ...) but different. Better?XXX
             \item \textbf{NDVI Correction:}
-            Explore the effect of different link functions between the estimated absolute residuals and the weights in section \ref{sec:corr_link}.
-
-            XXX weight/uncertainty function 
-            (problem of weight function -> some outer points get really low weights (just because others in the middle have very little residuals and thus very high weight))
+            Explore the effect of different link and normalizing functions % between the estimated absolute residuals and the weights 
+            in section \ref{sec:corr_link}. Currently we run into the danger of some outer points getting nearly ignored just because one estimated absolute residual for some interior point is very small.
             \item \textbf{NDVI Correction:}
             Yield is not the only target variable of interest. Other variables like protein content could also be used in section \ref{sec:ndvi_corr_eval} for the method evaluation. 
         \end{Nitemize}

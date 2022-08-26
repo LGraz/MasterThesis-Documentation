@@ -1,36 +1,30 @@
 \chapter{Discussion}
     \todo[inline]{Here in the discussion, you should take up the points you mentioned in the introduction}
 
-    SCL is prone to errors as can be seen in figure~\ref{fig:witzwil_selected_satellite_images}. A machine learning approach like the one developed in \cite{raiyaniSentinel2ImageScene2021} could be used instead.
-
-\section{Data Gaps}\label{sec:discussion_itpl_data_gaps}
-
-Kernel regression estimates the value for $t$ by relating to the points near $t$. To determine what ``near'' means, a bandwidth $h$ is used (c.f. equation \ref{eq:kernel_with_bandwidt}). This gets problematic as soon as data gaps become larger than $h$, since in this case no points left that are considered to be close to $t$. 
-
-Regarding the GK, we expect that because of the stationarity assumption, the interpolation will tend to the mean if data gaps are present (c.f. figure \ref{fig:kriging_parameters}). 
-
-Since the SG Filter requires equidistant points, it is clear that data gaps will break it. The linear interpolation, which is supposed to recover this, we consider as not being a satisfying solution.
-
-% FR SS LOESS DL BSPL 
-We do not trust the FR interpolation if there are noticeable data gaps. On the one hand, it corresponds to our experience REF that the curve can escape strongly there. On the other hand, the unreliability is illustrated by the poor values in table \ref{tab:cv-statistics_itpl-methods} for the robustified variant. These are meaningful in describing the ability to cope with data gaps, since more data points are ignored during the robustification and thus data gaps are simulated. 
-
-Similarly, for SS, LOESS, DL and B-splines we compare the values in table \ref{tab:cv-statistics_itpl-methods} between the robustified and non-robust variant. We find that the robust variant is not very different from the non-robust variant (unlike FR). Thus, we conclude that these methods do not have systematic failures.
-
-Regarding the LOESS, we observe in the figure \ref{fig:interpol/2x3_loess_robust} in plot (c) a strange peak between the first and second observation. This peak is due to the local weighting. In case of data gaps, the weights can attain non-intuitive values. For instance, the first data point in the plot, although adjacent to the peak, is given a low weight compared to the points to the right of the peak (for estimating the value at this peak).
-
-In our experience, the DL handles data gaps well, but it may happen that the model describes the NDVI increase as abrupt (REF...).
 
 \section{Interpolation Methods}{ \label{sec:discussion_itpl}
+    \subsection{Data Gaps in Time Series}\label{sec:discussion_itpl_data_gaps}{
+        Kernel regression estimates the value for $t$ by relating to the points near $t$. To determine what ``near'' means, a bandwidth $h$ is used (c.f. equation \ref{eq:kernel_with_bandwidt}). This gets problematic as soon as the data gaps become larger than $h$, since in this case no points are left that are considered to be close to $t$. 
+
+        Regarding the GK, we expect that because of the stationarity assumption, the interpolation will tend to the mean if data gaps are present (c.f. figure \ref{fig:kriging_parameters}). 
+
+        Since the SG Filter requires equidistant points, it is clear\todo{wertend} that data gaps will break it. The linear interpolation, which is supposed to recover this, we consider as not being a satisfying solution.
+
+        % FR SS LOESS DL BSPL 
+        We do not trust the FR interpolation if there are noticeable data gaps. On the one hand, it corresponds to our experience that the curve can escape strongly there (c.f. figure \ref{fig:interpol/fourier_dl_comparison}). On the other hand, the unreliability is illustrated by the poor values in table \ref{tab:cv-statistics_itpl-methods} for the robustified variant. These are meaningful in describing the ability to cope with data gaps, since more data points are ignored during the robustification and thus data gaps are simulated. 
+
+        Similarly, for SS, LOESS, DL and B-splines we compare the values in table \ref{tab:cv-statistics_itpl-methods} between the robustified and non-robust variant. We find that the robust variant is not very different from the non-robust variant (unlike FR). Thus, we conclude that these methods do not have systematic failures.
+
+        Regarding the LOESS, we observe in the figure \ref{fig:interpol/2x3_loess_robust} in plot (c) a strange peak between the first and second observation. This peak is due to the local weighting. In case of data gaps, the weights can attain non-intuitive values. For instance, the first data point in the plot, although adjacent to the peak, is given a low weight compared to the points to the right of the peak (for estimating the value at this peak).
+
+        In our experience, the DL handles data gaps well, but it may happen that the model describes the NDVI increase as abrupt. This however was fixed, by bounding the first derivative (c.f. section \ref{sec:itpl_param_optimizationissues}).
+    }
+
     \subsection{Preselection}{\label{sec:itpl_preselection}
-        XXX
-
-        - Kernel regression biased in peaks and valleys and bad when data gaps are bigger than the width of the kernel
-        
-        - Kriging violated stationarity assumption, biased, 
-
-        - SG Filter is a special case of the LOESS
-
-        take all remaining methods
+        We shall now justify our preselection of the interpolation methods tested in section \ref{sec:itpl_perfomance_assessment}. 
+        We decided against kernel regression because it has systematic errors at peaks and valleys. Moreover, this method handles data gaps poorly (c.f. \ref{sec:discussion_itpl_data_gaps}). 
+        Moreover, we will not consider kriging since the underlying assumptions are not met and therefore a systematic bias is introduced. On top of that, ML parameter finding occasionally fails.
+        Also, we do not include the SG filter in the next selection, since we think of it as a special case of LOESS.
     }
 
     \subsection{Candidate Selection}{
@@ -55,8 +49,10 @@ XXX discuss results from table \ref{tab:methods_vs_yieldprediction}
     }
 
     \subsection{Which Interpolation Strategy should we choose}
+        \todo[inline]{table mit OLS SCL als sieger diskutieren}
 
     \subsection{High RMSE in Yield Prediction}{
+        \todo{kurzer kontext von vergleichbaren values von gregor --- diese sektion ist für dena uftraggebenr}
         How much can we expect to get? We have multiple sources of uncertainty in the data:
         \begin{Nenumerate}
             \item Uncertainty in Yield data collected by the combine harvester

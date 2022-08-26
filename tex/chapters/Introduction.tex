@@ -1,60 +1,55 @@
 \chapter{Introduction}
 
-Research Questions:
+
+Satelite image time series are used in ...
+    The European Space Agency makes the images from the Sentinel 2 satelites freely avialable
+        Extracting indicies time series (like NDVI) and used to model ... (not only of interest to researchers but also public agents and insurance companies)
+                        - Plant Models REF
+                        - Season Start (start of spring) (community name: land-surface-plant-phenology)
+                        - Yield prediction
+                        - crop classification
+            erronous observations --> convervative (SCL) filtration 
+                --> Data gaps
+                    currently done: interpolation and smoothing techniques
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+                    we give an overview + review over popular interpolation methods + discuss how data gaps influence the given methods + discuss approach of robustifing against outliers
+                    Select suitable ones in our NDVI setting --> benchmark
+                Try to eliminate data gaps by not using strong SCL-filtration but weighting. Weighting comes from an uncertainty estimation done by a statistical model (develope a proxy for the true NDVI) <-- we tried various <-- evalute different IS's with objective defined quality measure (which relies on the assumption that a NDVI TS which better models the plant growth is more suitable for predicting yield)
+            
+
+
+Research Questions
+\begin{Nenumerate}
+    \item 1 review of interpolation methods
+    \item 2 errornous observations --- how to deal with them
+    \item 3 data gaps --- influence itpl mehtods 
+    \item 4 data gaps --- how to deal with them
+    % \item 5 develope own strategy of interpolation
+    \item 6 how to compare two NDVI interpolations?
+\end{Nenumerate}
+1 in \ref{sec:itpl}
+2 robustification \ref{sec:loess_robustify}
+3 discussed in \ref{sec:discussion_itpl_data_gaps}
+4 utilize observations filterd before and estimating how reliable each of them are \ref{sec:corr}
+5 
+
+% Roadmap
 
 
 
+%smoothing
+``Similarly, smoothing the time series of satellite data is helpful to address inconsistency in observation frequency and timing due to clouds and other sensor artefacts \cite{skakunWinterWheatYield2019}''
 
 
+\todo[inline]{Why do we do interpolation in NDVI (and other indices) time series? What are possible shortcomings thereof?}
+
+\begin{itemize}
+    \item Doublelogistic (winter-ndvi)
+    \item parametric / non-parametric approaches
+    \item spatio-temporal approaches
+\end{itemize}
 
 
-
-
-
-
-
-
-\section{XXX motivation - why is it important}{
-    - NDVI-timeseries is simple and widely used. 
-        Examples are: 
-            - Plant Models REF
-            - Season Start (start of spring) (community name: land-surface-plant-phenology)
-            - Yield prediction
-            - crop classification
-    
-    - NDVI is not only of interest to researchers but also public agents and insurance companies
-    
-    Since satellite images are ``for free'' researchers extract it (only S2 for free)
-    
-    \textcolor{red}{Please also add some words on the S2 satellites of ESA in the introduction.} 
-
-    %smoothing
-    ``Similarly, smoothing the time series of satellite data is helpful to address inconsistency in observation frequency and timing due to clouds and other sensor artefacts \cite{skakunWinterWheatYield2019}''
-}
-
-
-\section{XXX problembaum / fragestellungen}{
-    problem schilderung anhand referenzen und evtl. eines bileds:
-}
-
-
-
-\section{XXX State-of-the-art}{
-    \todo[inline]{Why do we do interpolation in NDVI (and other indices) time series? What are possible shortcomings thereof?}
-    zusammenfassung mit literaturrecherche hier (jetzige antowrt auf problemstellung):
-    \begin{itemize}
-        \item Doublelogistic (winter-ndvi)
-        \item parametric / non-parametric approaches
-        \item spatio-temporal approaches
-    \end{itemize}
-}
-
-\section{Research Questions}
-XXX
-
-\section{Roadmap -- anderer name XXX}{
-    This thesis is structured as follows: XXX
-}
 
 
 

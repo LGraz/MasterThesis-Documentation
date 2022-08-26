@@ -1,5 +1,4 @@
 \todo[inline]{Paper zitieren wo eingeführt oder wo benutzt (falls einführung fast schon trivial)}
-\todo[inline]{Ähnliche struktur sich überlegen}
 
 \section{Parametric Regression} 
 	\label{sec:itpl_parametric}
@@ -52,12 +51,11 @@
 			\label{fig:interpol/fourier_dl_comparison}
 		\end{my_figure}
 
-	\subsection{Optimization Issues}
+	\subsection{Optimization Issues}\label{sec:itpl_param_optimizationissues}
 		We shall mention some optimization issues we countered during implementation. Since we aim to minimize the residual sum of squares over 5 (or 6) parameters, we try to solve a non-convex optimization problem. Thus, the algorithm\footnote{We used the python function \texttt{scipy.optimize.curve\_fit}.} either struggles to find the global minimum or fails to converge. This was fixed by providing for each parameter reasonable initial values and generous bounds (which match our experience).
 
 \section{Non-Parametric Regression}
 	\label{sec:itpl_nonparametric}
-	\todo{TODO: include Weighted versions}
 	In non-parametric curve estimation, the curve does no longer have to be fully determined by parameters, but we allow it to flexibly approximate the data. Note, that we do not exclude the use of tuning-parameters.
 
 	\subsection{Kernel Regression}
@@ -65,30 +63,30 @@
 		As described in section \ref{sec:itpl_setup}, we aim to estimate
 		\begin{equation}
 			\label{eq:nadaraya}
-			\mathbb{E}[Y \mid X=x]
-			= \int_{\R} y f_{Y \mid X}(y \mid x) d y
-			=\frac{\int_{\R} y f_{X, Y}(x, y) d y}{f_{X}(x)},
+			\mathbb{E}[Y \mid T=t]
+			= \int_{\R} y f_{Y \mid T}(y \mid t) d y
+			=\frac{\int_{\R} y f_{T, Y}(t, y) d y}{f_{T}(t)},
 		\end{equation}
-		where $f_{Y \mid X}, f_{X, Y}, f_{X}$ denote the conditional, joint and marginal densities.
+		where $f_{Y \mid T}, f_{T, Y}, f_{T}$ denote the conditional, joint and marginal densities.
 		This can be done with a kernel $K$:
 		\begin{equation}
-			\hat{f}_{X}(x)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right)}{n h}, \quad \hat{f}_{X, Y}(x, y)=\frac{\sum_{i=1}^{n} K\left(\frac{x-x_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}},
+			\hat{f}_{T}(t)=\frac{\sum_{i=1}^{n} K\left(\frac{t-t_{i}}{h}\right)}{n h}, \quad \hat{f}_{T, Y}(t, y)=\frac{\sum_{i=1}^{n} K\left(\frac{t-t_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}},
 			\label{eq:kernel_with_bandwidt}
 		\end{equation}
 		where $h$, the bandwidth, symbolizes the windowsize of to consider. By using the above function in equation \eqref{eq:nadaraya} we arrive at the \textit{Nadaraya-Watson} kernel estimator:
-		$$\hat{m}(x)=\frac{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right) Y_{i}}{\sum_{i=1}^{n} K\left(\left(x-x_{i}\right) / h\right)}$$
+		$$\hat{m}(t)=\frac{\sum_{i=1}^{n} K\left(\left(t-t_{i}\right) / h\right) Y_{i}}{\sum_{i=1}^{n} K\left(\left(t-t_{i}\right) / h\right)}$$
 
-		Common choices for the kernel are the normal function or a uniform function (also called `box' function). 
+		Common choices for the kernel are the normal function or a uniform function (also called `bot' function). 
 		\subsubsection*{Choose Bandwidth}
 		Note that we still need to choose the bandwidth of the function. This can be done with the help of LOOCV while optimizing the RMSE. For non-equidistant data we refere to \cite{brockmannLocallyAdaptiveBandwidth1993} where a local adaptive bandwidth selection is presented.
 
 		\begin{my_pros_cons_table}{
-				\item flexible due to different possible kernels
-				\item can be assigned degrees of freedom (trace of the hat-matrix)
+				\item fletible due to different possible kernels
+				\item can be assigned degrees of freedom (trace of the hat-matrit)
 				\item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (REF c.f. CompStat 3.2.2)
 			}{
-				\item if the $x \mapsto K(x)$ is not continuous, $\hat m $ isn't either
-				\item choice of bandwidth, especially if $x_i$ are not equidistant.
+				\item if the $t \mapsto K(t)$ is not continuous, $\hat m $ isn't either
+				\item choice of bandwidth, especially if $t_i$ are not equidistant.
 			}
 		\end{my_pros_cons_table}
 
@@ -118,11 +116,11 @@
 			\end{my_figure}
 
 			\begin{my_figure}{width=1\textwidth}{interpol/kriging_parameter}
-				\caption{On the left, we see how the interpolation change if we increase the nugget and the range parameter. On the right, we compare two kriging interpolations, where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
+				\caption{On the left, we see how the interpolation change if we increase the nugget and the range parameter. On the right, we compare two kriging interpolations, where one takes parameters by numerically matimizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
 				\label{fig:kriging_parameters}
 			\end{my_figure}
 
-		Finally, we consider a one-dimensional Gaussian process $G_\gamma$ with variogram $\gamma$ and tune the variogram parameters using maximum likelihood\footnote{As illustrated in figure~\ref{fig:kriging_parameters} maximum likelihood estimation can lead to overfitting. Thus, we will in practice sample several such optimized parameters and use their median in the end.}. Let $z$ be a vector with the new values to extrapolate, then we can determine the values $m(z) = \mathbb{E}\left[G_\gamma(z) | (x,y)\right]$ using Bayes rule\footnote{Bayes rule generally claims, that for two random variables $A$ and $B$ we have that $P(A|B) = P(B|A) / P(B)$}. For an example fit, we refer to figure~\ref{fig:kriging_parameters}. 
+		Finally, we consider a one-dimensional Gaussian process $G_\gamma$ with variogram $\gamma$ and tune the variogram parameters using matimum likelihood\footnote{As illustrated in figure~\ref{fig:kriging_parameters} matimum likelihood estimation can lead to overfitting. Thus, we will in practice sample several such optimized parameters and use their median in the end.}. Let $z$ be a vector with the new values to ettrapolate, then we can determine the values $m(z) = \mathbb{E}\left[G_\gamma(z) | (t,y)\right]$ using Bayes rule\footnote{Bayes rule generally claims, that for two random variables $A$ and $B$ we have that $P(A|B) = P(B|A) / P(B)$}. For an etample fit, we refer to figure~\ref{fig:kriging_parameters}. 
 
 		\subsubsection*{Violated Assumption}
 			Since we observe a clear pattern of a growth period in spring and harvest in the end of summer, we have to admit that our stationarity assumtpion with the constant mean is structurally violated. This is also the reason why we observe (for every variogram parameter) a tendency to the mean, as indicated in figure~\ref{fig:kriging_parameters}.
@@ -144,7 +142,7 @@
 		The \textit{Savitzky-Golay Filter}, introduced in \cite{savitzkySmoothingDifferentiationData1964} is a technique in signal processing and can be used to filter out high frequencies (low-pass filter) \citep{schaferWhatSavitzkyGolayFilter2011}. Furthermore, it can also be used for smoothing by filtering high frequency noise while keeping the low frequency signal.
 
 		First, we choose a window size $m$. Then, for each point, $j \in \{m, m+1, \dots, n-m\}$ we fit a polynomial of degree $k$ by:
-		$$\hat y_j=\min_{p\in P_k}\sum_{i=-m}^{m}(p (x_{j+i})-y_{i+j})^{2},$$
+		$$\hat y_j=\min_{p\in P_k}\sum_{i=-m}^{m}(p (t_{j+i})-y_{i+j})^{2},$$
 		where $P_k$ denotes the Polynomials of degree $k$ over $\R$.
 		For equidistant points this can efficiently be calculated by
 		$$
@@ -186,11 +184,11 @@
 		The LOESS introduced by \cite{clevelandRobustLocallyWeighted1979} can be understood as a generalization of the SG Filter (c.f. sec.~\ref{sec:Savitzky-Golay}).
 
 		Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ separately by fitting a polynomial of order $d$ by weighted least squares. The weights are (usually) defined by
-		$$w_i(x_j)=\begin{cases}
-				\left(1-\left(\frac{x_j}{h_i}\right)^{3}\right)^{3}, & \text{for } |x_j|<h_i           \\
-				0,                                                   & \text{for } |x_j| \geqslant h_i
+		$$w_i(t_j)=\begin{cases}
+				\left(1-\left(\frac{|t_j-t_i|}{h_i}\right)^{3}\right)^{3}, & \text{for } |t_j-t_i|<h_i           \\
+				0,                                                   & \text{for } |t_j-t_i| \geqslant h_i
 			\end{cases} ,$$
-		where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(x_i)$.\footnote{\label{footnote:LOESS}If too many weights are set to zero, we might end up considering not enough observations and thus get a singular design-matrix (for the least squares estimation). Therefore, we substitute $h_i$ with $1.01 h_i$, so that the observation on the boundary of $B_{h_i}(x_i)$ does not get completely ignored. But we also have to assure that $\alpha$ is big enough.} So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
+		where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(t_i)$.\footnote{\label{footnote:LOESS}If too many weights are set to zero, we might end up considering not enough observations and thus get a singular design-matrit (for the least squares estimation). Therefore, we substitute $h_i$ with $1.01 h_i$, so that the observation on the boundary of $B_{h_i}(t_i)$ does not get completely ignored. But we also have to assure that $\alpha$ is big enough.} So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
 
 		\subsubsection{Differences between the Robust LOESS and the SG Filter?}
 		The LOESS smoother takes a fraction of points instead of a fixed number and therefore automatically adapts to the size of the data we wish to interpolate. However, we run into the danger of considering too little observations, since the estimation breaks down if $\lceil \alpha n\rceil < d+1$.\footnoteref{footnote:LOESS}
@@ -211,16 +209,18 @@
 		\label{sec:B}
 		B-splines as discussed in \cite{lycheSplineMethods2005} are piecewise cubic polynomials defined by 
 		$$
-			S(x)=\sum_{j=0}^{n-1} c_{j} B_{j, k ; t}(x),
+			S(t)=\sum_{j=0}^{n-1} c_{j} B_{j, k ; t}(t),
 		$$
 		where $B$ are basis functions and recursively defined by:
-		$$
-			\begin{array}{r}
+		
+		\begin{equation}
 				B_{i, 0}(z)=1, \text { if } t_{i} \leq z<t_{i+1}, \text { otherwise } 0 \\
-				B_{i, k}(z)=\frac{z-x_{i}}{x_{i+k}-x_{i}} B_{i, k-1}(z)+\frac{x_{i+k+1}-z}{x_{i+k+1}-x_{i+1}} B_{i+1, k-1}(z).
-			\end{array}
-		$$
-		Assuming that all $x_i$ are distinct, this yields an interpolation which fits the data perfectly. To reduce the amount of overfitting and increase the smoothness, we relax the constraint that we have to perfectly interpolate. Thus, we use the minimum number of basis functions\footnote{So we do not require one basis function for each neighboring pair of knots. SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number of knots used} such that:
+		\end{equation}
+		\begin{equation}
+			B_{i, k}(z)=\frac{z-t_{i}}{t_{i+k}-t_{i}} B_{i, k-1}(z)+\frac{t_{i+k+1}-z}{t_{i+k+1}-t_{i+1}} B_{i+1, k-1}(z).
+		\end{equation}
+		
+		Assuming that all $t_i$ are distinct, this yields an interpolation which fits the data perfectly. To reduce the amount of overfitting and increase the smoothness, we relax the constraint that we have to perfectly interpolate. Thus, we use the minimum number of basis functions\footnote{So we do not require one basis function for each neighboring pair of knots. SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number of knots used} such that:
 		$$\sum_{i=1}^n(w_i (y_i - \hat y_i))^2 \leq s$$
 
 		\begin{my_pros_cons_table}{
@@ -239,10 +239,10 @@
 		Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the unique\footnote{Strictly speaking it is only unique for $\lambda > 0$} minimizer
 		\begin{equation}
 			\label{eq:ss}
-			\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}w_i\left(y_{i}-{f}\left(x_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(x)^{2} dx
+			\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}w_i\left(y_{i}-{f}\left(t_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(t)^{2} dt
 		\end{equation}
 			
-		is a natural\footnote{It is called natural since it is affine outside the data range ($\forall x\notin [x_1, x_n]:\hat m''(x) = 0$)} cubic spline (i.e. a piecewise cubic polynomial function).
+		is a natural\footnote{It is called natural since it is affine outside the data range ($\forall t\notin [t_1, t_n]:\hat m''(t) = 0$)} cubic spline (i.e. a piecewise cubic polynomial function).
 		The objective function ensures that we decrease the curvature while keeping the RMSE low.
 
 

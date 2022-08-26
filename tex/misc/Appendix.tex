@@ -24,17 +24,17 @@
 
 
 \section{Interpolation}
-\begin{my_figure}[!h]{width=1\textwidth}{interpol/2x3_loess_robust}
+\begin{my_figure}[H]{width=1\textwidth}{interpol/2x3_loess_robust}
 	\caption{The LOESS smoother \RobItPlot}
 	\label{fig:interpol/2x3_loess_robust}
 \end{my_figure}
 
-\begin{my_figure}[!h]{width=1\textwidth}{interpol/2x3_B-Splines_robust}
+\begin{my_figure}[H]{width=1\textwidth}{interpol/2x3_B-Splines_robust}
 	\caption{B-Splines \RobItPlot}
 	\label{fig:interpol/2x3_B-Splines_robust}
 \end{my_figure}
 
-\begin{my_figure}[!h]{width=1\textwidth}{interpol/2x3_DL_robust}
+\begin{my_figure}[H]{width=1\textwidth}{interpol/2x3_DL_robust}
 	\caption{A Double Logistic curve \RobItPlot}
 	\label{fig:interpol/2x3_DL_robust}
 \end{my_figure}
@@ -51,7 +51,7 @@
 
 \input{tex/misc/4x2_stepwise-plots.tex}
 
-\begin{table}
+\begin{table}[H]
 	\begin{center}
 		\caption{Non-relative RMSE for yield prediction}.
 		\small
@@ -62,7 +62,7 @@
 \end{table}
 
 
-\begin{table}
+\begin{table}[H]
 	\begin{center}
 		\caption{Coefficient of determination (R\textsuperscript{2}) of yield prediction}
 		\small
@@ -72,7 +72,7 @@
 	\end{center}
 \end{table}
 
-\subsection{OLS-SCL Model Outputs}
+\subsection{OLS-SCL Model Outputs}\label{app:ols-scl-summary}
 \lstinputlisting[title= R Summary of the NDVI correction model (c.f. equation \refeq{eq:corr_lm})]{tex/chapters/misc/lm_scl.txt}
 \lstinputlisting[title= R Summary of the NDVI correction model (c.f. equation \refeq{eq:corr_lm_res})]{tex/chapters/misc/lm_scl_res.txt}
 
@@ -80,3 +80,4 @@
 \todo[inline]{replace space before ref by tilda}
 \todo[inline]{check quantile definitions}
 \todo[inline]{schwarz weiss färbung der IS tabelle korrigieren}
+\todo[inline]{so wenig wie möglich abkürzungen in den fig und table captions}
