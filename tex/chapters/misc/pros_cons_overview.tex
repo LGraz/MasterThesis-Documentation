@@ -19,14 +19,14 @@
 		Yes                                                                                                                                                          &
 		(Yes)                                                                                                                                                         \\ \hline%comment out?
 
-		Fourier Approximation                                                                                                                                              &
+		Fourier Series                                                                                                                                              &
 		\begin{cptitemize} \item[--]  NDVI can be approximated by a 2cd order Fourier series.                            \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Incorporates periodical growth-cycles                                 \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Parameter estimation can be very difficult \item[--]  Curve easily exceeds bounds of the NDVI             \end{cptitemize}        &
 		Yes                                                                                                                                                          &
 		No                                                                                                                                                         \\ \hline%comment out?
 
-		(Gaussian) Kernel Smoothing                                                                                                                                  &
+		Nadaraya-Watson (Kernel Smoothing)                                                                                                                                  &
 		\begin{cptitemize} \item[--]  Close points are related to each other via a kernel function \end{cptitemize}                                                                                                                                                            &
 		\begin{cptitemize} \item[--]  Simple  \item[--]  Computationally very fast                                                             \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Biased, especially at `peaks' and `valleys'   \item[--]  Bandwidth: fails if there are big data-gaps                                                     \end{cptitemize}               &
@@ -40,7 +40,7 @@
 		Yes                                                                                                                                                          &
 		(Yes)                \\ \hline%comment out?                                                                                                                                         \\ %\hline%comment out?
 
-		SG Filter                                                                                                                                        &
+		SG                                                                                                                                        &
 		\begin{cptitemize}
 			\item[--]  High frequencies are noise (Low-Pass-Filter) \item[--]  Equidistant points \item[--]  Local polynomials\end{cptitemize}                                              &
 		\begin{cptitemize} \item[--]  Computationally very fast                                                                   \end{cptitemize}                   &
@@ -69,7 +69,7 @@
 		Yes                                                                                                                                                            &
 		No                                            \\ \hline%comment out?
 
-		Smoothing Splines                                                                                                                                            &
+		Smoothing splines                                                                                                                                            &
 		\begin{cptitemize} \item[--]  2cd derivative of function is integrable                                                        \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  Intuitive meaning of penalty \item[--]  General assumptions \item[--]  Flexible shape                         \end{cptitemize} &
 		\begin{cptitemize} \item[--]  Choice of smoothing parameter                                                                                       \end{cptitemize}               &

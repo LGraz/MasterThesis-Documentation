@@ -26,11 +26,11 @@
         The ``true'' NDVI value at time $t$ can be successfully estimated by robustified LOOCV interpolation using high-quality observations. That is, the interpolated value  (using a robustified interpolation method from chapter \ref{sec:itpl})  considering the points $P^{SCL45}\setminus P_t$. In the following, we will call this estimate the ``true''-NDVI.
     \end{assumption}
 
-    We would like to get an idea if there is any information that can be recovered from non-SCL45 observations. For that, we will check for the other SCL-classes if there is a relation between the ``true'' NDVI (derived with robustified Smoothing Splines) and the observed NDVI. Thus, we pair each ``true'' NDVI with its observed one, collect all pairs, and create a scatter plot for each SCL-class in fig~\ref{fig:ndvi_corr/scl_residuals_scatter}.
+    We would like to get an idea if there is any information that can be recovered from non-SCL45 observations. For that, we will check for the other SCL-classes if there is a relation between the ``true'' NDVI (derived with robustified SS) and the observed NDVI. Thus, we pair each ``true'' NDVI with its observed one, collect all pairs, and create a scatter plot for each SCL-class in fig~\ref{fig:ndvi_corr/scl_residuals_scatter}.
     As expected, the ``true'' and the observed NDVI seem to be highly correlated for SCL45. But we can also detect some patterns of correlation in the SCL-classes 2, 3, 7, 8 and 10.  
 
     \begin{my_figure}[h]{width=1\textwidth}{ndvi_corr/scl_residuals_scatter}
-        \caption{For each SCL class, we compare the true NDVI with the observed NDVI. (The true NDVI was estimated with OOB smoothing splines, and we used all observations of 10\% of the total training pixels.)}
+        \caption{For each SCL class, we compare the true NDVI with the observed NDVI. (The true NDVI was estimated with LOOCV smoothing splines, and we used all observations of 10\% of the total pixels.)}
         \label{fig:ndvi_corr/scl_residuals_scatter}
     \end{my_figure}
 
@@ -99,7 +99,7 @@
 
 \section{Evaluation Method}{
     \label{sec:ndvi_corr_eval}
-    In this section, we introduce the relative yield-estimation-accuracy (\textit{RYEA}) and utilize it to evaluate the 28 interpolation strategies from section~\ref{sec:corr_itpl_stat}. 
+    In this section, we introduce the relative yield-estimation-accuracy ({RYEA}) and utilize it to evaluate the 28 interpolation strategies from section~\ref{sec:corr_itpl_stat}. 
     % idea
     The fundamental assumption is that the closer the interpolated NDVI time series is to the true one, the better it can be used to determine crop yield. Implicitly, we believe that an NDVI time series which better models yield will incorporate more true information about the underlying vegetation. 
     Therefore, we want to determine a comparable RYEA for each interpolation strategy and choose it as a benchmark criterion. 

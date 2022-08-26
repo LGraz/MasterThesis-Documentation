@@ -124,11 +124,11 @@
 	}
 	\subsection{Examples and Conclusions}{
 		\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_SS_robust}
-			\caption{Smoothing Splines \RobItPlot}
+			\caption{Smoothing splines \RobItPlot}
 			\label{fig:interpol/2x3_SS_robust}
 		\end{my_figure}
 
-		Examples of the first four iterative fits using smoothing splines are shown in figure \ref{fig:interpol/2x3_SS_robust} for six pixels. For the analogous figures of the other interpolation methods c.f. figures \ref{fig:interpol/2x3_loess_robust}, \ref{fig:interpol/2x3_B-Splines_robust}, \ref{fig:interpol/2x3_DL_robust} and \ref{fig:interpol/2x3_loess_robust}.
+		Examples of the first four iterative fits using SS are shown in figure \ref{fig:interpol/2x3_SS_robust} for six pixels. For the analogous figures of the other interpolation methods c.f. figures \ref{fig:interpol/2x3_loess_robust}, \ref{fig:interpol/2x3_B-Splines_robust}, \ref{fig:interpol/2x3_DL_robust} and \ref{fig:interpol/2x3_loess_robust}.
 		Indeed, we observe how the interpolated time series is less affected by outliers after each iteration. We notice the biggest difference in the first iteration. Furthermore, in the plot at the bottom left\todo{ consider naming the sub-plots} we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always stop after one iteration.
 	} 
 	
@@ -140,7 +140,7 @@
 \section{Performance Assessment}{\label{sec:itpl_perfomance_assessment}
 	Next, we will benchmark the in section \ref{sec:itpl_preselection} preselected interpolation methods with and without robustification. For this, we will use the same technique as we did for the parameter determination in section \ref{sec:itpl_param_est}. On $B_\lambda$ we apply the RMSE and different quantiles.  
 
-	The results are presented in section \ref{sec:results_itpl} and are discussed in section \ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method and from the non-parametric methods we choose the smoothing splines.
+	The results are presented in section \ref{sec:results_itpl} and are discussed in section \ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method and from the non-parametric methods we choose the SS.
 }
 
 

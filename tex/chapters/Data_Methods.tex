@@ -16,7 +16,7 @@
 		\input{tex/chapters/misc/table_S2-bands.tex}
 		
 		The S2 images contain 12 spectral bands with spatial resolutions up to 10 meters (see \ref{table:S2-bands}). Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation (\cite{perichPixelbasedYieldMapping2022a}). In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used\footnote{According to \cite{perichPixelbasedYieldMapping2022a}: ``Data prior to March 2018 was only available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by ESA''}. 
-		The ESA also supplies an algorithm\footnote{\url{https://sentinels.copernicus.eu/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm}} produces Scene Classification Layer (\textit{SCL}) where for each location the observed subject is assigned to one of 11 SCL-classes (c.f. table~\ref{tab:satelite/scl_classes}). 
+		The ESA also supplies an algorithm\footnote{\url{https://sentinels.copernicus.eu/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm}} produces Scene Classification Layer ({SCL}) where for each location the observed subject is assigned to one of 11 SCL-classes (c.f. table~\ref{tab:satelite/scl_classes}). 
 		In this thesis,  we will use this classification to filter out data points, which we belive to be less informative. That are all observations which SCL-class does not correspond to vegetation or bare soils (classes 4 and 5). For convenience, we define the set SCL45 as the observations which belong to SCL-class 4 or 5.
 		
 		% \begin{figure}[h]
@@ -67,12 +67,12 @@
 }
 
 \section{Normalized Difference Vegetation Index (NDVI)}{% NDVI
-	The well-known  (\textit{NDVI}) introduced in \cite{rouseMonitoringVernalAdvancement1974} is used to measure vegetation in remote sensing. It utilizes a large jump of reflectancy between red and infrared and can be calculated using the bands $B4$ and $B8$ (table \ref{table:S2-bands}) by:
+	The well-known  ({NDVI}) introduced in \cite{rouseMonitoringVernalAdvancement1974} is used to measure vegetation in remote sensing. It utilizes a large jump of reflectancy between red and infrared and can be calculated using the bands $B4$ and $B8$ (table \ref{table:S2-bands}) by:
 	\begin{equation}
 		NDVI = \frac{B8 - B4}{B8 + B4}
 		\label{eq:ndvi}
 	\end{equation}
-	Since we measure the NDVI via the S2 satelites from space we can not expect to measure the true NDVI. This is especially true if we do not see the ground because of clouds or the ground signal is disturbed by cloud shadows. Even if we only use SCL45 observations we still encouter issues as will be described in section \ref{sec:s2_challangges}. Therefore, we call the calculated values merely the \textit{observed NDVI}. In the following chapters, we will study the resulting NDVI time series (for one location and one season) extensively. Such a time series is shown in figure \ref{interpol/ndvi_ts_das_grey.pdf}.
+	Since we measure the NDVI via the S2 satelites from space we can not expect to measure the true NDVI. This is especially true if we do not see the ground because of clouds or the ground signal is disturbed by cloud shadows. Even if we only use SCL45 observations we still encouter issues as will be described in section \ref{sec:s2_challangges}. Therefore, we call the calculated values merely the {observed NDVI}. In the following chapters, we will study the resulting NDVI time series (for one location and one season) extensively. Such a time series is shown in figure \ref{interpol/ndvi_ts_das_grey.pdf}.
 	\begin{figure}[!h]
 		\centering
 		\begin{subfigure}{.47\textwidth}
@@ -103,7 +103,7 @@
 % \end{my_figure}
 \section{Timescale Transformation}\label{sec:gdd_def}
 	{% GDD & DAS
-		Regarding the Days After Sowing (DAS) time scale shown in fig. \ref{interpol/ndvi_ts_das_grey.pdf}, we detect two drawbacks. First, this scale makes it difficult to compare two NDVI time series because wheat is not always sown on the same day of the year and in some years plants begin to emerge earlier. Second, because there are only few SCL45 observations in the winter, we face significant data gaps in this period. The time scale transformation introduced in \cite{mcmasterGrowingDegreedaysOne1997} fixes both problems. The resulting Growing Degree Days (\textit{GDD}) are defined as the cumulative sum since sowing of temperature above a given base temperature $T_{base}$. For cereals, we use $T_{base}=0$ (\cite{perichPixelbasedYieldMapping2022a}). Thus, the GGD for $n$ days after sowing will be equal to:
+		Regarding the Days After Sowing (DAS) time scale shown in fig. \ref{interpol/ndvi_ts_das_grey.pdf}, we detect two drawbacks. First, this scale makes it difficult to compare two NDVI time series because wheat is not always sown on the same day of the year and in some years plants begin to emerge earlier. Second, because there are only few SCL45 observations in the winter, we face significant data gaps in this period. The time scale transformation introduced in \cite{mcmasterGrowingDegreedaysOne1997} fixes both problems. The resulting Growing Degree Days ({GDD}) are defined as the cumulative sum since sowing of temperature above a given base temperature $T_{base}$. For cereals, we use $T_{base}=0$ (\cite{perichPixelbasedYieldMapping2022a}). Thus, the GGD for $n$ days after sowing will be equal to:
 		\begin{equation}
 			\label{eq:gdd}
 			GDD_n := \sum_{i=0}^n \max(T_i - T_{base}, 0).
@@ -120,7 +120,7 @@
 		Analogously to $P$, define $P^{SCL45}$ by only considering $P_t$ with SCL-class 4 or 5 (vegetation and soil).  
 }
 
-		% We will call the resulting data set \textit{PIXELS}, as it is the collection of all Pixels (over all seasons). 
+		% We will call the resulting data set {PIXELS}, as it is the collection of all Pixels (over all seasons). 
 		
 		% Finally, we split PIXELS randomly into a train ($80\%$) and test  ($20\%$) set. 
 \section{Challenges in S2 Data}{\label{sec:s2_challangges}
@@ -152,14 +152,14 @@
 		\end{equation}
 		% keine definition für R2 und relative RMSE da diese nur im appendix verwendet werden. Die definition nehmen wir dort vor.
 		
-		\subsection{Out-Of-Bag (\textit{OOB}) and Leave-One-Out-Cross-Validation (\textit{LOOCV})}{ \label{sec:OOB_LOOCV}
+		\subsection{Out-Of-Bag ({OOB}) and Leave-One-Out-Cross-Validation ({LOOCV})}{ \label{sec:OOB_LOOCV}
 		The rationale for OOB and LOOCV is that we intend to evaluate a model $M$ with unseen data. That is, if $D$ describes the entire dataset and we train a model on a subset of $D$, we can use the remaining data to evaluate the model. 
 		
 		To formally introduce this, let:
 		$$
 			D=\{(X_{[j,:]},y_j)|\; X\in\R^{n\times p}, y\in \R^n, j=1,\dots,n\}
 		$$
-		be a dataset, $i\in \{1,\dots,n\}$ and $M^{(-i)}$ a model fitted on a subset of $D\setminus\{(X_{[i,:]},y_i)\}$. Then we call $\hat y_i:= M^{(-i)}(X_{[i,:]})$ an \textit{OOB} estimator of $y_i$. If we do this for all $i\in\{1,\dots,n\}$, we obtain $\hat y := \left(\hat y_1,\dots,\hat y_n\right)$ the OOB estimator for $y\in \R^n$.
+		be a dataset, $i\in \{1,\dots,n\}$ and $M^{(-i)}$ a model fitted on a subset of $D\setminus\{(X_{[i,:]},y_i)\}$. Then we call $\hat y_i:= M^{(-i)}(X_{[i,:]})$ an {OOB} estimator of $y_i$. If we do this for all $i\in\{1,\dots,n\}$, we obtain $\hat y := \left(\hat y_1,\dots,\hat y_n\right)$ the OOB estimator for $y\in \R^n$.
 
 		In the bootstrap (e.g., random forest) framework, we define $\hat y_i$ to be the average of all computed and admissible $M^{(-i)}$. 
 		

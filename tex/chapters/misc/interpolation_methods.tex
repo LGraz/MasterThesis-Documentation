@@ -4,7 +4,7 @@
 	\label{sec:itpl_parametric}
 	Parametric Curve estimation tries to fit a parametric function, such as, for example, a Gaussian function with parameters $\mu$ and $\sigma$, to a dataset. In the following, we introduce two parametric approaches.
 
-	\subsection{Double Logistic}
+	\subsection{Double Logistic (DL)}
 		\label{sec:double_logistic}
 		The Double Logistic smoothing as described in \cite{beckImprovedMonitoringVegetation2006}REF heavily relies on shape assumptions of the fitted curve (i.e. the NDVI time series). First, we assume that there  is a minimum NDVI level $y_{\min}$ in the winter (e.g. due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking several years into account. Second, we assume that the growth cycle can be divided into an increase and a decrease period, where the time series follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$). The equation of the double-logistic fit is given by:
 		\begin{equation*}
@@ -13,7 +13,7 @@
 		Where the five free parameters: $y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Such fit can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}.
 
 		\subsubsection*{Robustification}
-		Similar as for the Savitzky-Golay Filter (c.f. section~\ref{sec:Savitzky–Golay}) one can reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations. For the details on the choice of the weights we refer to \cite{beckImprovedMonitoringVegetation2006}. We will not apply this reestimation but rather the robustification introduced later in section \ref{sec:loess_robustify}.
+		Similar as for the SG (c.f. section~\ref{sec:Savitzky-Golay}) one can reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations. For the details on the choice of the weights we refer to \cite{beckImprovedMonitoringVegetation2006}. We will not apply this reestimation but rather the robustification introduced later in section \ref{sec:loess_robustify}.
 
 		\begin{my_pros_cons_table}{
 				\item Incorporates subject specific knowledge in the case of evergreen plants covered in snow.
@@ -26,9 +26,9 @@
 		\end{my_pros_cons_table}
 
 
-	\subsection{Fourier Approximation}
+	\subsection{Fourier Series (FS)}
 		\label{sec:fourier_approx}
-		Analogous to section~\ref{sec:double_logistic} we fit a parametric curve to the data by least squares. Here we take the second order Fourier series:
+		Analogous to section~\ref{sec:double_logistic} we fit a parametric curve to the data by least squares. Here we take the second order FS approximation:
 		$$
 			\operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}  \right)
 		$$
@@ -58,7 +58,7 @@
 	\label{sec:itpl_nonparametric}
 	In non-parametric curve estimation, the curve does no longer have to be fully determined by parameters, but we allow it to flexibly approximate the data. Note, that we do not exclude the use of tuning-parameters.
 
-	\subsection{Kernel Regression}
+	\subsection{Kernel Regression: Nadaraya-Watson (NW)}
 		\label{sec:Kernel}
 		As described in section \ref{sec:itpl_setup}, we aim to estimate
 		\begin{equation}
@@ -73,7 +73,7 @@
 			\hat{f}_{T}(t)=\frac{\sum_{i=1}^{n} K\left(\frac{t-t_{i}}{h}\right)}{n h}, \quad \hat{f}_{T, Y}(t, y)=\frac{\sum_{i=1}^{n} K\left(\frac{t-t_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}},
 			\label{eq:kernel_with_bandwidt}
 		\end{equation}
-		where $h$, the bandwidth, symbolizes the windowsize of to consider. By using the above function in equation \eqref{eq:nadaraya} we arrive at the \textit{Nadaraya-Watson} kernel estimator:
+		where $h$, the bandwidth, symbolizes the windowsize of to consider. By using the above function in equation \eqref{eq:nadaraya} we arrive at the NW kernel estimator:
 		$$\hat{m}(t)=\frac{\sum_{i=1}^{n} K\left(\left(t-t_{i}\right) / h\right) Y_{i}}{\sum_{i=1}^{n} K\left(\left(t-t_{i}\right) / h\right)}$$
 
 		Common choices for the kernel are the normal function or a uniform function (also called `bot' function). 
@@ -91,10 +91,10 @@
 		\end{my_pros_cons_table}
 
 
-	\subsection{Kriging}
+	\subsection{Universal Kriging (UK)}
 		\label{sec:Kriging}
 
-		Kriging as described in \cite{diggleGaussianModelsGeostatistical2007} was developed in geostatistics to deal with autocorrelation of the response variable at locations which are spatially close. By applying the notion that two spectral indices which are timewise close should also take similar values, we justify the application of Kriging. In the end, we would like to fit a smooth Gaussian process to the data.
+		UK as described in \cite{diggleGaussianModelsGeostatistical2007} was developed in geostatistics to deal with autocorrelation of the response variable at locations which are spatially close. By applying the notion that two spectral indices which are timewise close should also take similar values, we justify the application of UK. In the end, we would like to fit a smooth Gaussian process to the data.
 
 		% definition (gaussian process)
 		A Gaussian Process $\{S(t) : t\in \mathbb R\} $ is a stochastic process if $(S(t_1),\dots,S(t_k))$ has a multivariate Gaussian distribution for every collection of times ${t_1, \dots , t_k}$. $S$ can be fully characterized by the mean $\mu(t):=E[S(t)]$ and its covariance function $\gamma\left(t, t^{\prime}\right):=\operatorname{Cov}\left(S(t), S\left(t^{\prime}\right)\right)$. 
@@ -116,7 +116,7 @@
 			\end{my_figure}
 
 			\begin{my_figure}{width=1\textwidth}{interpol/kriging_parameter}
-				\caption{On the left, we see how the interpolation change if we increase the nugget and the range parameter. On the right, we compare two kriging interpolations, where one takes parameters by numerically matimizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
+				\caption{On the left, we see how the interpolation change if we increase the nugget and the range parameter. On the right, we compare two UK interpolations, where one takes parameters by numerically matimizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
 				\label{fig:kriging_parameters}
 			\end{my_figure}
 
@@ -137,9 +137,9 @@
 		\end{my_pros_cons_table}
 
 
-	\subsection{Savitzky-Golay Filter (SG Filter)}
+	\subsection{Savitzky-Golay Filter (SG)}
 		\label{sec:Savitzky-Golay}
-		The \textit{Savitzky-Golay Filter}, introduced in \cite{savitzkySmoothingDifferentiationData1964} is a technique in signal processing and can be used to filter out high frequencies (low-pass filter) \citep{schaferWhatSavitzkyGolayFilter2011}. Furthermore, it can also be used for smoothing by filtering high frequency noise while keeping the low frequency signal.
+		The SG, introduced in \cite{savitzkySmoothingDifferentiationData1964} is a technique in signal processing and can be used to filter out high frequencies (low-pass filter) \citep{schaferWhatSavitzkyGolayFilter2011}. Furthermore, it can also be used for smoothing by filtering high frequency noise while keeping the low frequency signal.
 
 		First, we choose a window size $m$. Then, for each point, $j \in \{m, m+1, \dots, n-m\}$ we fit a polynomial of degree $k$ by:
 		$$\hat y_j=\min_{p\in P_k}\sum_{i=-m}^{m}(p (t_{j+i})-y_{i+j})^{2},$$
@@ -150,18 +150,18 @@
 		$$
 		where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in the original paper.
 
-		\cite{chenSimpleMethodReconstructing2004a} developed a `robust' interpolation method for the NDVI based on the SG Filter. 
+		\cite{chenSimpleMethodReconstructing2004a} developed a `robust' interpolation method for the NDVI based on the SG. 
 		The method is based on the assumption that due to atmospheric effects the observed NDVI tends to be underestimated and that it cannot increase too quickly. The latter is argued by the biological impossibility of such fast vegetation changes. Their proposed algorithm is:\todo{figure / tabelle / pseudocode anstatt aufzählung}
 			\begin{enumerate}
 				\item Remove non-SCL45 points.
 				\item Remove points which would indicate an increase greater than 0.4 within 20 days.
 				\item Linearly interpolate to obtain an equidistant time series $X^0$.
-				\item Apply the SG Filter to obtain a new time series $X^1$.
-				\item Update $X^1$ by applying again a SG Filter. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''.
+				\item Apply the SG to obtain a new time series $X^1$.
+				\item Update $X^1$ by applying again a SG. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''.
 			\end{enumerate}
 
-		\subsubsection*{Extension: Spatial-Temporal-Savitzky-Golay Filter}
-			One notable adaptation of the SG Filter is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors, we will waive this extension.
+		\subsubsection*{Extension: Spatial-Temporal SG}
+			One notable adaptation of the SG is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors, we will waive this extension.
 
 		\begin{my_pros_cons_table}{
 				\item Popular technique in signal processing.
@@ -181,7 +181,7 @@
 		% Introduced by : \cite{clevelandRobustLocallyWeighted1979}
 		% implemented here \cite{cappellariATLAS3DProjectXX2013}
 
-		The LOESS introduced by \cite{clevelandRobustLocallyWeighted1979} can be understood as a generalization of the SG Filter (c.f. sec.~\ref{sec:Savitzky-Golay}).
+		The LOESS introduced by \cite{clevelandRobustLocallyWeighted1979} can be understood as a generalization of the SG (c.f. sec.~\ref{sec:Savitzky-Golay}).
 
 		Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ separately by fitting a polynomial of order $d$ by weighted least squares. The weights are (usually) defined by
 		$$w_i(t_j)=\begin{cases}
@@ -190,13 +190,13 @@
 			\end{cases} ,$$
 		where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(t_i)$.\footnote{\label{footnote:LOESS}If too many weights are set to zero, we might end up considering not enough observations and thus get a singular design-matrit (for the least squares estimation). Therefore, we substitute $h_i$ with $1.01 h_i$, so that the observation on the boundary of $B_{h_i}(t_i)$ does not get completely ignored. But we also have to assure that $\alpha$ is big enough.} So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
 
-		\subsubsection{Differences between the Robust LOESS and the SG Filter?}
+		\subsubsection{Differences between the Robust LOESS and the SG?}
 		The LOESS smoother takes a fraction of points instead of a fixed number and therefore automatically adapts to the size of the data we wish to interpolate. However, we run into the danger of considering too little observations, since the estimation breaks down if $\lceil \alpha n\rceil < d+1$.\footnoteref{footnote:LOESS}
 		Furthermore, LOESS gives less weight to points further away. This yields a "smoother" estimate, since when we slide the window (e.g. for estimating the next value) an influential point at the border does not suddenly get zero weight from being weighted equally before.
 		Finally, the LOESS also can be used for non-equidistant data and allows for arbitrary interpolation.
 
 		\begin{my_pros_cons_table}{
-				\item Flexible generalization of SG Filter
+				\item Flexible generalization of SG
 				\item arbitrary interpolation possible
 				\item Intuitive parameters
 			}{
@@ -205,9 +205,9 @@
 		\end{my_pros_cons_table}
 
 
-	\subsection{B-splines}
+	\subsection{B-Splines (BS)}
 		\label{sec:B}
-		B-splines as discussed in \cite{lycheSplineMethods2005} are piecewise cubic polynomials defined by 
+		BS as discussed in \cite{lycheSplineMethods2005} are piecewise cubic polynomials defined by 
 		$$
 			S(t)=\sum_{j=0}^{n-1} c_{j} B_{j, k ; t}(t),
 		$$
@@ -228,13 +228,13 @@
 				\item extendable to "smooth" version
 				\item performs also well if points are not equidistant
 			}{
-				\item smoothing process does not translate well to a interpretation (unlike smoothing splines)
+				\item smoothing process does not translate well to a interpretation (unlike SS)
 				\item choice of smoothing parameter $s$
 			}
 		\end{my_pros_cons_table}
 
 
-	\subsection{Natural Smoothing Splines}
+	\subsection{Smoothing Splines (SS)}
 		\label{sec:Natural_SS}
 		Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the unique\footnote{Strictly speaking it is only unique for $\lambda > 0$} minimizer
 		\begin{equation}
@@ -242,7 +242,8 @@
 			\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}w_i\left(y_{i}-{f}\left(t_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(t)^{2} dt
 		\end{equation}
 			
-		is a natural\footnote{It is called natural since it is affine outside the data range ($\forall t\notin [t_1, t_n]:\hat m''(t) = 0$)} cubic spline (i.e. a piecewise cubic polynomial function).
+		is a % natural\footnote{It is called natural since it is affine outside the data range ($\forall t\notin [t_1, t_n]:\hat m''(t) = 0$)} 
+		cubic spline (i.e. a piecewise cubic polynomial function).
 		The objective function ensures that we decrease the curvature while keeping the RMSE low.
 
 
@@ -273,7 +274,7 @@
 	%     $$
 	%     For example, an optical emission (OES) spectrum is plotted Figure 1 along with two smoothed versions shown for $\mathbf{W}_{0}=\mathbf{I}$ and $\lambda_{\mathrm{s}}=0.1$ (low smoothing) and $\lambda_{\mathrm{s}}=10$ (stronger smoothing).   
 	% **Original paper states use of the first derivative**  
-	% --> second derivative is very similar to smoothing splines
+	% --> second derivative is very similar to SS
 	% \begin{my_pros_cons_table}{
 	%     \item 1
 	%     \item 2
