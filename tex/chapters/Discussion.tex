@@ -4,7 +4,7 @@
 
 \section{Interpolation Methods}{ \label{sec:discussion_itpl}
     \subsection{Data Gaps in Time Series}\label{sec:discussion_itpl_data_gaps}{
-        NW estimates the value for $t$ by relating to the points near $t$. To determine what ``near'' means, a bandwidth $h$ is used (c.f. equation \ref{eq:kernel_with_bandwidt}). This gets problematic as soon as the data gaps become larger than $h$, since in this case no points are left that are considered to be close to $t$. 
+        NW estimates the value for $t$ by relating to the points near $t$. To determine what ``near'' means, a bandwidth $h$ is used (c.f. equation \refeq{eq:kernel_with_bandwidt}). This gets problematic as soon as the data gaps become larger than $h$, since in this case no points are left that are considered to be close to $t$. 
 
         Regarding the GK, we expect that because of the stationarity assumption, the interpolation will tend to the mean if data gaps are present (c.f. figure \ref{fig:kriging_parameters}). 
 
@@ -48,10 +48,10 @@ XXX discuss results from table \ref{tab:methods_vs_yieldprediction}
         Including temporally (e.g., $P_{t-1}$ and $P_{t+1}$) and geographically adjacent pixels would likely improve performance. However, for simplicity, we omit it here\footnote{This is done for simplicity of understanding and using the model, since one would need to adapt to some convention of how to supply the data of adjacent pixels without redundancy (i.e. supplying $P_t$ multiple times).}.
     }
 
-    \subsection{Which Interpolation Strategy should we choose}
+    \subsection{Which Interpolation Strategy should we choose}\label{sec:discussion_iplfstrategy-choose}
         \todo[inline]{table mit OLS SCL als sieger diskutieren}
-
-    \subsection{High RMSE in Yield Prediction}{
+        if we use no-correctionXss-rob instead of OLS-SCLXss we loose $(0.148-0.14)/0.148 = 5,4\%$ of the information.
+    \subsection{High RMSE in Yield Prediction}{\label{sec:discuss_high-rmse-in-yield-prdiction}
         \todo{kurzer kontext von vergleichbaren values von gregor --- diese sektion ist für dena uftraggebenr}
         How much can we expect to get? We have multiple sources of uncertainty in the data:
         \begin{Nenumerate}
@@ -60,6 +60,7 @@ XXX discuss results from table \ref{tab:methods_vs_yieldprediction}
             \item Uncertainty in satellite images through ``measurement errors'' introduced via clouds and other atmospheric effects 
             \item Uncertainty introduced by interpolating (especially when long data-gaps are present)
         \end{Nenumerate}
+        \todo[inline]{even in a perfect world the NDVI curve only holds a fraction of the information avialbe}
     }
 }
 

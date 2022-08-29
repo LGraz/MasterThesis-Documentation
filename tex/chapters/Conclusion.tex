@@ -1,29 +1,45 @@
 \chapter{Conclusion}
-\label{s:Conclusion}
-\begin{verbatim}
-    
-- itpl methods, 
-    parametric dl 
-    non-param 
-        discarded 
-            kernel methods because of strong bias  
-            universal kriging because assumptions not met and ML parameter erstimation issiues
-            savitzky-golay filter since we will investigate the LOESS which can be thought as its generalization 
-            LOESS slightly best performing itpl method but we notice non-smooth behaviour if data gaps are present
-        loess > ss > bspl
-        choose ss because of its meaningful definition (minimizing the integral of the second derivative squared (\refeq{eq:ss}))
-- robustifying apparently not responsible for big improvements
+\label{sec:Conclusion}
 
-\end{verbatim}
-XXX draw your conclusion to which you came during this thesis
+% GENERAL INFORMATION
+In dieser Thesis haben wir studiert, wie wir mit aus Satellitenbildern das Pflanzenwachstum via NDVI-Zeitreihen modellieren können. Die grösste Herausforderungen waren hierbei die fragen, wie man mit (durch Wolken oder Schatten) verfälschten Beobachtungen umgehen soll und wie man die einzelnen Beobachtungen zu interpolieren hat. 
+% ITPL METHODS
+Für eine zusammenfassung der betrachteten interpolationsmethoden verweisen wir auf die Tabelle \ref{sec:itpl}. 
 
-Let us recapitulate the interpolation strategy introduced in chapter \ref{sec:corr}: We estimate the true NDVI using SS via LOOCV, then obtain the corrected NDVI using the OLS-SCL model. Subsequently, we estimate the absolute error with the OLS-SCL model and thereby obtain weights that are supposed to reflect the reliability of the corrected NDVI. Finally, we perform a weighted interpolation with SS.
+    % robustification
+    Durch Wolken und Schatten manipulierte Beobachtungen führen dazu, dass wir fehlerhafte NDVI werte erhalten. Zwar können wir diese bis zu einem gewissen grad filtern, haben aber trotzdem noch fehlerhafte Beobachtungen. Um mit diesen Ausreißern umzugehen haben wir eine Technik verallgemeinert, welche die Interpolation robuster gegen Ausreisser entwickelt macht.
+    % Rejected
+    Durch die Filtration von fehlerhaften Beobachtungen, erhalten wir besonders im Winter Datenlücken. Daher ist es ein Kriterium für unsere gewählten interpolationsmethode, dass sie gut mit solchen Datenlücken umgehen können. Der Nadaraya-Watson kernel schätzer, Universal Kriging, 2cd order Fourier Series und Savitzky-Golay Filter konnten hier nicht überzeugen (vgl. sektion \ref{sec:discussion_itpl_data_gaps}). Vereinzelt hat hier auch eine Generalisierung des Savitzky-Golay Filters -- der LOESS --- überraschendes verhalten aufgezeigt.  
+        % ausführlicher:
+            % Durch Wolken und Schatten manipulierte Beobachtungen führen dazu, dass wir besonders im Winter Datenlücken haben. Daher ist es ein Kriterium für unsere gewählten interpolationsmethode, dass sie gut mit solchen Datenlücken umgehen können. Der Nadaraya-Watson kernel schätzer hat probleme wenn im betrachteten Fenster keine oder zu wenig punkte vorhanden sind; Universal Kriging tendiert in umgebungen mit keinen daten besonders stark zum mittelwert (vgl. figure \ref{fig:kriging_parameters}); 2cd order Fourier Series kann stark ausschlagen bei datenpunkten (vgl. figure \ref{fig:interpol/fourier_dl_comparison}) und Savitzky-Golay Filter setzt equidistante beobachtungen vorraus (vgl. sektion \ref{sec:discussion_itpl_data_gaps}). Vereinzelt hat hier auch eine Generalisierung des Savitzky-Golay Filters -- der LOESS --- überraschendes verhalten in datenlücken aufgezeigt.
+    % LOOCV performance
+    Dieser konnte hingegen bei der Leave-One-Out-Cross-Validation (LOOCV)  überzeugen (c.f. table  \ref{tab:cv-statistics_itpl-methods}), jedoch bevorzugen wir die Smoothing Splines (SS), da sie dort nur wenig schlechter abscheiden, aber eine deutlich glattere kurve produzieren (vgl. Abbildung \ref{fig:interpol/2x3_SS_robust} und \ref{fig:interpol/2x3_loess_robust}). Die SS approximieren flexibel die Daten, halten aber gleichzeitig die Krümmung gering (c.f. equation \refeq{eq:ss}). B-Splines hingegen waren hinsichtlich jeder getesteten Score Funktion schlechter als SS und ihr smoothing Mechanismus ist auch schlechter Interpretierbar. Am besten schneiden hier jedoch die Approximation durch eine Double logistic (DL) ab, welche starke annahmen über die Form der NDVI kurve macht. Probleme für die Parameterschätzung des DL (und der Fourierreihe) haben wir behoben, indem wir den parameterraum durch großzügige aber realistische werte beschränkt haben. Probleme mit overfitting beim Universal Kriging haben wir behoben, indem wir die parameter für ein subsample an NDVI zeitreihen bestimmt haben und schlussendlich den median jeweiliger parameter benutzt haben. 
+    %Candiates (SS and DL)
+    Schlussendlich wählen wir DL und SS als unsere Favoriten der Interpolationsmethoden.
+    \todo[inline]{Frage: mehr details für die begründung der Interpolations-kandidaten?} 
+
+    % NDVI CORRECTION
+    Auf die Frage, wie wir mit den verfälschten Beobachtungen umgehen sollen, lautet die traditionelle Antwort, dass wir nur Beobachtungen beachten, welche als Vegetation oder als bare soil gelabelt sind (SCL45). Dies wird mit der von der European Space Agency gelieferten `Scene Classification Layer' (SCL) bewerkstelligt. In figure \ref{fig:witzwil_selected_satellite_images} wird jedoch die Unzuverlässigkeit dieses Labelings illustriert. Zudem haben wir die festgestellt, dass auch nicht-SCL45 Beobachtungen wertvolle Informationen enthalten seien können (vgl. Sektion \ref{sec:corr_otherSCL}). Wir haben uns entschieden, nicht an der traditionellen (SCL-)Filtration festzuhalten. Stattdessen betrachten wir alle Beobachtungen und korrigieren den beobachten NDVI. Dafür benutzen wir statistische Modelle, die zusätzliche Informationen wie die verbleibenden Spektralbänder in Betracht nehmen. Bevor wir aber die korrigierten NDVI Werte interpolieren, weisen wir jeder Beobachtung ein Gewicht zu, korrespondieren zu ihrer Unsicherheit. Die Unsicherheit wird analog wie die NDVI Korrektur geschätzt. 
+    % Considerd Interpolation strategies
+    Durch die Wahl verschiedener Interpolationsmethoden (mit und ohne robustifizierung) und statistischer Modelle, erhalten wir somit 28 verschiedene Interpolationsstrategien (vgl. Sektion \ref{sec:corr_itpl_stat}). Um zu beurteilen, welche dieser Interpolationsstragie am besten ist, machen wir die folgende Annahme: ``je besser die Interpolationsstrategie, desto besser kann damit interpolierte NDVI Zeitreihe den Ertrag voraussagen''. Überraschender Weise ist die beste Strategie, die mit nicht-robustifizierten SS und dem einfachsten betrachteten statischen Modell, welches nur den beobachteten NDVI und die SCL Klassifizierung benutzt.
+    % Best Itpl strategy
+    Let us recapitulate the best interpolation strategy: First, we estimate the ``true'' NDVI using SS via LOOCV, then obtain the corrected NDVI using the OLS-SCL model (c.f. equation \refeq{eq:corr_lm}). Subsequently, we estimate the absolute error with the OLS-SCL model (c.f. equation \refeq{eq:corr_lm}) and thereby obtain weights that are supposed to reflect the reliability of the corrected NDVI (c.f. equation \refeq{eq:corr_link}). Finally, we perform a weighted interpolation with SS.
+
+% robustification -- good or bad?
+Zwar ist die die robustifizierung nicht teil der besten Interpolationsstragie, verfehlt dieses Ziel aber nur knapp. Hingegen sehen wir in tabelle \ref{tab:cv-statistics_itpl-methods}, dass die robustifizierung in den meisten Fällen zu kleineren LOOCV Residuen führt (mit ausnahme von der Fourier Approxmiation). Daher empfehlen wir die robustifizierung durchzuführen, wenn wir mit Fehlerhaften beobachtungen rechnen. 
+
+Auf die Frage welche interpolationsmethode wir schlussendlich empfehlen, wollen wir zwei Fälle betrachten. Wenn es nur darum geht möglichst präzise eine Kurve den daten anzupassen, empfehlen wir die robustifizierten DL, da diese die LOOCV residuals in den meisten fällen minimieren (vgl. tabelle \ref{tab:cv-statistics_itpl-methods}). Falls wir eine interpolation erhalten wollen die möglichst viele informationen über die pflanze enthält empfehlen wir die SS. Diese empfehlung gilt besonders, falls wir traditionell nur SCL45 beobachtungen betrachten wollen ohne die vorgeschlagene NDVI zu korrigieren. Jedoch empfehlen wir die oben aufgeführte interpolationsstrategie, da uns ansonsten über 5\% der informationen aus der NDVI zeitreihe abhanden kommmen (vgl. sektion \ref{sec:discussion_iplfstrategy-choose}). Im anbetracht aller Fehlerquellen (c.f. section \ref{sec:discuss_high-rmse-in-yield-prdiction}) und der tatsache dass wir nur die NDVI Zeitreihe betrachten wir die 5\% als eine solide verbesserung.
+
+
+
+\todo[inline]{Anzahl von Beobachtungen, empfehlungen? -- schwierig, weil regelmäßigkeit in `wichtigen' zeiträumen (der veränderung) wichtiger ist.}
+
 
 \section{Future Work}{
-    \label{ss:FutureWork}
+    \label{sec:FutureWork}
 
     \subsection{Time Series Correction-Interpolation as a General Method}{
-        Throughout this thesis, we developed a correction and interpolation method for the NDVI. However, we never used features of the NDVI. Only the parameter estimated via cross-validation in chapter \ref{sec:itpl_param_est} depends on the scale of the time series. For simplicity, we could thus determine the parameter using Generalized Cross Validation (as \citefullauthor{ripleyFitSmoothingSpline} suggest). Therefore, our approach of interpolation and correction of time series can be applied to arbitrary time series as long as additional information is available. However, further research is required, to demonstrate the usefulness of this approach in general.
+        Throughout this thesis, we developed a correction and interpolation method for the NDVI. However, we never used features of the NDVI. Only the parameter estimated via cross-validation in chapter \ref{sec:itpl_param_est} depends on the scale of the time series. For simplicity, we could thus determine the parameter using Generalized Cross Validation (as \citefullauthor{ripleyFitSmoothingSpline} suggest). Therefore, our approach of interpolation and correction of time series can be applied to arbitrary time series as long as additional information is available. However, further research is required, to demonstrate the general usefulness of this approach.
 
 
         \subsubsection*{Example: Cloud Correction with Uncertainty Estimation and Interpolation}
@@ -36,7 +52,7 @@ Let us recapitulate the interpolation strategy introduced in chapter \ref{sec:co
         During this project, we also noticed some minor issues that we would have liked to investigate further if more resources were available. The most relevant of these are:
         \begin{Nitemize}
             \item \textbf{Data:}
-            Method how data\todo{which data? I assume the combine harvester point data?} has been extrapolated to the grid could possibly be improved
+            Method how combine harvester point data has been extrapolated to the grid could possibly be improved.
             \item \textbf{Data:}
             For computational reasons, we mostly considered all years and split the data (on the pixel level) randomly into a train/test set. A leave one year out cross validation might yield more accurate results.
             \item \textbf{Data:}

@@ -11,7 +11,7 @@
     In this chapter, we will try to improve our NDVI interpolation by not relying only on the observed NDVI, but by training our own model to correct the NDVI using all S2 bands. For this, we introduce several statistical modelling approaches and discuss the strengths and weaknesses for each of them. After correcting the observed NDVI, we will assess the uncertainties of our corrections and translate them into weights. These will be used for the subsequent interpolation. This step-by-step procedure is illustrated by the figure \ref{fig:step_plot_ndvi_corr} in the appendix. Finally, we will evaluate which combination of interpolation methods and correction model performs the best.
 }
 
-\section{Considering other SCL Classes}{
+\section{Considering other SCL Classes}{\label{sec:corr_otherSCL}
     In figure~\ref{fig:ndvi_corr/residuals_scl_classes} we plot the observed NDVI and notice that some blue points which correspond to the SCL-class 10 (thin cirrus clouds) follow the interpolated line closely. Hence, they might be useful in improving an interpolation fit.
 
     \begin{my_figure}[ht]{width=0.6\textwidth}{ndvi_corr/residuals_scl_classes}
