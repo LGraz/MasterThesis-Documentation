@@ -1,19 +1,19 @@
 \chapter{Introduction}
 
-Remote sensing zielt darauf ab, ziel-Grössen effizient aus der Entfernung messen zu können. Hier finden Satellitenbilder Zeitreihen Verwendung, wie etwa die von der europäischen Raum Agentur (ESA) kostenlos veröffentlichten Bilder Zeitreihen der multi-spektralen Sentinel 2 (S2) Satelliten.
+Remote sensing zielt darauf ab, ziel-Grössen effizient aus der Entfernung messen zu können. Hier finden Satellitenbilder Zeitreihen Verwendung, wie etwa die von der europäischen Raum-Agentur (ESA) kostenlos veröffentlichten Bilder Zeitreihen der Multi-spektralen Sentinel 2 (S2) Satelliten.
 % stakeholders + applications  
-Die Vegetationsentwicklung von Wäldern und landwirtschaftlich relevanten Flächen im großen stiele zu überwachen, ist unter anderem für public angents, Versicherungen, Umwelt- und Klimaforscher von grossem Interesse. Mögliche Ziele sind hierbei eine crop Klassifizierung für das subventionieren von bauern oder das Erstellen von Pflanzenmodellen, um Ernteertrag oder Stickstoff-konzentrations zu schätzen. 
+Die Vegetationsentwicklung von Wäldern und landwirtschaftlich relevanten Flächen im grossen Stiele zu überwachen, ist unter anderem für public angents, Versicherungen, Umwelt- und Klimaforscher von grossem Interesse. Mögliche Ziele sind hierbei eine crop Klassifizierung für das Subventionieren von Bauern oder das Erstellen von Pflanzenmodellen, um Ernteertrag oder Stickstoffkonzentration zu schätzen. 
     % Season Start (start of spring) (community name: land surface plant phenology)
 % NDVI
-Um die hochdimensionalen Satellitenbilder in leicht interpretierbare größen zu transformieren, werden spektrale Indizes, wie der Normalized Difference Vegetation Index (NDVI) benutzt. Dieser ist ein proxy für die Vegetationsdichte und die korrespondierende Zeitreihe spiegelt somit das pflanzenwachstum wieder. 
+Um die hochdimensionalen Satellitenbilder in leicht interpretierbare grossen zu transformieren, werden spektrale Indizes, wie der Normalized Difference Vegetation Index (NDVI) benutzt. Dieser ist ein Proxy für die Vegetationsdichte und die korrespondierende Zeitreihe spiegelt somit das Pflanzenwachstum wider. 
 % S2 issues (clouds ...)
-Der Informationsgehalt von einem Satellitenbild ist jedoch abhängig vom Zustand der Atmosphäre und so trägt der davon abgeleitete NDVI bei einer dichten Wolkendecke keine informationen über die Vegetation am Boden. Daher liefert die ESA zusätzlich eine Scene Classification Layer (SCL), welche Aufschluss gibt was beobachtet wird (z.B Schatten, Wolken, Vegetation, etc.). So können wir bei der extraktion der NDVI zeitreihe aus der S2 Satellitenbilder Zeitreihe, anhand der SCL Klassifizierung, die uninformativen Beobachtungen herausfiltern. Durch diese Filtration kann es jedoch leicht vorkommen, dass wir besonders im Winter über mehrere Wochen keine Observationen haben. Zudem kommt, dass manche Beobachtungen zu unrecht durch die SCL als informativ bewertet wird (z.B. als Vegetation) und somit in einem fehlerhaften NDVI resultiert. 
+Der Informationsgehalt von einem Satellitenbild ist jedoch abhängig vom Zustand der Atmosphäre und so trägt der davon abgeleitete NDVI bei einer dichten Wolkendecke keine Informationen über die Vegetation am Boden. Daher liefert die ESA zusätzlich eine Scene Classification Layer (SCL), welche Aufschluss gibt, was beobachtet wird (z.B Schatten, Wolken, Vegetation, etc.). So können wir bei der Extraktion der NDVI Zeitreihe aus der S2 Satellitenbilder Zeitreihe, anhand der SCL Klassifizierung, die uninformativen Beobachtungen herausfiltern. Durch diese Filtration kann es jedoch leicht vorkommen, dass wir besonders im Winter über mehrere Wochen keine Observationen haben. Zudem kommt, dass manche Beobachtungen zu Unrecht durch die SCL als informativ bewertet wird (z.B. als Vegetation) und somit in einem fehlerhaften NDVI resultiert. 
 % state-of-the-art
-Diese beiden probleme versucht man gegenwärtig mit interpolation und smoothing zu lösen. Starke formannahmen über die NDVI kurve werden in ... getroffen. Flexiblere ansätze wurden von ... verwendet. 
+Diese beiden Probleme versucht man gegenwärtig mit Interpolation und Smoothing zu lösen. Starke Formannahmen über die NDVI Kurve werden in ... getroffen. Flexiblere Ansätze wurden von ... verwendet. 
 
 % my contribuition:
-In dieser Thesis werden wir stärken und schwächen von solch gängigen Interpolationsmethoden diskutieren und hinsichtlich der NDVI Interpolation bewerten. Dafür benutzen wir die S2 Satelitenbilder Zeitreihe und Ernteertragskarten von verschiedenen Feldern verschiedenen Weizenarten auf einer Farm in Witzwil in der Schweiz über die Jahre 2017-2021.
-Um die Interpolationmethoden zu verbessern, verallgemeinern und testen wir einen Ansatz, der Interpolationen robuster gegen Ausreisser machen soll. Zudem ermitteln wir, wie Datenlücken die verschiedenen Interpolationmethoden beeinflussen. Ausserdem stellen wir am Beispiel des NDVI eine generelle Interpolations-prozedur vor, welche anhand von zusätzlichen informationen die Zielvariable mit einer Unsicherheitsschätzung korrigiert und anschließend interpoliert. Somit müssen wir die Observationen nicht mehr a priori via der SCL filtern \textcolor{gray}{, sondern korrigieren den beobachteten NDVI und filtern via der geschätzten Unsicherheiten}. Schlussendlich benchmarken wir verschiedene interpolations strategien mit einem objektiven Qualitätsmaß, welches annimmt, dass je besser eine NDVI TS das Pflanzenwachstum modelliert, desto geeigneter ist sie, um den Ernteertrag zu schätzen. 
+In dieser Thesis werden wir stärken und schwächen von solch gängigen Interpolationsmethoden diskutieren und hinsichtlich der NDVI Interpolation bewerten. Dafür benutzen wir die S2 Satellitenbilder Zeitreihe und Ernteertragskarten von verschiedenen Feldern verschiedenen Weizenarten auf einer Farm in Witzwil in der Schweiz über die Jahre 2017-2021.
+Um die Interpolationmethoden zu verbessern, verallgemeinern und testen wir einen Ansatz, der Interpolationen robuster gegen Ausreisser machen soll. Zudem ermitteln wir, wie Datenlücken die verschiedenen Interpolationmethoden beeinflussen. Ausserdem stellen wir am Beispiel des NDVI eine generelle Interpolations-prozedur vor, welche anhand von zusätzlichen Informationen die Zielvariable mit einer Unsicherheitsschätzung korrigiert und anschliessend interpoliert. Somit müssen wir die Observationen nicht mehr a priori via der SCL filtern \textcolor{gray}{, sondern korrigieren den beobachteten NDVI und filtern via der geschätzten Unsicherheiten}. Schlussendlich benchmarken wir verschiedene Interpolation Strategien mit einem objektiven Qualitätsmass, welches annimmt, dass je besser eine NDVI TS das Pflanzenwachstum modelliert, desto geeigneter ist sie, um den Ernteertrag zu schätzen. 
 
 Die Hauptfragestellungen, welchen wir in dieser Thesis nachgehen wollen lauten also:
 \begin{Nenumerate}
@@ -21,20 +21,18 @@ Die Hauptfragestellungen, welchen wir in dieser Thesis nachgehen wollen lauten a
     \item 2 errornous observations --- how to deal with them
     \item 3 data gaps --- influence itpl mehtods 
     \item 4 data gaps --- how to deal with them
-    % \item 5 develope own strategy of interpolation
-    \item 6 how to compare two NDVI interpolation strategies?
+    \item 5 how to compare two NDVI interpolation strategies?
 \end{Nenumerate}
 
 Roadmap ...
-1 in \ref{sec:itpl}
-2 robustification \ref{sec:loess_robustify}
-3 discussed in \ref{sec:discussion_itpl_data_gaps}
-4 utilize observations filterd before and estimating how reliable each of them are \ref{sec:corr}
-6 \ref{sec:ndvi_corr_eval}
+% 1 in \ref{sec:itpl}
+% 2 robustification \ref{sec:loess_robustify}
+% 3 discussed in \ref{sec:discussion_itpl_data_gaps}
+% 4 utilize observations filterd before and estimating how reliable each of them are \ref{sec:corr}
+% 5 \ref{sec:ndvi_corr_eval}
 
 
-%smoothing
-``Similarly, smoothing the time series of satellite data is helpful to address inconsistency in observation frequency and timing due to clouds and other sensor artefacts \cite{skakunWinterWheatYield2019}''
+%smoothing:   ``Similarly, smoothing the time series of satellite data is helpful to address inconsistency in observation frequency and timing due to clouds and other sensor artefacts \cite{skakunWinterWheatYield2019}''
 
 
 
