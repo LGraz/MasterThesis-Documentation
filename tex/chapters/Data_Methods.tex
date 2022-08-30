@@ -1,7 +1,7 @@
 \chapter{Data and Methods}\label{sec:data_methods}
 {
 	We will start by describing the available data and the challenges associated with it.
-	Our study region is a farm of over 800ha, which is located in western Switzerland. From \cite{perichPixelbasedYieldMapping2022a} we acquire satellite image data (section \ref{sec:s2_img_data}), yield maps of several cereals from 2017 to 2021 (section \ref{sec:yieldmapping_data}), and meteorological data (section \ref{sec:gather_data_to_pixel}).
+	Our study region is a farm of over 800ha, which is located in western Switzerland. From \cite{perichPixelbasedCropYield2022}  we acquire satellite image data (section \ref{sec:s2_img_data}), yield maps of several cereals from 2017 to 2021 (section \ref{sec:yieldmapping_data}), and meteorological data (section \ref{sec:gather_data_to_pixel}).
 	Afterwards, we will introduce general methods in section \ref{sec:general_methods}, which will be used in the remaining chapters.
 }
 
@@ -15,9 +15,9 @@
 		
 		\input{tex/chapters/misc/table_S2-bands.tex}
 		
-		The S2 images contain 12 spectral bands with spatial resolutions up to 10 meters (see \ref{table:S2-bands}). Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation (\cite{perichPixelbasedYieldMapping2022a}). In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used\footnote{According to \cite{perichPixelbasedYieldMapping2022a}: ``Data prior to March 2018 was only available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by ESA''}. 
+		The S2 images contain 12 spectral bands with spatial resolutions up to 10 meters (see \ref{table:S2-bands}). Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation (\cite{perichPixelbasedCropYield2022}). In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used\footnote{According to \cite{perichPixelbasedCropYield2022}: ``Data prior to March 2018 was only available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by ESA''}. 
 		The ESA also supplies an algorithm\footnote{\url{https://sentinels.copernicus.eu/web/sentinel/technical-guides/sentinel-2-msi/level-2a/algorithm}} produces Scene Classification Layer ({SCL}) where for each location the observed subject is assigned to one of 11 SCL-classes (c.f. table~\ref{tab:satelite/scl_classes}). 
-		In this thesis,  we will use this classification to filter out data points, which we belive to be less informative. That are all observations which SCL-class does not correspond to vegetation or bare soils (classes 4 and 5). For convenience, we define the set SCL45 as the observations which belong to SCL-class 4 or 5.
+		In this thesis,  we will use this classification to filter out data points, that we belive to be less informative. That are all observations which SCL-class does not correspond to vegetation or bare soils (classes 4 and 5). For convenience, we define the set SCL45 as the observations that belong to SCL-class 4 or 5.
 		
 		% \begin{figure}[h]
 		% 	\label{fig:satelite/sentinel-2-bands}
@@ -34,7 +34,7 @@
 \section{Crop Yield Data}{
 	\label{sec:yieldmapping_data}
 	The crop yield data were collected using a combine harvester. Equipped with GPS, the harvester drives over the fields and continuously estimates the dry crop yield density in $t/ha$ (see fig. \ref{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}). 
-	We take the data set derived in \cite{perichPixelbasedYieldMapping2022a}, where error-prone measurement points (such as during a tight curve of the combine harvester) were removed and then the yield map was rasterized using linear interpolation (c.f. fig. \ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}). We summarize the rasterized dry-yield values by the following statistics:
+	We take the data set derived in \cite{perichPixelbasedCropYield2022}, where error-prone measurement points (such as during a tight curve of the combine harvester) were removed and then the yield map was rasterized using linear interpolation (c.f. fig. \ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}). We summarize the rasterized dry-yield values by the following statistics:
 
 	% tabelle anstadt histogramm, da schon zu viele figuren ``herumschwirren'' und es so kompakter ist.
 	\begin{tabular}{l l l l l l l} 
@@ -42,7 +42,7 @@
 		0.107   & 6.186        & 7.560  & 7.359 & 8.756        & 13.35   & 4.035
 	\end{tabular}    
 
-	Comparing the average per-field crop yield reported by the farmer with the yield estimated by the combine harvester shows that the latter overestimates crop yield by ca. $10\%$ (c.f. \cite{perichPixelbasedYieldMapping2022a}). Since the relative estimation error is approximately constant and we do not aim for an accurate yield prediction, we will not consider this deviation. 
+	Comparing the average per-field crop yield reported by the farmer with the yield estimated by the combine harvester shows that the latter overestimates crop yield by ca. $10\%$ (c.f. \cite{perichPixelbasedCropYield2022}). Since the relative estimation error is approximately constant and we do not aim for an accurate yield prediction, we will not consider this deviation. 
 
 
 
@@ -103,7 +103,7 @@
 % \end{my_figure}
 \section{Timescale Transformation}\label{sec:gdd_def}
 	{% GDD & DAS
-		Regarding the Days After Sowing (DAS) time scale shown in fig. \ref{interpol/ndvi_ts_das_grey.pdf}, we detect two drawbacks. First, this scale makes it difficult to compare two NDVI time series because wheat is not always sown on the same day of the year and in some years plants begin to emerge earlier. Second, because there are only few SCL45 observations in the winter, we face significant data gaps in this period. The time scale transformation introduced in \cite{mcmasterGrowingDegreedaysOne1997} fixes both problems. The resulting Growing Degree Days ({GDD}) are defined as the cumulative sum since sowing of temperature above a given base temperature $T_{base}$. For cereals, we use $T_{base}=0$ (\cite{perichPixelbasedYieldMapping2022a}). Thus, the GGD for $n$ days after sowing will be equal to:
+		Regarding the Days After Sowing (DAS) time scale shown in fig. \ref{interpol/ndvi_ts_das_grey.pdf}, we detect two drawbacks. First, this scale makes it difficult to compare two NDVI time series because wheat is not always sown on the same day of the year and in some years plants begin to emerge earlier. Second, because there are only few SCL45 observations in the winter, we face significant data gaps in this period. The time scale transformation introduced in \cite{mcmasterGrowingDegreedaysOne1997} fixes both problems. The resulting Growing Degree Days ({GDD}) are defined as the cumulative sum since sowing of temperature above a given base temperature $T_{base}$. For cereals, we use $T_{base}=0$ (\cite{perichPixelbasedCropYield2022}). Thus, the GGD for $n$ days after sowing will be equal to:
 		\begin{equation}
 			\label{eq:gdd}
 			GDD_n := \sum_{i=0}^n \max(T_i - T_{base}, 0).
@@ -126,7 +126,7 @@
 \section{Challenges in S2 Data}{\label{sec:s2_challangges}
 	\input{tex/chapters/misc/2x3_satelite_ts_plot_grid.tex}
 	% Description of plot
-	Now, we shall illustrate with an example pixel the challenges, we will confront in the coming chapters. The figure~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, one selected Pixel and the NDVI time series of that pixel. 		
+	Now, we shall illustrate with an example pixel the challenges, we will confront in the coming chapters. The figure~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, one selected Pixel and the NDVI time series of this pixel. 		
 	In February (image a), we see no vegetation but bare soil and thus also a low NDVI. At the beginning of May (b), we observe a cloudless dark green field with a high NDVI. In (c) heavy cloud cover (SCL class 9) leads to a complete loss of plant information in this S2 observation. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds which is also reflected in a sudden NDVI drop. Even though SCL indicates that (e) are thin cirrus clouds, we see a pale green and we also note a NDVI.
 
 	So in conclusion, we remark that some SCL45 observations are not accurate and even though a few non-SCL45 observations contain useful information, most of them are too unreliable (e.g. all SCL 9 observations). Thus, we aim to substitute the unreliable ones with interpolated versions and correct corrupt ones.
@@ -141,7 +141,7 @@
 }
 
 \section{General Methods}{\label{sec:general_methods}
-	Here we will only introduce Methods which will accure in several places. For interpolation methods we refer to sections \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric}, for a robust interpolation strategy to section \ref{sec:loess_robustify}. In section \ref{sec:itpl_param_est} we describe a method to objectively determine the quality of an interpolation, and in chapter \ref{sec:corr} we present the NDVI correction together with an adapted interpolation strategy.
+	Here we will only introduce Methods that will accure at several places. For interpolation methods we refer to sections \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric}, for a robust interpolation strategy to section \ref{sec:loess_robustify}. In section \ref{sec:itpl_param_est} we describe a method to objectively determine the quality of an interpolation, and in chapter \ref{sec:corr} we present the NDVI correction together with an adapted interpolation strategy.
 
 
 	\subsection{Root Mean Square Error (RMSE)}

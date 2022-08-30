@@ -23,7 +23,7 @@ Für eine zusammenfassung der betrachteten interpolationsmethoden verweisen wir 
     % Considerd Interpolation strategies
     Durch die Wahl verschiedener Interpolationsmethoden (mit und ohne robustifizierung) und statistischer Modelle, erhalten wir somit 28 verschiedene Interpolationsstrategien (vgl. Sektion \ref{sec:corr_itpl_stat}). Um zu beurteilen, welche dieser Interpolationsstragie am besten ist, machen wir die folgende Annahme: ``je besser die Interpolationsstrategie, desto besser kann damit interpolierte NDVI Zeitreihe den Ertrag voraussagen''. Überraschender Weise ist die beste Strategie, die mit nicht-robustifizierten SS und dem einfachsten betrachteten statischen Modell, welches nur den beobachteten NDVI und die SCL Klassifizierung benutzt.
     % Best Itpl strategy
-    Let us recapitulate the best interpolation strategy: First, we estimate the ``true'' NDVI using SS via LOOCV, then obtain the corrected NDVI using the OLS-SCL model (c.f. equation \refeq{eq:corr_lm}). Subsequently, we estimate the absolute error with the OLS-SCL model (c.f. equation \refeq{eq:corr_lm}) and thereby obtain weights that are supposed to reflect the reliability of the corrected NDVI (c.f. equation \refeq{eq:corr_link}). Finally, we perform a weighted interpolation with SS.
+    Let us recapitulate the best interpolation strategy: First, we estimate the ``true'' NDVI using SS via LOOCV, then obtain the corrected NDVI using the OLS-SCL model (c.f. equation \refeq{eq:corr_lm}). Subsequently, we estimate the absolute error with the OLS-SCL model (c.f. equation \refeq{eq:corr_lm}) and thereby obtain weights which are supposed to reflect the reliability of the corrected NDVI (c.f. equation \refeq{eq:corr_link}). Finally, we perform a weighted interpolation with SS.
 
 % robustification -- good or bad?
 Zwar ist die die robustifizierung nicht teil der besten Interpolationsstragie, verfehlt dieses Ziel aber nur knapp. Hingegen sehen wir in tabelle \ref{tab:cv-statistics_itpl-methods}, dass die robustifizierung in den meisten Fällen zu kleineren LOOCV Residuen führt (mit ausnahme von der Fourier Approxmiation). Daher empfehlen wir die robustifizierung durchzuführen, wenn wir mit Fehlerhaften beobachtungen rechnen. 
@@ -56,14 +56,14 @@ Auf die Frage welche interpolationsmethode wir schlussendlich empfehlen, wollen 
             \item \textbf{Data:}
             For computational reasons, we mostly considered all years and split the data (on the pixel level) randomly into a train/test set. A leave one year out cross validation might yield more accurate results.
             \item \textbf{Data:}
-            We have not included the spectral bands which have a resolution of 60 m. But precisely these seem to be promising for cloud correction, since they are a proxy of the water (content and form) in the atmosphere.
+            We have not included the spectral bands that have a resolution of 60 m. But precisely these seem to be promising for cloud correction, since they are a proxy of the water (content and form) in the atmosphere.
             \item \textbf{Data:}
-            \cite{raiyaniSentinel2ImageScene2021} presents an Machine Learing approach that supposedly improves the SCL and thus could improve our results which are based on the SCL.
+            \cite{raiyaniSentinel2ImageScene2021} presents an Machine Learing approach that supposedly improves the SCL and thus could improve our results that are based on the SCL.
             % \item \textbf{Interpolation:}
             % Penalized Regressions as described in ... are similar to smoothing splines (c.f. ...) but different. Better?XXX
             \item \textbf{NDVI Correction:}
             Explore the effect of different link and normalizing functions % between the estimated absolute residuals and the weights 
-            in section \ref{sec:corr_link}. Currently we run into the danger of some outer points getting nearly ignored just because one estimated absolute residual for some interior point is very small.
+            in section \ref{sec:corr_link}. Currently we run into the danger of some outer points getting nearly ignored just because one estimated absolute residual for some interior point is close to zero.
             \item \textbf{NDVI Correction:}
             Yield is not the only target variable of interest. Other variables like protein content could also be used in section \ref{sec:ndvi_corr_eval} for the method evaluation. 
         \end{Nitemize}

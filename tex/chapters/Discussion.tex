@@ -8,12 +8,12 @@
 
         Regarding the GK, we expect that because of the stationarity assumption, the interpolation will tend to the mean if data gaps are present (c.f. figure \ref{fig:kriging_parameters}). 
 
-        Since the SG requires equidistant points, it is clear\todo{wertend} that data gaps will break it. The linear interpolation, which is supposed to recover this, we consider as not being a satisfying solution.
+        Since the SG requires equidistant points, it follows that data gaps will break it. The linear interpolation, that is supposed to recover this, we consider as not being a satisfying solution.
 
         % FR SS LOESS DL BSPL 
         We do not trust the FR interpolation if there are noticeable data gaps. On the one hand, it corresponds to our experience that the curve can escape strongly there (c.f. figure \ref{fig:interpol/fourier_dl_comparison}). On the other hand, the unreliability is illustrated by the poor values in table \ref{tab:cv-statistics_itpl-methods} for the robustified variant. These are meaningful in describing the ability to cope with data gaps, since more data points are ignored during the robustification and thus data gaps are simulated. 
 
-        Similarly, for SS, LOESS, DL and BS we compare the values in table \ref{tab:cv-statistics_itpl-methods} between the robustified and non-robust variant. We find that the robust variant is not very different from the non-robust variant (unlike FR). Thus, we conclude that these methods do not have systematic failures.
+        Similarly, for SS, LOESS, DL and BS we compare the values in table \ref{tab:cv-statistics_itpl-methods} between the robustified and non-robust variant. We find that the robust variant does not differ strongly from the non-robust variant (unlike FR). Thus, we conclude that these methods do not have systematic failures.
 
         Regarding the LOESS, we observe in the figure \ref{fig:interpol/2x3_loess_robust} in plot (c) a strange peak between the first and second observation. This peak is due to the local weighting. In case of data gaps, the weights can attain non-intuitive values. For instance, the first data point in the plot, although adjacent to the peak, is given a low weight compared to the points to the right of the peak (for estimating the value at this peak).
 
@@ -48,7 +48,7 @@ XXX discuss results from table \ref{tab:methods_vs_yieldprediction}
         Including temporally (e.g., $P_{t-1}$ and $P_{t+1}$) and geographically adjacent pixels would likely improve performance. However, for simplicity, we omit it here\footnote{This is done for simplicity of understanding and using the model, since one would need to adapt to some convention of how to supply the data of adjacent pixels without redundancy (i.e. supplying $P_t$ multiple times).}.
     }
 
-    \subsection{Which Interpolation Strategy should we choose}\label{sec:discussion_iplfstrategy-choose}
+    \subsection{Choose Interpolation Strategy}\label{sec:discussion_iplfstrategy-choose}
         \todo[inline]{table mit OLS SCL als sieger diskutieren}
         if we use no-correctionXss-rob instead of OLS-SCLXss we loose $(0.148-0.14)/0.148 = 5,4\%$ of the information.
     \subsection{High RMSE in Yield Prediction}{\label{sec:discuss_high-rmse-in-yield-prdiction}

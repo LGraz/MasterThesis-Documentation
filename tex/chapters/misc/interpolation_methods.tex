@@ -32,7 +32,7 @@
 		$$
 			\operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}  \right)
 		$$
-		where $\Phi=2 \pi \times(t-1) / n$. Thus, we periodical behavior. If we would set the period to match one year this would coinced with the nothion that plans grow every year. Example fits can be seen in figure \ref{fig:interpol/fourier_dl_comparison}
+		where $\Phi=2 \pi \times(t-1) / n$. Thus, we periodical behavior. If we would set the period to match one year this would coinced with the notion that plans grow every year. Example fits can be seen in figure \ref{fig:interpol/fourier_dl_comparison}
 
 		% \cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
 
@@ -52,11 +52,11 @@
 		\end{my_figure}
 
 	\subsection{Optimization Issues}\label{sec:itpl_param_optimizationissues}
-		We shall mention some optimization issues we countered during implementation. Since we aim to minimize the residual sum of squares over 5 (or 6) parameters, we try to solve a non-convex optimization problem. Thus, the algorithm\footnote{We used the python function \texttt{scipy.optimize.curve\_fit}.} either struggles to find the global minimum or fails to converge. This was fixed by providing for each parameter reasonable initial values and generous bounds (which match our experience).
+		We shall mention some optimization issues we countered during implementation. Since we aim to minimize the residual sum of squares over 5 (or 6) parameters, we try to solve a non-convex optimization problem. Thus, the algorithm\footnote{We used the python function \texttt{scipy.optimize.curve\_fit}.} either struggles to find the global minimum or fails to converge. This was fixed by providing for each parameter reasonable initial values and generous bounds (that match our experience).
 
 \section{Non-Parametric Regression}
 	\label{sec:itpl_nonparametric}
-	In non-parametric curve estimation, the curve does no longer have to be fully determined by parameters, but we allow it to flexibly approximate the data. Note, that we do not exclude the use of tuning-parameters.
+	In non-parametric curve estimation, the curve does no longer have to be fully determined by parameters, but we allow it to flexibly approximate the data. Note that we do not exclude the use of tuning-parameters.
 
 	\subsection{Kernel Regression: Nadaraya-Watson (NW)}
 		\label{sec:Kernel}
@@ -94,7 +94,7 @@
 	\subsection{Universal Kriging (UK)}
 		\label{sec:Kriging}
 
-		UK as described in \cite{diggleGaussianModelsGeostatistical2007} was developed in geostatistics to deal with autocorrelation of the response variable at locations which are spatially close. By applying the notion that two spectral indices which are timewise close should also take similar values, we justify the application of UK. In the end, we would like to fit a smooth Gaussian process to the data.
+		UK as described in \cite{diggleGaussianModelsGeostatistical2007} was developed in geostatistics to deal with autocorrelation of the response variable at locations that are spatially close. By applying the notion that two spectral indices that are timewise close should also take similar values, we justify the application of UK. In the end, we would like to fit a smooth Gaussian process to the data.
 
 		% definition (gaussian process)
 		A Gaussian Process $\{S(t) : t\in \mathbb R\} $ is a stochastic process if $(S(t_1),\dots,S(t_k))$ has a multivariate Gaussian distribution for every collection of times ${t_1, \dots , t_k}$. $S$ can be fully characterized by the mean $\mu(t):=E[S(t)]$ and its covariance function $\gamma\left(t, t^{\prime}\right):=\operatorname{Cov}\left(S(t), S\left(t^{\prime}\right)\right)$. 
@@ -116,11 +116,11 @@
 			\end{my_figure}
 
 			\begin{my_figure}{width=1\textwidth}{interpol/kriging_parameter}
-				\caption{On the left, we see how the interpolation change if we increase the nugget and the range parameter. On the right, we compare two UK interpolations, where one takes parameters by numerically matimizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
+				\caption{On the left, we see how the interpolation change if we increase the nugget and the range parameter. On the right, we compare two UK interpolations, where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
 				\label{fig:kriging_parameters}
 			\end{my_figure}
 
-		Finally, we consider a one-dimensional Gaussian process $G_\gamma$ with variogram $\gamma$ and tune the variogram parameters using matimum likelihood\footnote{As illustrated in figure~\ref{fig:kriging_parameters} matimum likelihood estimation can lead to overfitting. Thus, we will in practice sample several such optimized parameters and use their median in the end.}. Let $z$ be a vector with the new values to ettrapolate, then we can determine the values $m(z) = \mathbb{E}\left[G_\gamma(z) | (t,y)\right]$ using Bayes rule\footnote{Bayes rule generally claims, that for two random variables $A$ and $B$ we have that $P(A|B) = P(B|A) / P(B)$}. For an etample fit, we refer to figure~\ref{fig:kriging_parameters}. 
+		Finally, we consider a one-dimensional Gaussian process $G_\gamma$ with variogram $\gamma$ and tune the variogram parameters using matimum likelihood\footnote{As illustrated in figure~\ref{fig:kriging_parameters} matimum likelihood estimation can lead to overfitting. Thus, we will in practice sample several such optimized parameters and use their median in the end.}. Let $z$ be a vector with the new values to ettrapolate, then we can determine the values $m(z) = \mathbb{E}\left[G_\gamma(z) | (t,y)\right]$ using Bayes rule\footnote{Bayes rule generally claims that for two random variables $A$ and $B$ we have that $P(A|B) = P(B|A) / P(B)$}. For an etample fit, we refer to figure~\ref{fig:kriging_parameters}. 
 
 		\subsubsection*{Violated Assumption}
 			Since we observe a clear pattern of a growth period in spring and harvest in the end of summer, we have to admit that our stationarity assumtpion with the constant mean is structurally violated. This is also the reason why we observe (for every variogram parameter) a tendency to the mean, as indicated in figure~\ref{fig:kriging_parameters}.
@@ -154,7 +154,7 @@
 		The method is based on the assumption that due to atmospheric effects the observed NDVI tends to be underestimated and that it cannot increase too quickly. The latter is argued by the biological impossibility of such fast vegetation changes. Their proposed algorithm is:\todo{figure / tabelle / pseudocode anstatt aufzählung}
 			\begin{enumerate}
 				\item Remove non-SCL45 points.
-				\item Remove points which would indicate an increase greater than 0.4 within 20 days.
+				\item Remove points that would indicate an increase greater than 0.4 within 20 days.
 				\item Linearly interpolate to obtain an equidistant time series $X^0$.
 				\item Apply the SG to obtain a new time series $X^1$.
 				\item Update $X^1$ by applying again a SG. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''.
@@ -168,7 +168,7 @@
 				\item Efficient calculation for equidistant points.
 				\item Upper envelope matches intuition for the NDVI. Therefore, it is robust against outliers with small values.
 			}{
-				\item No natural way of how to estimate points which are not in the data.
+				\item No natural way of how to estimate points that are not in the data.
 				\item Not generalizable to other spectral indices.
 				\item Linear interpolation to account for missing data might be not appropriate.
 				\item No smooth interpolation between two measurements.
@@ -220,7 +220,7 @@
 			B_{i, k}(z)=\frac{z-t_{i}}{t_{i+k}-t_{i}} B_{i, k-1}(z)+\frac{t_{i+k+1}-z}{t_{i+k+1}-t_{i+1}} B_{i+1, k-1}(z).
 		\end{equation}
 		
-		Assuming that all $t_i$ are distinct, this yields an interpolation which fits the data perfectly. To reduce the amount of overfitting and increase the smoothness, we relax the constraint that we have to perfectly interpolate. Thus, we use the minimum number of basis functions\footnote{So we do not require one basis function for each neighboring pair of knots. SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number of knots used} such that:
+		Assuming that all $t_i$ are distinct, this yields an interpolation that fits the data perfectly. To reduce the amount of overfitting and increase the smoothness, we relax the constraint that we have to perfectly interpolate. Thus, we use the minimum number of basis functions\footnote{So we do not require one basis function for each neighboring pair of knots. SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number of knots used} such that:
 		$$\sum_{i=1}^n(w_i (y_i - \hat y_i))^2 \leq s$$
 
 		\begin{my_pros_cons_table}{

@@ -2,7 +2,7 @@
 %     ML-methoden: muss ich sie beschreiben? Es scheint mir wissen zu sein, was ich vorraussetzen kann. 
     % --> ja, kurz und bündig erklären
 \subsection{Ordinary Least Squares (OLS)}{\label{sec:corr_model_OLS}
-    The OLS is a linear model which aims to minimize the sum of the squared residuals. We assume a linear relationship between $y$ and $X$ and allow for Gaussian noise. That is:
+    The OLS is a linear model that aims to minimize the sum of the squared residuals. We assume a linear relationship between $y$ and $X$ and allow for Gaussian noise. That is:
     \begin{equation}
         \label{eq:ols}
         y = X\beta  + \epsilon \quad \text{ where }\epsilon \overset{i.i.d.}{\sim}\mathcal{N}(0,\sigma^2)
@@ -59,7 +59,7 @@
         g_{add}(x) = \mu + \sum_{i=1}^pg_j(x_j).\footnote{wher $g_j$ is a real-valued function. For identifiability we also demand $\mathbb{E}[g_j(X_{:,j})] = 0$ for $j=1,\dots,p$.}
     \end{equation}  
 
-    To estimate the non-parametric functions, we can use SS (ref sec.~\ref{sec:Natural_SS}). For this let $\mathcal{S}_j$ be the function which takes some $z\in\R^n$ and returns the SS fitted to $(X_{:,j}, z)$ where the smoothing parameter is optimized by LOOCV\footnote{For efficiency an proxy of the LOOCV is used called generalized cross validation.}.
+    To estimate the non-parametric functions, we can use SS (ref sec.~\ref{sec:Natural_SS}). For this let $\mathcal{S}_j$ be the function that takes some $z\in\R^n$ and returns the SS fitted to $(X_{:,j}, z)$ where the smoothing parameter is optimized by LOOCV\footnote{For efficiency an proxy of the LOOCV is used called generalized cross validation.}.
     Since we cannot fit all $g_j$ simultaneously, we will use a strategy named Backfitting. We basically cycle through the indices $1,\dots p$ and refit $\hat g_j$ each time. The following illustrates the procedure: 
     \begin{eqnarray*}
         1) \quad \hat g_1 &=& \mathcal S_1(y - \mu)    \\
@@ -128,7 +128,7 @@
     \end{equation}
     and select the pair (which when added to $\mathcal{M}$ and the coefficients refitted) reduces the RMSE the most. Add the selected pair to $\mathcal{M}$ and repeat until the RMSE reduction becomes insignificant.
 
-    Finally, to avoid overfitting, we prune the set $\mathcal{M}$ by optimizing a LOOCV score.\footnote{This means that we perform an iterative procedure to reduce the number of functions in $\mathcal{M}$. For every function $h$ in $\mathcal{M}$, we compute the model using $\mathcal{M}\\\{h\}$. We discard the function which -- when excluding from $\mathcal{M}$ -- leads to the best LOOCV score.}  
+    Finally, to avoid overfitting, we prune the set $\mathcal{M}$ by optimizing a LOOCV score.\footnote{This means that we perform an iterative procedure to reduce the number of functions in $\mathcal{M}$. For every function $h$ in $\mathcal{M}$, we compute the model using $\mathcal{M}\\\{h\}$. We discard the function that -- when excluding from $\mathcal{M}$ -- leads to the best LOOCV score.}  
 
     To reduce computational complexity, we follow the recommendation from \cite{stephenEarthMultivariateAdaptive2021} and restrict $h$ in equation~\eqref{eq:mars_candidate} to be of degree one (so it is also in a pair of $\mathcal{B}$). Consequently, $\mathcal{C}$ contains functions with a degree of at most 2. 
 
