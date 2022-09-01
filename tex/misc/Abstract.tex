@@ -1,18 +1,20 @@
 \chapter*{Abstract}
 
 %% Intro
-Multispectral satellite imagery Time Series (TS) are utilized to model ground-based TS of spectral indices. As such, the TS of the Normalized Difference Vegetation Index (NDVI) --- a proxy for vegetation density --- is considered to contain information about vegetation development. 
+Multispectral satellite imagery Time Series (TS) are utilized to estimate TS of spectral indices at the ground. As such, the TS of the Normalized Difference Vegetation Index (NDVI) is used to model vegetation development. 
 %% Problem Illustration
-Due to atmospheric effects (e.g. clouds or shadows) satellite measurements may not match the ground signal and therefore traditional approaches try to filter out such corrupted observations before extracting and subsequently interpolating the NDVI. After filtering, remaining corrupted observations and resulting data gaps are the two challenges for interpolation that we address in this thesis.
+Due to atmospheric effects (e.g. clouds or shadows) satellite measurements may not match the ground signal. Therefore, traditional approaches try to filter out contaminated observations before extracting and subsequently interpolating the NDVI. After filtering, remaining contaminated observations and resulting data gaps are the two challenges for interpolation that we address in this thesis.
 
 %% Our Setting
-For this purpose, we use crop yield maps from 2017-2021 of cereals from a farm in Switzerland and corresponding Sentinel 2 satellite image TS published by the European Space Agency, together with a Scene Classification Layer (SCL). 
+For this purpose, we use crop yield maps from 2017-2021 of cereals from a farm in Switzerland and corresponding Sentinel 2 satellite image TS published by the European Space Agency. Contaminated observations can be filtered with the provided Scene Classification Layer (SCL). 
 
 %% NDVI itpl
-We give a benchmark-supported review of different interpolation methods and opt for Smoothing Splines as a non-parametric (flexible) method and Double Logistic approximation as a parametric method with implicit shape assumptions. In addition, we generalize an iterative technique which robustifies interpolation methods against outliers by reducing their weight. In most cases, this robustification successfully decreased the 50\% and 75\% quantiles of the absolute out-of-bag residuals. 
+We give a benchmark-supported review of different interpolation methods and opt for Smoothing Splines as a flexible non-parametric method and Double Logistic approximation as a parametric method with implicit shape assumptions. In addition, we generalize an iterative technique which robustifies interpolation methods against outliers by reducing their weight. In most cases, this robustification successfully decreased the 50\% and 75\% quantiles of the absolute out-of-bag residuals. 
 
 %% NDVI corr. 
-Moreover, using NDVI as an example, we present a general interpolation procedure that utilizes additional information to correct the target variable with an uncertainty estimate and then performs a weighted interpolation. Consequently, we do not filter using the SCL but weight observations according to their reliability. The combination of different interpolation methods and correction models results in 28 interpolation strategies. We assume that the better the resulting NDVI TS models crop growth, the more suitable it is to predict crop yield. Based on this, the best interpolation strategy uses Smoothing Splines and corrects the NDVI with uncertainty estimation through a simple linear model considering only of the observed NDVI and the associated SCL class. This strategy produces NDVI TS that can explain 5\% more variance in yield estimation than the NDVI TS obtained by traditional Smoothing Splines.
+Moreover, we present a general interpolation procedure that utilizes additional information to correct the target variable with an uncertainty estimate and then performs a weighted interpolation. In our setting, the target variable is the NDVI and as additional information we use the SCL, the observed NDVI and the spectral bands. Consequently, we do not filter using the SCL but weight observations according to their reliability. The combination of different interpolation methods and correction models yields 28 interpolation strategies. In order to choose the best one, we assume that the better the interpolated NDVI TS models crop growth, the more suitable it is to predict crop yield. 
+% {The resulting interpolation strategy uses Smoothing Splines and corrects the NDVI with uncertainty estimation through a simple linear model considering only of the observed NDVI and the associated SCL class.} 
+Applying this procedure, the variance in crop yield explained by the resulting NDVI TS decreases by more than 5\%. 
 
 %% Reproducibility  +  R-package
 Instructions and a codebase for reproducibility of the results, as well as an R package making the presented general interpolation procedure accessible to the user, are supplied. 

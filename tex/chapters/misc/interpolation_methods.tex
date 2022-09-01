@@ -6,7 +6,7 @@
 
 	\subsection{Double Logistic (DL)}
 		\label{sec:double_logistic}
-		The Double Logistic smoothing as described in \cite{beckImprovedMonitoringVegetation2006}REF heavily relies on shape assumptions of the fitted curve (i.e. the NDVI time series). First, we assume that there  is a minimum NDVI level $y_{\min}$ in the winter (e.g. due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking several years into account. Second, we assume that the growth cycle can be divided into an increase and a decrease period, where the time series follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$). The equation of the double-logistic fit is given by:
+		The Double Logistic smoothing as described in \cite{beckImprovedMonitoringVegetation2006} heavily relies on shape assumptions of the fitted curve (i.e. the NDVI time series). First, we assume that there  is a minimum NDVI level $y_{\min}$ in the winter (e.g. due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking several years into account. Second, we assume that the growth cycle can be divided into an increase and a decrease period, where the time series follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$). The equation of the double-logistic fit is given by:
 		\begin{equation*}
 			y(t) = y_{\min} + \left(y_{\max}-y_{\min}\right)\left(\frac{1}{1+e^{-d_0(t-t_0)}}+\frac{1}{1+e^{-d_1(t-t_1)}}-1\right)
 		\end{equation*}
@@ -28,11 +28,14 @@
 
 	\subsection{Fourier Series (FS)}
 		\label{sec:fourier_approx}
-		Analogous to section~\ref{sec:double_logistic} we fit a parametric curve to the data by least squares. Here we take the second order FS approximation:
+		\cite{stockliEuropeanPlantPhenology2004} approximates the NDVI curve using a second order FS:
 		$$
 			\operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}  \right)
 		$$
-		where $\Phi=2 \pi \times(t-1) / n$. Thus, we periodical behavior. If we would set the period to match one year this would coinced with the notion that plans grow every year. Example fits can be seen in figure \ref{fig:interpol/fourier_dl_comparison}
+		where $\Phi=2 \pi \times(t-1) / n$. Thus, we periodical behavior. If we would set the period to match one year this would coinced with the notion that plans grow every year. 
+		Analogous to section~\ref{sec:double_logistic} we fit it to the data by least squares.
+		Example fits can be seen in figure \ref{fig:interpol/fourier_dl_comparison}
+
 
 		% \cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
 
@@ -246,6 +249,7 @@
 		cubic spline (i.e. a piecewise cubic polynomial function).
 		The objective function ensures that we decrease the curvature while keeping the RMSE low.
 
+		\subsubsection{XXX Whittaker}
 
 		\begin{my_pros_cons_table}{
 				\item Can be assigned degrees of freedom (trace of the hat-matrix).
