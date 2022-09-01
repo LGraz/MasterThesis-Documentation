@@ -1,7 +1,7 @@
 \chapter{NDVI Correction} \label{sec:corr}
 
 {
-    Let's remind ourselves that the data from the S2 satellites is distributed  with an SCL and we therefore have some evidence about what is observed at each pixel for each sampled time (c.f. table~\ref{tab:satelite/scl_classes}). So far, we have only considered points, labeled as cloud- and shadow-free (SCL45). However, we remind ourselves of the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite the `vegetation' label and see vegetation in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to observe `cirrus clouds'.
+    Let's remind ourselves that the data from the S2 satellites is distributed  with an SCL and we therefore have some evidence about what is observed at each pixel for each sampled time (cf. table~\ref{tab:satelite/scl_classes}). So far, we have only considered points, labeled as cloud- and shadow-free (SCL45). However, we remind ourselves of the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite the `vegetation' label and see vegetation in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to observe `cirrus clouds'.
     
     % In this chapter, we would like to improve the NDVI interpolation by inspecting also other SCL-classes and by using more than just the two bands used to calculate the NDVI (B4 and B8). 
 
@@ -44,7 +44,7 @@
         \label{sec:corr_methods}
 
     For training an NDVI correction model, we require ground-truth data which we will aim to model using informative covariates. Since ground-truth NDVI data is not available, we will again use the assumption \ref{true_ndvi_assumption} and use the ``true'' NDVI instead. There is no canonical answer to the question of which covariates we should use. It is a tradeoff between simplicity, generalizability and performance (with the danger of overfitting). 
-    Our desire with the NDVI correction is to develop a product that is simple to use and understand. Therefore, in the subsequent, we will only take the spectral data of the satellite (i.e. all the bands) and the observed NDVI derived from it as covariates. We organize the choosen covariats in the desing matrix $X$\footnote{Strictly speaking, we include also the intercept and introduce one dummy variable for each SCL-class}, where each row corresponds to a $P_t$ (i.e., a pixel at a time $t$) and each column to one covariate.    
+    Our desire with the NDVI correction is to develop a product that is simple to use and understand. Therefore, in the subsequent, we will only take the spectral data of the satellite (i.e., all the bands) and the observed NDVI derived from it as covariates. We organize the choosen covariats in the desing matrix $X$\footnote{Strictly speaking, we include also the intercept and introduce one dummy variable for each SCL-class}, where each row corresponds to a $P_t$ (i.e., a pixel at a time $t$) and each column to one covariate.    
 
     In the following, we will introduce different approaches, to model the relationship between the response $y:=\operatorname{NDVI}_\text{``true''}\in \R^n$ and the design matrix $X\in\R^{n \times p}$. First, we will study the basic OLS. Second, we look at the LASSO, an penalized adaptation of the OLS which is known to successfully deal with highly correlated covariates. Afterwards, GAMs are introduced which model the response similar to OLS but allow for non-linear relations. Last but not least, we discuss RF and MARS, which are both flexible modelling approaches. % since only weak assumptions on the relationship between the response and covariates are made. 
 
@@ -101,7 +101,7 @@
     \label{sec:ndvi_corr_eval}
     In this section, we introduce the relative yield-estimation-accuracy ({RYEA}) and utilize it to evaluate the 28 interpolation strategies from section~\ref{sec:corr_itpl_stat}. 
     % idea
-    The fundamental assumption is that the closer the interpolated NDVI time series is to the true one, the better it can be used to determine crop yield. Implicitly, we believe that an NDVI time series that better models yield will incorporate more true information about the underlying vegetation. 
+    The fundamental assumption is that the closer the interpolated NDVI {TS} is to the true one, the better it can be used to determine crop yield. Implicitly, we believe that an NDVI {TS} that better models yield will incorporate more true information about the underlying vegetation. 
     Therefore, we want to determine a comparable RYEA for each interpolation strategy and choose it as a benchmark criterion. 
     This is an objective measure, since we have not considered crop yield in any of our previous steps. Moreover, this criterion is justified by the fact that yield estimation has been a motivation for the interpolation.
 
@@ -117,13 +117,13 @@
     % \subsubsection*{Yield Estimation}
     {
         \label{sec:corr_yield_est}
-        We would like to estimate the yield from the NDVI time series produced by all the interpolation strategies for all pixels. However, given the high dimensionality and different lengths of the interpolation (not every time series has the same start and end point), we must first map each NDVI time series into a low-dimensional vector space of covariates. For this, we will use the following statistics:
+        We would like to estimate the yield from the NDVI {TS} produced by all the interpolation strategies for all pixels. However, given the high dimensionality and different lengths of the interpolation (not every {TS} has the same start and end point), we must first map each NDVI {TS} into a low-dimensional vector space of covariates. For this, we will use the following statistics:
         {% covaraites
             \renewcommand{\arraystretch}{1.2} \begin{longtable}{p{0.48\linewidth} p{0.48\linewidth}}
                 --- Maximum slope   &   --- Integral\footnoteref{note:integral-min} up to the peak \\
                 --- Minimum slope   &   --- Integral\footnoteref{note:integral-min} after peak \\
                 --- Integral\footnote{\label{note:integral-min} We will only consider the integral of the function $max(0, NDVI - 0.3)$, where $0.3$ is assumed to be a minimal NDVI value. REF} over all   &   --- Integral\footnoteref{note:integral-min} from 0-685 GDD \\
-                --- Peak (i.e. maximal NDVI)    &   --- Integral\footnoteref{note:integral-min} from 685-1075 GDD     \\
+                --- Peak (i.e., maximal NDVI)    &   --- Integral\footnoteref{note:integral-min} from 685-1075 GDD     \\
                 --- GDD for the Peak &  
             \end{longtable} \renewcommand{\arraystretch}{1}
             % Old itemize
@@ -131,18 +131,18 @@
                 %     \item Maximum slope
                 %     \item Minimum slope
                 %     \item Integral\footnote{\label{note:integral-min} We will only consider the integral of the function $max(0, NDVI - 0.3)$, where $0.3$ is assumed to be a minimal NDVI value. REF} over all
-                %     \item Peak (i.e. maximal NDVI)
-                %     \item Peak GDD (i.e. value at which the peak is attained)
+                %     \item Peak (i.e., maximal NDVI)
+                %     \item Peak GDD (i.e., value at which the peak is attained)
                 %     \item Integral\footnoteref{note:integral-min} up to the peak
                 %     \item Integral\footnoteref{note:integral-min} after peak
                 %     \item Integral\footnoteref{note:integral-min} from 0-685 GDD
                 %     \item Integral\footnoteref{note:integral-min} from 685-1075 GDD    
                 % \end{Nitemize}
         }
-        For the choice we were inspired by (c.f. table 2 in \cite{kamirEstimatingWheatYields2020}). However, we deliberately omit any statistic that involves the minimum (e.g. the NDVI-range), since we regard the minimum as a very error-prone measure due to the large influence of clouds in the time series. 
+        For the choice we were inspired by (cf. table 2 in \cite{kamirEstimatingWheatYields2020}). However, we deliberately omit any statistic that involves the minimum (e.g., the NDVI-range), since we regard the minimum as a very error-prone measure due to the large influence of clouds in the {TS}. 
         
         As a result, for each interpolation strategy, a matrix is obtained in which each row corresponds to a pixel and both the yield and the covariates (computed by applying the above statistics) are contained.
-        Using this matrix, we train a random forest for yield estimation, and compute the integrated OOB estimates\footnote{By the integrated OOB estimates, we denote the predictions for each pixel where only trees are used, where the pixel has not been used (as $n_{tree}$, the number of Trees, grows the fraction of trees which do not contain a certain pixel converges to $\frac{1}{e}$).} $\hat y$. Note that the choice of the modeling approach does not matter much, as long as it is general enough (i.e. able to approximate any function) and we use the same one for each interpolation strategy. 
+        Using this matrix, we train a random forest for yield estimation, and compute the integrated OOB estimates\footnote{By the integrated OOB estimates, we denote the predictions for each pixel where only trees are used, where the pixel has not been used (as $n_{tree}$, the number of Trees, grows the fraction of trees which do not contain a certain pixel converges to $\frac{1}{e}$).} $\hat y$. Note that the choice of the modeling approach does not matter much, as long as it is general enough (i.e., able to approximate any function) and we use the same one for each interpolation strategy. 
         Finally, for each interpolation strategy, we calculate the RYEA and describe the results in section \ref{sec:results_ndvi_corr}.
     }
 

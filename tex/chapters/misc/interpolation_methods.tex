@@ -6,14 +6,14 @@
 
 	\subsection{Double Logistic (DL)}
 		\label{sec:double_logistic}
-		The Double Logistic smoothing as described in \cite{beckImprovedMonitoringVegetation2006} heavily relies on shape assumptions of the fitted curve (i.e. the NDVI time series). First, we assume that there  is a minimum NDVI level $y_{\min}$ in the winter (e.g. due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking several years into account. Second, we assume that the growth cycle can be divided into an increase and a decrease period, where the time series follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$). The equation of the double-logistic fit is given by:
+		The Double Logistic smoothing as described in \cite{beckImprovedMonitoringVegetation2006} heavily relies on shape assumptions of the fitted curve (i.e., the NDVI {TS}). First, we assume that there  is a minimum NDVI level $y_{\min}$ in the winter (e.g., due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking several years into account. Second, we assume that the growth cycle can be divided into an increase and a decrease period, where the {TS} follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$). The equation of the double-logistic fit is given by:
 		\begin{equation*}
 			y(t) = y_{\min} + \left(y_{\max}-y_{\min}\right)\left(\frac{1}{1+e^{-d_0(t-t_0)}}+\frac{1}{1+e^{-d_1(t-t_1)}}-1\right)
 		\end{equation*}
 		Where the five free parameters: $y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Such fit can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}.
 
 		\subsubsection*{Robustification}
-		Similar as for the SG (c.f. section~\ref{sec:Savitzky-Golay}) one can reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations. For the details on the choice of the weights we refer to \cite{beckImprovedMonitoringVegetation2006}. We will not apply this reestimation but rather the robustification introduced later in section \ref{sec:loess_robustify}.
+		Similar as for the SG (cf. section~\ref{sec:Savitzky-Golay}) one can reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations. For the details on the choice of the weights we refer to \cite{beckImprovedMonitoringVegetation2006}. We will not apply this reestimation but rather the robustification introduced later in section \ref{sec:loess_robustify}.
 
 		\begin{my_pros_cons_table}{
 				\item Incorporates subject specific knowledge in the case of evergreen plants covered in snow.
@@ -21,7 +21,7 @@
 			}{
 				\item Strong shape assumptions on the NDVI curve.
 				\item Parameter optimization might go wrong. This can be mitigated to some extent to provide bounds for the parameters
-				\item Strange behavior in regions with little observations. (c.f. figure~\ref{fig:interpol/fourier_dl_comparison})
+				\item Strange behavior in regions with little observations. (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
 			}
 		\end{my_pros_cons_table}
 
@@ -43,7 +43,7 @@
 				\item Assumption of periodicity can be helpful if we are modelling multiyear grow cycles
 				\item Flexible curve shape
 			}{
-				\item Bad behavior in regions with little data (c.f. figure~\ref{fig:interpol/fourier_dl_comparison})
+				\item Bad behavior in regions with little data (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
 				\item Hard to interpret estimated parameters
 				\item Parameter estimation can go wrong. Introducing bounds can help.
 			}
@@ -86,7 +86,7 @@
 		\begin{my_pros_cons_table}{
 				\item fletible due to different possible kernels
 				\item can be assigned degrees of freedom (trace of the hat-matrit)
-				\item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (REF c.f. CompStat 3.2.2)
+				\item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (REF cf. CompStat 3.2.2)
 			}{
 				\item if the $t \mapsto K(t)$ is not continuous, $\hat m $ isn't either
 				\item choice of bandwidth, especially if $t_i$ are not equidistant.
@@ -102,7 +102,7 @@
 		% definition (gaussian process)
 		A Gaussian Process $\{S(t) : t\in \mathbb R\} $ is a stochastic process if $(S(t_1),\dots,S(t_k))$ has a multivariate Gaussian distribution for every collection of times ${t_1, \dots , t_k}$. $S$ can be fully characterized by the mean $\mu(t):=E[S(t)]$ and its covariance function $\gamma\left(t, t^{\prime}\right):=\operatorname{Cov}\left(S(t), S\left(t^{\prime}\right)\right)$. 
 		% stationarity assumtpion
-		Furthermore, we will assume the Gaussian process to be stationary. That is for $\mu(t)$ to be constant in $t$ and $\gamma(t,t')$ to depend only on $h=t-t'$. Thus, we will write in the following only $\gamma(h)$.\footnote{Note that the process is also \textit{isotropic} (i.e. $\gamma(h)=\gamma(\|h\|$) since we are in a one-dimensional setting and the covariance is symmetric.}
+		Furthermore, we will assume the Gaussian process to be stationary. That is for $\mu(t)$ to be constant in $t$ and $\gamma(t,t')$ to depend only on $h=t-t'$. Thus, we will write in the following only $\gamma(h)$.\footnote{Note that the process is also \textit{isotropic} (i.e., $\gamma(h)=\gamma(\|h\|$) since we are in a one-dimensional setting and the covariance is symmetric.}
 
 		% variogram
 		Now, we need to make some assumption on the covariance function. For this we introduce the variogram of a Gaussian process as
@@ -158,8 +158,8 @@
 			\begin{enumerate}
 				\item Remove non-SCL45 points.
 				\item Remove points that would indicate an increase greater than 0.4 within 20 days.
-				\item Linearly interpolate to obtain an equidistant time series $X^0$.
-				\item Apply the SG to obtain a new time series $X^1$.
+				\item Linearly interpolate to obtain an equidistant {TS} $X^0$.
+				\item Apply the SG to obtain a new {TS} $X^1$.
 				\item Update $X^1$ by applying again a SG. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the ``upper NDVI envelope''.
 			\end{enumerate}
 
@@ -184,7 +184,7 @@
 		% Introduced by : \cite{clevelandRobustLocallyWeighted1979}
 		% implemented here \cite{cappellariATLAS3DProjectXX2013}
 
-		The LOESS introduced by \cite{clevelandRobustLocallyWeighted1979} can be understood as a generalization of the SG (c.f. sec.~\ref{sec:Savitzky-Golay}).
+		The LOESS introduced by \cite{clevelandRobustLocallyWeighted1979} can be understood as a generalization of the SG (cf. sec.~\ref{sec:Savitzky-Golay}).
 
 		Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ separately by fitting a polynomial of order $d$ by weighted least squares. The weights are (usually) defined by
 		$$w_i(t_j)=\begin{cases}
@@ -195,7 +195,7 @@
 
 		\subsubsection{Differences between the Robust LOESS and the SG?}
 		The LOESS smoother takes a fraction of points instead of a fixed number and therefore automatically adapts to the size of the data we wish to interpolate. However, we run into the danger of considering too little observations, since the estimation breaks down if $\lceil \alpha n\rceil < d+1$.\footnoteref{footnote:LOESS}
-		Furthermore, LOESS gives less weight to points further away. This yields a "smoother" estimate, since when we slide the window (e.g. for estimating the next value) an influential point at the border does not suddenly get zero weight from being weighted equally before.
+		Furthermore, LOESS gives less weight to points further away. This yields a "smoother" estimate, since when we slide the window (e.g., for estimating the next value) an influential point at the border does not suddenly get zero weight from being weighted equally before.
 		Finally, the LOESS also can be used for non-equidistant data and allows for arbitrary interpolation.
 
 		\begin{my_pros_cons_table}{
@@ -246,7 +246,7 @@
 		\end{equation}
 			
 		is a % natural\footnote{It is called natural since it is affine outside the data range ($\forall t\notin [t_1, t_n]:\hat m''(t) = 0$)} 
-		cubic spline (i.e. a piecewise cubic polynomial function).
+		cubic spline (i.e., a piecewise cubic polynomial function).
 		The objective function ensures that we decrease the curvature while keeping the RMSE low.
 
 		\subsubsection{XXX Whittaker}
@@ -258,7 +258,7 @@
 				\item Also performs well if points are not equidistant.
 				\item Fixes the Runge's phenomenon (fluctuation of high degree polynomial interpolation).
 			}{
-				\item The tuning parameter $\lambda$ must be chosen. This can be done via cross validation and optimizing a score function (e.g. the RMSE). 
+				\item The tuning parameter $\lambda$ must be chosen. This can be done via cross validation and optimizing a score function (e.g., the RMSE). 
 			}
 		\end{my_pros_cons_table}
 

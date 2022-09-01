@@ -24,6 +24,12 @@ $X_{[i,:]}$ 	& the $i$-th row of $X$\\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Abbreviations and Objects}
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
+TS	
+		& Time Series. \\
+S2	
+		& Sentinel 2 satellites. Two multi-spectral image satellites deployed by the European Space Agency. \\
+SCL	
+		& Scene Classification Layer provided by the European Space Agency that gives an estimation of the land cover class of each pixel. It indicates what one can expect at a pixel at a sampled time. For an overview, see table~\ref{tab:satelite/scl_classes}\\
 Pixel	
 		& A pixel originates of an image pixel and describes a square of 10 x 10 meters in the field that coincides with the resolution (and location) of the Sentinel-2 pixels. Such pixels are illustrated in figure~\ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}. Additional information like yield is also attached.\\
 
@@ -33,8 +39,6 @@ $P_t$
 $P$	
 		& a pixel. We see it as a collection of all the observations at the specified location within one season. More formally, $P := \left\{P_t | t\text{ is a valid sample time within a defined season}\right\}$\\
 
-SCL	
-		& Scene Classification Layer provided by the European Space Agency that gives an estimation of the land cover class of each pixel. It indicates what one can expect at a pixel at a sampled time. For an overview, c.f. table~\ref{tab:satelite/scl_classes}\\
 
 $P^{SCL45}$	
 		& is similar to $P$ but we only consider observations that belong to the classes 4 and 5. This is used done to get a subset of observations which are less contaminated by clouds and shadows.\\
@@ -52,44 +56,44 @@ RYEA
 		& Relative Yield-Estimation-Accuracy. Definition \ref{def:ryea}\\
 
 OOB 	
-		& Out Of the Box. Describes the procedure of  estimating the value for a point by a model that has not seen this point before (c.f. section \ref{sec:OOB_LOOCV}).\\
+		& Out Of the Box. Describes the procedure of  estimating the value for a point by a model that has not seen this point before (see section \ref{sec:OOB_LOOCV}).\\
 
 LOOCV 	
-		& Leave One Out Cross Validation. Describes the procedure of estimating the value for a point by a model that has seen all the points except the current one (c.f. section \ref{sec:OOB_LOOCV}).\\
+		& Leave One Out Cross Validation. Describes the procedure of estimating the value for a point by a model that has seen all the points except the current one (see section \ref{sec:OOB_LOOCV}).\\
 \end{longtable} 
 
 \section*{Statistical Models}
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
 	DL
-		& Double Logistic (c.f. section \ref{sec:double_logistic})\\
+		& Double Logistic (see section \ref{sec:double_logistic})\\
 	FS
-		& Fourier Series (c.f. section \ref{sec:fourier_approx})\\
+		& Fourier Series (see section \ref{sec:fourier_approx})\\
 	NW
-		& Nadaraya-Watson (c.f. section \ref{sec:Kernel})\\
+		& Nadaraya-Watson (see section \ref{sec:Kernel})\\
 	UK
-		& Universal Kriging (c.f. section \ref{sec:Kriging})\\
+		& Universal Kriging (see section \ref{sec:Kriging})\\
 	SG
-		& Savitzky-Golay Filter (c.f. section \ref{sec:Savitzky-Golay})\\
+		& Savitzky-Golay Filter (see section \ref{sec:Savitzky-Golay})\\
 	LOESS
-		& Locally Weighted Regression (c.f. section \ref{sec:loess})\\
+		& Locally Weighted Regression (see section \ref{sec:loess})\\
 	BS
-		& B-splines (c.f. section \ref{sec:B})\\
+		& B-splines (see section \ref{sec:B})\\
 	SS
-		& Smoothing Splines (c.f. section \ref{sec:Natural_SS})\\
+		& Smoothing Splines (see section \ref{sec:Natural_SS})\\
 	OLS
-		& Ordinary Least Squares (c.f. section \ref{sec:corr_model_OLS})\\
+		& Ordinary Least Squares (see section \ref{sec:corr_model_OLS})\\
 	OLS-SCL
 		& OLS using only the observed NDVI and SCL classes (as factor variables)\\
 	OLS-all
 		& OLS using the covarietes OLS-SCL uses and the spectral bands\\
 	LASSO
-		& Least Absolute Shrinkage and Selection Operator (c.f. section \ref{sec:corr_model_LASSO})\\
+		& Least Absolute Shrinkage and Selection Operator (see section \ref{sec:corr_model_LASSO})\\
 	GAM
-		& General Additive Model (c.f. section \ref{sec:corr_model_GAM})\\
+		& General Additive Model (see section \ref{sec:corr_model_GAM})\\
 	RF
-		& Random Forest (c.f. section \ref{sec:corr_model_RF})\\
+		& Random Forest (see section \ref{sec:corr_model_RF})\\
 	MARS
-		& Multivariate Adaptive Regression Splines (c.f. section \ref{sec:corr_model_MARS})\\
+		& Multivariate Adaptive Regression Splines (see section \ref{sec:corr_model_MARS})\\
 \end{longtable} \renewcommand{\arraystretch}{1}
 
 

@@ -6,13 +6,13 @@
 %         \item 2
 %     }
 % \end{my_pros_cons_table}
-\newcommand{\RobItPlot}{fitted to different (SCL45) NDVI time series. Iterations of a robustifing refit (as indicated in section~\ref{sec:loess_robustify}) are also displayed}
+\newcommand{\RobItPlot}{fitted to different (SCL45) NDVI {TS}. Iterations of a robustifing refit (as indicated in section~\ref{sec:loess_robustify}) are also displayed}
 
 
 \chapter{Interpolation Methods} \label{sec:itpl}\todo{verdeutliche dem leser, dass ein auftrag das findne von interpolationmethoden war}
 	{% Roadmap
-		In section \ref{sec:s2_challangges} we have established the need for interpolating the NDVI time series. In this chapter we first specify a setting for the interpolation and divide the interpolation methods into those that make fundamental shape assumptions (parametric) and those that are more flexible (non-parametric). We give an introduction for each method with an compact definition, highlight adjustments or give remarks where appropriate, and then point out strengths and weaknesses of each method. Additionally, a brief overview of the considered interpolation methods is provided in table~\ref{table:pros_cons_overview}.
-		% In this section, we take a closer look at several interpolation methods, which will be used to interpolate and smooth the NDVI time series, while considering only SCL45 in this chapter. First, we define the general setting and discuss a general approach to make the interpolation more robust (i.e. reduce the impact of outliers). Afterwards, we introduce and discuss each method.
+		In section \ref{sec:s2_challangges} we have established the need for interpolating the NDVI {TS}. In this chapter we first specify a setting for the interpolation and divide the interpolation methods into those that make fundamental shape assumptions (parametric) and those that are more flexible (non-parametric). We give an introduction for each method with an compact definition, highlight adjustments or give remarks where appropriate, and then point out strengths and weaknesses of each method. Additionally, a brief overview of the considered interpolation methods is provided in table~\ref{table:pros_cons_overview}.
+		% In this section, we take a closer look at several interpolation methods, which will be used to interpolate and smooth the NDVI {TS}, while considering only SCL45 in this chapter. First, we define the general setting and discuss a general approach to make the interpolation more robust (i.e., reduce the impact of outliers). Afterwards, we introduce and discuss each method.
 		Afterwards, we extract an robustification strategy from the one interpolation method and generalize it so we can use it for all methods that allow for a priori weighted observations. Finally, using LOOCV, we tune the parameters (where necessary) and get a first idea of the performance of each method.
 
 
@@ -79,7 +79,7 @@
 	{ % Intro
 		Now we discuss a general approach of how to make an interpolation more robust against outliers. The main idea is to give less weight to observations that have high residuals after the initial (or if we reiterate, the previous) fit.
 
-		Even though the procedure is taken from the robust version of the LOESS smoother (c.f. section~\ref{sec:loess} and \cite{clevelandRobustLocallyWeighted1979}), we can apply it to every interpolation method that allows for prior weighting of observations.
+		Even though the procedure is taken from the robust version of the LOESS smoother (cf. section~\ref{sec:loess} and \cite{clevelandRobustLocallyWeighted1979}), we can apply it to every interpolation method that allows for prior weighting of observations.
 	}
 	
 	{	
@@ -128,12 +128,12 @@
 			\label{fig:interpol/2x3_SS_robust}
 		\end{my_figure}
 
-		Examples of the first four iterative fits using SS are shown in figure \ref{fig:interpol/2x3_SS_robust} for six pixels. For the analogous figures of the other interpolation methods c.f. figures \ref{fig:interpol/2x3_loess_robust}, \ref{fig:interpol/2x3_B-Splines_robust}, \ref{fig:interpol/2x3_DL_robust} and \ref{fig:interpol/2x3_loess_robust}.
-		Indeed, we observe how the interpolated time series is less affected by outliers after each iteration. We notice the biggest difference in the first iteration. Furthermore, in the plot at the bottom left\todo{ consider naming the sub-plots} we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always stop after one iteration.
+		Examples of the first four iterative fits using SS are shown in figure \ref{fig:interpol/2x3_SS_robust} for six pixels. For the analogous figures of the other interpolation methods cf. figures \ref{fig:interpol/2x3_loess_robust}, \ref{fig:interpol/2x3_B-Splines_robust}, \ref{fig:interpol/2x3_DL_robust} and \ref{fig:interpol/2x3_loess_robust}.
+		Indeed, we observe how the interpolated {TS} is less affected by outliers after each iteration. We notice the biggest difference in the first iteration. Furthermore, in the plot at the bottom left\todo{ consider naming the sub-plots} we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always stop after one iteration.
 	} 
 	
 	\subsection{Upper Envelope Approach - Penalty for Negative Residuals}
-		If we artificially increase the negative residuals in \refeq{eq:bisquare} by multiplying (e.g. factor 2), the corresponding points will get less weight in the next iteration. This allows us to create an interpolation that resembles an upper envelope. Intuitively, this upper envelope can be thought of as a sheet that is laid on top of the points.
+		If we artificially increase the negative residuals in \refeq{eq:bisquare} by multiplying (e.g., factor 2), the corresponding points will get less weight in the next iteration. This allows us to create an interpolation that resembles an upper envelope. Intuitively, this upper envelope can be thought of as a sheet that is laid on top of the points.
 			
 		This approach is based on the premise that we tend to underestimate the NDVI (as argued in \cite{caoSimpleMethodImprove2018b}). Since we want to develop a general method that is in principle not related to the NDVI, we will not pursue this approach further.	
 }

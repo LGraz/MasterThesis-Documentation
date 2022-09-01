@@ -4,25 +4,25 @@
 
 \section{Interpolation Methods}{ \label{sec:discussion_itpl}
     \subsection{Data Gaps in Time Series}\label{sec:discussion_itpl_data_gaps}{
-        NW estimates the value for $t$ by relating to the points near $t$. To determine what ``near'' means, a bandwidth $h$ is used (c.f. equation \refeq{eq:kernel_with_bandwidt}). This gets problematic as soon as the data gaps become larger than $h$, since in this case no points are left that are considered to be close to $t$. 
+        NW estimates the value for $t$ by relating to the points near $t$. To determine what ``near'' means, a bandwidth $h$ is used (cf. equation \refeq{eq:kernel_with_bandwidt}). This gets problematic as soon as the data gaps become larger than $h$, since in this case no points are left that are considered to be close to $t$. 
 
-        Regarding the GK, we expect that because of the stationarity assumption, the interpolation will tend to the mean if data gaps are present (c.f. figure \ref{fig:kriging_parameters}). 
+        Regarding the GK, we expect that because of the stationarity assumption, the interpolation will tend to the mean if data gaps are present (cf. figure \ref{fig:kriging_parameters}). 
 
         Since the SG requires equidistant points, it follows that data gaps will break it. The linear interpolation, that is supposed to recover this, we consider as not being a satisfying solution.
 
         % FR SS LOESS DL BSPL 
-        We do not trust the FR interpolation if there are noticeable data gaps. On the one hand, it corresponds to our experience that the curve can escape strongly there (c.f. figure \ref{fig:interpol/fourier_dl_comparison}). On the other hand, the unreliability is illustrated by the poor values in table \ref{tab:cv-statistics_itpl-methods} for the robustified variant. These are meaningful in describing the ability to cope with data gaps, since more data points are ignored during the robustification and thus data gaps are simulated. 
+        We do not trust the FR interpolation if there are noticeable data gaps. On the one hand, it corresponds to our experience that the curve can escape strongly there (cf. figure \ref{fig:interpol/fourier_dl_comparison}). On the other hand, the unreliability is illustrated by the poor values in table \ref{tab:cv-statistics_itpl-methods} for the robustified variant. These are meaningful in describing the ability to cope with data gaps, since more data points are ignored during the robustification and thus data gaps are simulated. 
 
         Similarly, for SS, LOESS, DL and BS we compare the values in table \ref{tab:cv-statistics_itpl-methods} between the robustified and non-robust variant. We find that the robust variant does not differ strongly from the non-robust variant (unlike FR). Thus, we conclude that these methods do not have systematic failures.
 
         Regarding the LOESS, we observe in the figure \ref{fig:interpol/2x3_loess_robust} in plot (c) a strange peak between the first and second observation. This peak is due to the local weighting. In case of data gaps, the weights can attain non-intuitive values. For instance, the first data point in the plot, although adjacent to the peak, is given a low weight compared to the points to the right of the peak (for estimating the value at this peak).
 
-        In our experience, the DL handles data gaps well, but it may happen that the model describes the NDVI increase as abrupt. This however was fixed, by bounding the first derivative (c.f. section \ref{sec:itpl_param_optimizationissues}).
+        In our experience, the DL handles data gaps well, but it may happen that the model describes the NDVI increase as abrupt. This however was fixed, by bounding the first derivative (cf. section \ref{sec:itpl_param_optimizationissues}).
     }
 
     \subsection{Preselection}{\label{sec:itpl_preselection}
         We shall now justify our preselection of the interpolation methods tested in section \ref{sec:itpl_perfomance_assessment}. 
-        We decided against NW because it has systematic errors at peaks and valleys. Moreover, this method handles data gaps poorly (c.f. \ref{sec:discussion_itpl_data_gaps}). 
+        We decided against NW because it has systematic errors at peaks and valleys. Moreover, this method handles data gaps poorly (cf. \ref{sec:discussion_itpl_data_gaps}). 
         Moreover, we will not consider UK since the underlying assumptions are not met and therefore a systematic bias is introduced. On top of that, ML parameter finding occasionally fails.
         Also, we do not include the SG in the next selection, since we think of it as a special case of LOESS.
     }
@@ -42,10 +42,10 @@ XXX discuss results from table \ref{tab:methods_vs_yieldprediction}
         The question arises if we can build the correction model on the same year as we want to apply it on. Usually, a similar approach might carry the danger of overfitting. However, we have not used any ground truth at any point (until the evaluation). Instead, we estimated the ``true'' NDVI with the assumption \ref{true_ndvi_assumption} via OOB. Thus, we have bootstrapped our way out of the problem. Consequently, we reason that we can apply our method to a new (comparable) dataset and solve the correction again via this bootstrap.
     \subsection{Using Additional Covariates}{
         \todo{where does this section belong to? Chapter `NDVI Correction' or `Further Work'?}
-        In section \ref{sec:corr_data_table} we have only used the spectral data (and the observational NDVI calculated from them) as covariates. Since we have the weather data available (c.f. REF-SEC), it would be a small effort to incorporate it, together with statistics collected from it (i.e. GDD or `rainfall in the last 30 days'). 
+        In section \ref{sec:corr_data_table} we have only used the spectral data (and the observational NDVI calculated from them) as covariates. Since we have the weather data available (cf. REF-SEC), it would be a small effort to incorporate it, together with statistics collected from it (i.e., GDD or `rainfall in the last 30 days'). 
     
         We decided against using this data, because on the one hand we have the problem that we have practically too few observations (we observe only 5 years) and we expect the weather in our study region to be rather homogeneous which is suggested by the fact that the weather data published by Meteoswiss are for a grid with a resolution of 1 km. On the other hand, we want the underlying model not to learn improper relationships. For example, the model might automatically predict a high NDVI for a day in summer (detected by high GDD / many sunshine hours / high temperature) just because it is ``used'' to observing a lot of vegetation in summer. 
-        Including temporally (e.g., $P_{t-1}$ and $P_{t+1}$) and geographically adjacent pixels would likely improve performance. However, for simplicity, we omit it here\footnote{This is done for simplicity of understanding and using the model, since one would need to adapt to some convention of how to supply the data of adjacent pixels without redundancy (i.e. supplying $P_t$ multiple times).}.
+        Including temporally (e.g., $P_{t-1}$ and $P_{t+1}$) and geographically adjacent pixels would likely improve performance. However, for simplicity, we omit it here\footnote{This is done for simplicity of understanding and using the model, since one would need to adapt to some convention of how to supply the data of adjacent pixels without redundancy (i.e., supplying $P_t$ multiple times).}.
     }
 
     \subsection{Choose Interpolation Strategy}\label{sec:discussion_iplfstrategy-choose}
