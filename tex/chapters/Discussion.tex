@@ -1,4 +1,4 @@
-\chapter{Discussion}
+\chapter{Discussion}\label{sec:discussion}
     \todo[inline]{Here in the discussion, you should take up the points you mentioned in the introduction}
 
 
@@ -27,7 +27,7 @@
         Also, we do not include the SG in the next selection, since we think of it as a special case of LOESS.
     }
 
-    \subsection{Candidate Selection}{
+    \subsection{Candidate Selection}{\label{sec:itpl_candiate_selection}
         Given that DL convinces regarding most of the selected score functions in table \ref{tab:cv-statistics_itpl-methods} we will certainly investigate this method in chapter \ref{sec:corr}. Moreover, we see that the robustification mostly improved the score regarding the 50, 75, 85, and 90 \% Quantiles. Only for the outlier-sensitive score functions (RMSE and q95)\footnote{For the RMSE one outlier is enough to take away the usefulness of the statics, in the case of q95 it is enough if 5\% of the data are corrupt to break the statics.} we notice significant worsening (we consider the robust FS separately in section \ref{sec:discussion_itpl_data_gaps}). Consequently, we will also use the robustification in section \ref{sec:corr}.
         Not wanting to rely on the form assumptions of the DL, we further choose a non-parametric method for further consideration. Despite the LOESS slightly dominating the SS in table \ref{tab:cv-statistics_itpl-methods}, we choose the SS. This is due to the strange behavior of the LOESS in case of data gaps (see section \ref{sec:discussion_itpl_data_gaps}) and the good interpretability of the SS using the minimization function \refeq{eq:ss}.
     }
@@ -37,17 +37,7 @@
 
 XXX discuss results from table \ref{tab:methods_vs_yieldprediction}
 
-\section{NDVI Correction}{
-    \subsection{Bootstrap}
-        The question arises if we can build the correction model on the same year as we want to apply it on. Usually, a similar approach might carry the danger of overfitting. However, we have not used any ground truth at any point (until the evaluation). Instead, we estimated the ``true'' NDVI with the assumption \ref{true_ndvi_assumption} via OOB. Thus, we have bootstrapped our way out of the problem. Consequently, we reason that we can apply our method to a new (comparable) dataset and solve the correction again via this bootstrap.
-    \subsection{Using Additional Covariates}{
-        \todo{where does this section belong to? Chapter `NDVI Correction' or `Further Work'?}
-        In section \ref{sec:corr_data_table} we have only used the spectral data (and the observational NDVI calculated from them) as covariates. Since we have the weather data available (cf. REF-SEC), it would be a small effort to incorporate it, together with statistics collected from it (i.e., GDD or `rainfall in the last 30 days'). 
-    
-        We decided against using this data, because on the one hand we have the problem that we have practically too few observations (we observe only 5 years) and we expect the weather in our study region to be rather homogeneous which is suggested by the fact that the weather data published by Meteoswiss are for a grid with a resolution of 1 km. On the other hand, we want the underlying model not to learn improper relationships. For example, the model might automatically predict a high NDVI for a day in summer (detected by high GDD / many sunshine hours / high temperature) just because it is ``used'' to observing a lot of vegetation in summer. 
-        Including temporally (e.g., $P_{t-1}$ and $P_{t+1}$) and geographically adjacent pixels would likely improve performance. However, for simplicity, we omit it here\footnote{This is done for simplicity of understanding and using the model, since one would need to adapt to some convention of how to supply the data of adjacent pixels without redundancy (i.e., supplying $P_t$ multiple times).}.
-    }
-
+\section{NDVI Correction}{\label{sec:discussion_corr}
     \subsection{Choose Interpolation Strategy}\label{sec:discussion_iplfstrategy-choose}
         \todo[inline]{table mit OLS SCL als sieger diskutieren}
         if we use no-correctionXss-rob instead of OLS-SCLXss we loose $(0.148-0.14)/0.148 = 5,4\%$ of the information.
@@ -62,6 +52,16 @@ XXX discuss results from table \ref{tab:methods_vs_yieldprediction}
         \end{Nenumerate}
         \todo[inline]{even in a perfect world the NDVI curve only holds a fraction of the information avialbe}
     }
+
+    \subsection{Bootstrap}
+        The question arises if we can build the correction model on the same year as we want to apply it on. Usually, a similar approach might carry the danger of overfitting. However, we have not used any ground truth at any point (until the evaluation). Instead, we estimated the ``true'' NDVI with the assumption \ref{true_ndvi_assumption} via OOB. Thus, we have bootstrapped our way out of the problem. Consequently, we reason that we can apply our method to a new (comparable) dataset and solve the correction again via this bootstrap.
+    \subsection{Using Additional Covariates}{
+        \todo{where does this section belong to? Chapter `NDVI Correction' or `Further Work'?}
+        In section \ref{sec:corr_data_table} we have only used the spectral data (and the observational NDVI calculated from them) as covariates. Since we have the weather data available (cf. REF-SEC), it would be a small effort to incorporate it, together with statistics collected from it (i.e., GDD or `rainfall in the last 30 days'). 
+
+        We decided against using this data, because on the one hand we have the problem that we have practically too few observations (we observe only 5 years) and we expect the weather in our study region to be rather homogeneous which is suggested by the fact that the weather data published by Meteoswiss are for a grid with a resolution of 1 km. On the other hand, we want the underlying model not to learn improper relationships. For example, the model might automatically predict a high NDVI for a day in summer (detected by high GDD / many sunshine hours / high temperature) just because it is ``used'' to observing a lot of vegetation in summer. 
+        Including temporally (e.g., $P_{t-1}$ and $P_{t+1}$) and geographically adjacent pixels would likely improve performance. However, for simplicity, we omit it here\footnote{This is done for simplicity of understanding and using the model, since one would need to adapt to some convention of how to supply the data of adjacent pixels without redundancy (i.e., supplying $P_t$ multiple times).}.
+}
 }
 
 \todo[inline]{You already capture the "main" structure of your thesis with the interpolation and the NDVi correction sections. Can you combine them both in a "synthesis" subsection at the end of the discussion?}

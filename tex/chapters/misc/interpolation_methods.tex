@@ -193,7 +193,7 @@
 			\end{cases} ,$$
 		where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(t_i)$.\footnote{\label{footnote:LOESS}If too many weights are set to zero, we might end up considering not enough observations and thus get a singular design-matrit (for the least squares estimation). Therefore, we substitute $h_i$ with $1.01 h_i$, so that the observation on the boundary of $B_{h_i}(t_i)$ does not get completely ignored. But we also have to assure that $\alpha$ is big enough.} So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
 
-		\subsubsection{Differences between the Robust LOESS and the SG?}
+		\subsubsection{Differences between the Robust LOESS and the SG}
 		The LOESS smoother takes a fraction of points instead of a fixed number and therefore automatically adapts to the size of the data we wish to interpolate. However, we run into the danger of considering too little observations, since the estimation breaks down if $\lceil \alpha n\rceil < d+1$.\footnoteref{footnote:LOESS}
 		Furthermore, LOESS gives less weight to points further away. This yields a "smoother" estimate, since when we slide the window (e.g., for estimating the next value) an influential point at the border does not suddenly get zero weight from being weighted equally before.
 		Finally, the LOESS also can be used for non-equidistant data and allows for arbitrary interpolation.

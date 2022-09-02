@@ -21,24 +21,39 @@ On the other hand, assumptions are made about more abstract properties of the cu
 In this thesis, we will discuss strengths and weaknesses of these interpolation methods and evaluate them with respect to NDVI interpolation. For this purpose, we use the Sentinel 2 satellite image {TS} and crop yield maps of different fields of different wheat species on a farm in Witzwil, Switzerland over the years 2017-2021.
 To improve interpolation methods, we generalize and test an iterative technique that makes interpolations more robust to outliers by weighting them less. Additionally, we determine how data gaps affect the different interpolation methods. Furthermore, using NDVI as an example, we present a general interpolation procedure that utilizes additional information to correct the target variable with an uncertainty estimate and then interpolates. Thus, we no longer have to filter the observations a priori via the SCL, but instead correct the observed NDVI and weight the observations via the estimated uncertainties. Combining interpolation methods with the NDVI correcting models produces 28 interpolation strategies. We benchmark these against an objective quality measure, which assumes that the better an NDVI TS models crop growth, the more appropriate it is for estimating crop yield.
 
-Die Hauptaufgaben, welchen wir in dieser Thesis nachgehen wollen lauten also:
+
+\bigskip The research questions, which are pursued in this thesis, are:
 \begin{Nenumerate}
-    \item 1 rezensiere und bewerte verwendete Interpolationsmethoden
-    \item 2 Wie kann mit fehlerhaften daten umgegangen werden?
-    \item 3 Wie beinflussen datenlücken die Interpolation?
-    \item 4 Wie soll man mit datenlücken umgehen?
-    \item 5 Wie kann man Intepolationsstrategien vergleichen?
+    \item 1 Which interpolation methods are used in the context of NDVI and what are their advantages and disadvantages?
+\item 2 How may contaminated data be dealt with?
+    \item 3 How do data gaps affect interpolation?
+\item 4 How to deal with data gaps?
+    \item 5 How can we recognize a good interpolation of the NDVI?
 \end{Nenumerate}
 
-Roadmap ...
-% 1 in \ref{sec:itpl}
-% 2 robustification \ref{sec:loess_robustify}
-% 3 discussed in \ref{sec:discussion_itpl_data_gaps}
-% 4 utilize observations filterd before and estimating how reliable each of them are \ref{sec:corr}
-% 5 \ref{sec:ndvi_corr_eval}
+% Roadmap:
+The thesis is structured as follows: After presenting the available data, illustrating challenges and defining different concepts in chapter \ref{sec:data_methods}, we turn to the two main blocks of this thesis. 
+On the first, in section \ref{sec:itpl} we study parametric and non-parametric interpolation methods (question i.), generalize an iterative robustification technique (question ii.), and show a way to evaluate interpolations with out-of-bag residuals (question iii.). In section \ref{sec:discussion_itpl_data_gaps} we discuss how different interpolation methods respond to data gaps, and in section \ref{sec:itpl_preselection} we preselect interpolation methods. We evaluate this preselection in \ref{sec:results_itpl} and select two candidates from different interpolation methods in section \ref{sec:itpl_candiate_selection}.
+For the second, we attempt to correct contaminated data with statistical models in section \ref{sec:corr} (question ii.) and utilize previously ignored observations, which we hope will further reduce data gaps (question iv.). In addition, we compare different interpolation strategies using a vegetation-oriented quality measure (question v.) and describe the results in section \ref{sec:results_ndvi_corr}. Based on these results, we argue what the best interpolation strategy is in section \ref{sec:discussion_corr}. In addition, we justify why our NDVI correction can be understood as unsupervised learning and why we relied only on satellite imagery and not on meterological data for the NDVI correction.
+Our conclusions of this thesis, recommendations, as well as an outlook on future work is given in chapter \ref{sec:Conclusion}. 
+
+
+% und Definieren verschiedene Konzepte. Darunter eine transformation der Zeitachse, welche datenlücken im Winter zusammenschrumpfen lässt (Frage iv.). 
+
+
 
 
 %smoothing:   ``Similarly, smoothing the {TS} of satellite data is helpful to address inconsistency in observation frequency and timing due to clouds and other sensor artefacts \cite{skakunWinterWheatYield2019}''
+
+
+
+
+
+
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -66,6 +81,24 @@ Roadmap ...
 % my contribuition:
 % In dieser Thesis werden wir stärken und schwächen von diesen gängigen Interpolationsmethoden diskutieren und hinsichtlich der NDVI Interpolation bewerten. Dafür benutzen wir die S2 Satellitenbilder Zeitreihe und Ernteertragskarten von verschiedenen Feldern verschiedenen Weizenarten auf einer Farm in Witzwil in der Schweiz über die Jahre 2017-2021.
 % Um die Interpolationmethoden zu verbessern, verallgemeinern und testen wir eine iterativen Technik, die Interpolationen robuster gegen Ausreisser machen soll, indem sie weniger Gewicht bekommen. Zudem ermitteln wir, wie Datenlücken die verschiedenen Interpolationmethoden beeinflussen. Ausserdem stellen wir am Beispiel des NDVI eine generelle Interpolations-prozedur vor, welche anhand von zusätzlichen Informationen die Zielvariable mit einer Unsicherheitsschätzung korrigiert und anschliessend interpoliert. Somit müssen wir die Observationen nicht mehr a priori via der SCL filtern \textcolor{gray}, sondern korrigieren den beobachteten NDVI und gewichten die Beobachtungen via der geschätzten Unsicherheiten. Durch die Kombination von Interpolationsmethoden mit den NDVI korrigierenden Modellen ergebn sich somit 28 Intepolationsstrategien. Diese benchmarken wir mit einem objektiven Qualitätsmass, welches annimmt, dass je besser eine NDVI TS das Pflanzenwachstum modelliert, desto geeigneter ist sie, um den Ernteertrag zu schätzen. 
+
+
+% Die Hauptaufgaben, welchen wir in dieser Thesis nachgehen wollen lauten also:
+% \begin{Nenumerate}
+%     \item 1 Was sind bestehende Interpolationsmethoden und was sind ihre Vor- und Nachteile?
+%     \item 2 Wie kann mit fehlerhaften daten umgegangen werden?
+%     \item 3 Wie beinflussen datenlücken die Interpolation?
+%     \item 4 Wie soll man mit datenlücken umgehen?
+%     \item 5 Woran erkennen wir eine gute interpolatin des NDVI?
+% \end{Nenumerate}
+
+% Die struktur dieser Thesis wird durch zwei Hauptthemen geprägt. Nachdem wir in Kapitel \ref{sec:data_methods} die datenlage aufzeigen,  Herrausforderungen illustrieren und verschiedene konzepte definieren, wenden wir uns den zwei Hauptblöcken dieser Thesis zu. 
+
+% Als erstes studieren wir in Kapitel \ref{sec:itpl} parametrische und nicht-parametrische Interpolationsmethoden (Frage i.), verallgemeinern eine iterative robustifikationstechnik (frage ii.) und zeigen eine Möglichkeit zur bewertung von Interpolationen mit out-of-bag residuals auf (frage iii.). In Sektion \ref{sec:discussion_itpl_data_gaps} diskutieren wir, wie verschiedene interpolationmethoden auf datenlücken reagieren und treffen in sektion \ref{sec:itpl_preselection} wir eine vorauswahl an interpolationsmethoden. Die Bewertung für diese vorauswahl beschreiben in \ref{sec:results_itpl} und wählen in sektion \ref{sec:itpl_candiate_selection} von den verschiednen interpolationsmethoden zwei kandidaten.
+
+% Als zweites versuchen wir in Kapitel \ref{sec:corr} fehlerhafte daten mit statistischen modellen zu korrigieren (frage ii.) und utilisieren zuvor ignorierte beobachtungen, wodurch wir uns eine weitere reduktion von Datenlücken erhoffen (frage iv.). Darüber hinaus vergleichen wir mit einem vegetationsorientiertm qualitätsmaß (frage v.) verschiedene interpolationsstrategien und beschreiben die resultate in sektion \ref{sec:results_ndvi_corr}. Auf basis dieser resultate argumentieren wir sektion \ref{sec:discussion_corr} die beste interpolationsstrategie. Zudem rechtfertigen wir, weshalb unsere NDVI korrektur als unsupervized learning verstanden werden kann und weshalb wir für die NDVI korrektur nur die Satelliten bilder und nicht meterologische daten verwendet haben.
+
+% Unsere zusammenfassende Schlussfolgerungen dieser Thesis, sowie ein Ausblick über zukünftige Arbeit wird in kapitel \ref{sec:Conclusion} gegeben. 
 
 
 %%% Local Variables: 
