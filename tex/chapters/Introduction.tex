@@ -1,40 +1,38 @@
 \chapter{Introduction}
 
-Remote sensing aims to measure target variables efficiently from a distance. In this context, satellite imagery Time Series ({TS}) such as the imagery {TS} of the multi-spectral Sentinel 2 satellites freely distributed by the European Space Agency are used.
+Remote sensing aims to measure target variables efficiently from a distance. In this context, satellite imagery Time Series ({TS}) such as the imagery {TS} of the multi-spectral Sentinel 2 satellites freely distributed by the European Space Agency are used \citep{esaSentinel22022}.
 % stakeholders + applications  
-Large scale monitoring of forest and agricultural vegetation dynamics is of great interest to authorities, insurance companies and environmental and climate researchers. Examples include crop classification for subsidizing farmers and the creation of crop models for estimating crop yields or nitrogen concentrations. 
-    % Season Start (start of spring) (community name: land surface plant phenology)
+Large scale monitoring of forest and agricultural vegetation dynamics is of great interest to authorities, insurance companies and environmental and climate researchers. Examples include crop classification for subsidizing farmers \citep{henitsSentinel2EnablesNationwide2022} and the creation of crop models for estimating crop yields or nitrogen concentrations \citep{couraultSTICSCropModel2021,perichCropNitrogenRetrieval2021}. 
+% Season Start (start of spring) (community name: land surface plant phenology)
 % NDVI
-In order to transform the high dimensional satellite images into easily interpretable metrics, spectral indices such as the Normalized Difference Vegetation Index (NDVI) are used. The NDVI serves as a proxy for vegetation density, and the corresponding {TS} reflects the vegetation development. 
+In order to transform the high dimensional satellite images into easily interpretable metrics, spectral indices such as the Normalized Difference Vegetation Index (NDVI) are used \citep{rouseMonitoringVernalAdvancement1974}. The NDVI serves as a proxy for vegetation density (or chlorophyll content to be more presize), and thus the corresponding {TS} reflects the vegetation development. 
 % S2 issues (clouds ...)
-The quality of a satellite image however depends on atmospheric conditions and thus in case of a dense cloud cover the information content derived from the NDVI is impaired. Therefore, the European Space Agency also provides a Scene Classification Layer (SCL), which provides additional metadata about what is observed (e.g., shadows, clouds, vegetation, etc.). So when extracting the NDVI {TS} from the Sentinel 2 satellite imagery {TS}, we can filter out the corrupted observations using the SCL classification. However, due to this filtration it may occur that we have no observations for several weeks, especially in winter, or that some observations are wrongly classified by the SCL (e.g., as vegetation) and thus result in an erroneous NDVI. Consequently, the main challenge is to interpolate an NDVI {TS}, which can contain both large data gaps and outliers. 
+The quality of a satellite image however depends on atmospheric conditions and thus in case of a dense cloud cover the information content derived from the NDVI is impaired. Therefore, the European Space Agency also provides a Scene Classification Layer (SCL), which provides additional metadata about what is observed (e.g., shadows, clouds, vegetation, etc.) \citep{esaLevel2AAlgorithmOverview2022}. So when extracting the NDVI {TS} from the Sentinel 2 satellite imagery {TS}, we can filter out the corrupted observations using the SCL classification. However, due to this filtration it may occur that we have no observations for several weeks, especially in winter, or that some observations are wrongly classified by the SCL (e.g., as vegetation) and thus result in an erroneous NDVI. Consequently, the main challenge is to interpolate an NDVI {TS}, which can contain both large data gaps and outliers. 
 
 % state-of-the-art
 There are several approaches to adequately address this issue. One is to look at the observed evolution of vegetation density and assume its bell shape for the NDVI {TS} given the strong correlation between NDVI and vegetation density. Approaches to model this include a 2nd order Fourier approximation \citep{stockliEuropeanPlantPhenology2004} or a Double Logistic function \citep{beckImprovedMonitoringVegetation2006}.
 On the other hand, assumptions are made about more abstract properties of the curve, such as smoothness or the like. We divide these into local and global approaches. Nadaraya-Watson \citep{strbacEstimationEvapotrasnpirationUrban2017}, Savitzky-Golay Filter \citep{chenSimpleMethodReconstructing2004a} and Locally Reweighted Regression \citep{omoriAssessmentPaddyFields2021} use a sliding window to interpolate the {TS} stepwise. Global methods like B-Splines \citep{gurungPredictingEnhancedVegetation2009} and Smoothing Splines \citep{caiPerformanceSmoothingMethods2017} reduce the squares of all residuals simultaneously, and Universal Kriging fits a Gaussian process to the data \citep{chandolaScalableTimeSeries2010}.
-
-
 % SS defined in \cite{cravenSmoothingNoisyData1978}
 
-
 % my contribuition:
-In this thesis, we will discuss strengths and weaknesses of these interpolation methods and evaluate them with respect to NDVI interpolation. For this purpose, we use the Sentinel 2 satellite image {TS} and crop yield maps of different fields of different wheat species on a farm in Witzwil, Switzerland over the years 2017-2021.
-To improve interpolation methods, we generalize and test an iterative technique that makes interpolations more robust to outliers by weighting them less. Additionally, we determine how data gaps affect the different interpolation methods. Furthermore, using NDVI as an example, we present a general interpolation procedure that utilizes additional information to correct the target variable with an uncertainty estimate and then interpolates. Thus, we no longer have to filter the observations a priori via the SCL, but instead correct the observed NDVI and weight the observations via the estimated uncertainties. Combining interpolation methods with the NDVI correcting models produces 28 interpolation strategies. We benchmark these against an objective quality measure, which assumes that the better an NDVI TS models crop growth, the more appropriate it is for estimating crop yield.
+In this thesis, we will discuss strengths and weaknesses of these Interpolation Methods ({{IM}}s) and evaluate them with respect to NDVI interpolation. For this purpose, we use the Sentinel 2 satellite image {TS} and crop yield maps of different fields of different wheat species on a farm in Witzwil, Switzerland over the years 2017-2021.
+To improve {{IM}}s, we generalize and test an iterative technique that makes interpolations more robust to outliers by weighting them less. Additionally, we determine how data gaps affect the different {{IM}}s. Furthermore, using NDVI as an example, we present a general interpolation procedure that utilizes additional information to correct the target variable with an uncertainty estimate and then interpolates. Thus, we no longer have to filter the observations a priori via the SCL, but instead correct the observed NDVI and weight the observations via the estimated uncertainties. Combining {{IM}}s with the NDVI correcting models produces 28 Interpolation Strategies ({{ISs}}). We benchmark these against an objective quality measure, which assumes that the better an NDVI TS models crop growth, the more appropriate it is for estimating crop yield.
 
-
-\bigskip The research questions, which are pursued in this thesis, are:
+\bigskip
+The research questions, which are pursued in this thesis, are:
 \begin{Nenumerate}
-    \item 1 Which interpolation methods are used in the context of NDVI and what are their advantages and disadvantages?
-\item 2 How may contaminated data be dealt with?
-    \item 3 How do data gaps affect interpolation?
-\item 4 How to deal with data gaps?
-    \item 5 How can we recognize a good interpolation of the NDVI?
+    \item Which {{IM}}s are used in the context of NDVI and what are their advantages and disadvantages?
+\item How may contaminated data be dealt with?
+    \item How do data gaps affect interpolation?
+\item How to deal with data gaps?
+    \item How can we recognize a good interpolation of the NDVI?
 \end{Nenumerate}
+\bigskip
 
 % Roadmap:
 The thesis is structured as follows: After presenting the available data, illustrating challenges and defining different concepts in chapter \ref{sec:data_methods}, we turn to the two main blocks of this thesis. 
-On the first, in section \ref{sec:itpl} we study parametric and non-parametric interpolation methods (question i.), generalize an iterative robustification technique (question ii.), and show a way to evaluate interpolations with out-of-bag residuals (question iii.). In section \ref{sec:discussion_itpl_data_gaps} we discuss how different interpolation methods respond to data gaps, and in section \ref{sec:itpl_preselection} we preselect interpolation methods. We evaluate this preselection in \ref{sec:results_itpl} and select two candidates from different interpolation methods in section \ref{sec:itpl_candiate_selection}.
-For the second, we attempt to correct contaminated data with statistical models in section \ref{sec:corr} (question ii.) and utilize previously ignored observations, which we hope will further reduce data gaps (question iv.). In addition, we compare different interpolation strategies using a vegetation-oriented quality measure (question v.) and describe the results in section \ref{sec:results_ndvi_corr}. Based on these results, we argue what the best interpolation strategy is in section \ref{sec:discussion_corr}. In addition, we justify why our NDVI correction can be understood as unsupervised learning and why we relied only on satellite imagery and not on meterological data for the NDVI correction.
+On the first, in section \ref{sec:itpl} we study parametric and non-parametric {{IM}}s (question i.), generalize an iterative robustification technique (question ii.), and show a way to evaluate interpolations with out-of-bag residuals (question iii.). In section \ref{sec:discussion_itpl_data_gaps} we discuss how different {{IM}}s respond to data gaps, and in section \ref{sec:itpl_preselection} we preselect {{IM}}s. We evaluate this preselection in \ref{sec:results_itpl} and select two candidates from different {{IM}}s in section \ref{sec:itpl_candiate_selection}.
+For the second, we attempt to correct contaminated data with statistical models in section \ref{sec:corr} (question ii.) and utilize previously ignored observations, which we hope will further reduce data gaps (question iv.). In addition, we compare different {{ISs}} using a vegetation-oriented quality measure (question v.) and describe the results in section \ref{sec:results_ndvi_corr}. Based on these results, we argue what the best {{IS}} is in section \ref{sec:discussion_corr}. In addition, we justify why our NDVI correction can be understood as unsupervised learning and why we relied only on satellite imagery and not on meterological data for the NDVI correction.
 Our conclusions of this thesis, recommendations, as well as an outlook on future work is given in chapter \ref{sec:Conclusion}. 
 
 
@@ -44,61 +42,6 @@ Our conclusions of this thesis, recommendations, as well as an outlook on future
 
 
 %smoothing:   ``Similarly, smoothing the {TS} of satellite data is helpful to address inconsistency in observation frequency and timing due to clouds and other sensor artefacts \cite{skakunWinterWheatYield2019}''
-
-
-
-
-
-
-
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%    G E R M A N 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Remote sensing zielt darauf ab, ziel-Grössen effizient aus der Entfernung messen zu können. Hier finden Satellitenbilder Zeitreihen Verwendung, wie etwa die von der europäischen Raum-Agentur (ESA) kostenlos veröffentlichten Bilder Zeitreihen der Multi-spektralen Sentinel 2 (S2) Satelliten.
-% % stakeholders + applications  
-% Die Vegetationsentwicklung von Wäldern und landwirtschaftlich relevanten Flächen im grossen Stiele zu überwachen, ist unter anderem für public angents, Versicherungen, Umwelt- und Klimaforscher von grossem Interesse. Mögliche Ziele sind hierbei eine crop Klassifizierung für das Subventionieren von Bauern oder das Erstellen von Pflanzenmodellen, um Ernteertrag oder Stickstoffkonzentration zu schätzen. 
-%     % Season Start (start of spring) (community name: land surface plant phenology)
-% % NDVI
-% Um die hochdimensionalen Satellitenbilder in leicht interpretierbare Grössen zu transformieren, werden spektrale Indizes, wie der Normalized Difference Vegetation Index (NDVI) benutzt. Dieser ist ein Proxy für die Vegetationsdichte und die korrespondierende Zeitreihe spiegelt somit die Vegetationsentwicklung wider. 
-% % S2 issues (clouds ...)
-% Der Informationsgehalt von einem Satellitenbild ist jedoch abhängig vom Zustand der Atmosphäre und so trägt der davon abgeleitete NDVI bei einer dichten Wolkendecke keine Informationen über die Vegetation am Boden. Daher liefert die ESA zusätzlich eine Scene Classification Layer (SCL), welche Aufschluss gibt, was beobachtet wird (z.B Schatten, Wolken, Vegetation, etc.). So können wir bei der Extraktion der NDVI Zeitreihe aus der S2 Satellitenbilder Zeitreihe, anhand der SCL Klassifizierung, die uninformativen Beobachtungen herausfiltern. Durch diese Filtration kann es jedoch vorkommen, dass wir besonders im Winter über mehrere Wochen keine Observationen haben, oder dass manche Beobachtungen zu Unrecht durch die SCL als informativ bewertet wird (z.B. als Vegetation) und somit in einem fehlerhaften NDVI resultiert. 
-% Die heaupt herausforderungn sind also eine NDVI zeitreihe zu interpolieren, welche sowohl große datenlücken als auch ausreißer beinhalten kann. 
-
-% % state-of-the-art
-% Es giebt verschiedene Herangehensweisen diesem Notstand adequat zu begegnen. Zum hat man sich an der beobachteten Entwicklung der Vegetationsdichte orientiet und auf grund der starken korrelation zwischen NDVI und vegetationsdichte eine Glockenform der NDVI Zeitreihe angenommen. Ansätze diese zu modellieren beinhalten eine Fourier Approximation 2ter Ordnung REF oder einer Double Logistic funktion REF. Zum anderem trifft man annahmen über abstraktere eigenschaften der kurve. Diese unterteilein wir in Lokale und Globale ansätze. NW, SG und LOESS verwenden ein sliding Fenster um stückweise die Zeitreihe zu interpolieren. Globale methoden wie BS und SS verwenden reduzieren die quadrate aller residuen simultan und GK fitted ein Gaussaischen Process zu den daten.
-    % Diese beiden Probleme versucht man gegenwärtig mit Interpolation und Smoothing zu lösen. 
-    % Parametrische Lösungsansätze beinhalten die approximation durch eine Fourierreihe \citep{stockliEuropeanPlantPhenology2004} oder eine Double Logistic funktion, welche starke annahmen über die Form des NDVI trifft \citep{beckImprovedMonitoringVegetation2006}.
-    % Nicht-parametrische methoden sind hingegen flexibler. Darunter zählt der Savitzky-Golay Filter \citep{chenSimpleMethodReconstructing2004a} und seine verallgemeinerung die Locally weighted Regression \citep{omoriAssessmentPaddyFields2021} 
-    % der Nadaraya-Watson schätzer \citep{strbacEstimationEvapotrasnpirationUrban2017} 
-    % sowie das Universal Kriging (auch bekannt als Gaussian Process Regression) \citep{chandolaScalableTimeSeries2010} 
-    % Das spline fitting wird mit den B-splines \citep{gurungPredictingEnhancedVegetation2009} und den Smoothing Splines \citep{caiPerformanceSmoothingMethods2017}
-
-% my contribuition:
-% In dieser Thesis werden wir stärken und schwächen von diesen gängigen Interpolationsmethoden diskutieren und hinsichtlich der NDVI Interpolation bewerten. Dafür benutzen wir die S2 Satellitenbilder Zeitreihe und Ernteertragskarten von verschiedenen Feldern verschiedenen Weizenarten auf einer Farm in Witzwil in der Schweiz über die Jahre 2017-2021.
-% Um die Interpolationmethoden zu verbessern, verallgemeinern und testen wir eine iterativen Technik, die Interpolationen robuster gegen Ausreisser machen soll, indem sie weniger Gewicht bekommen. Zudem ermitteln wir, wie Datenlücken die verschiedenen Interpolationmethoden beeinflussen. Ausserdem stellen wir am Beispiel des NDVI eine generelle Interpolations-prozedur vor, welche anhand von zusätzlichen Informationen die Zielvariable mit einer Unsicherheitsschätzung korrigiert und anschliessend interpoliert. Somit müssen wir die Observationen nicht mehr a priori via der SCL filtern \textcolor{gray}, sondern korrigieren den beobachteten NDVI und gewichten die Beobachtungen via der geschätzten Unsicherheiten. Durch die Kombination von Interpolationsmethoden mit den NDVI korrigierenden Modellen ergebn sich somit 28 Intepolationsstrategien. Diese benchmarken wir mit einem objektiven Qualitätsmass, welches annimmt, dass je besser eine NDVI TS das Pflanzenwachstum modelliert, desto geeigneter ist sie, um den Ernteertrag zu schätzen. 
-
-
-% Die Hauptaufgaben, welchen wir in dieser Thesis nachgehen wollen lauten also:
-% \begin{Nenumerate}
-%     \item 1 Was sind bestehende Interpolationsmethoden und was sind ihre Vor- und Nachteile?
-%     \item 2 Wie kann mit fehlerhaften daten umgegangen werden?
-%     \item 3 Wie beinflussen datenlücken die Interpolation?
-%     \item 4 Wie soll man mit datenlücken umgehen?
-%     \item 5 Woran erkennen wir eine gute interpolatin des NDVI?
-% \end{Nenumerate}
-
-% Die struktur dieser Thesis wird durch zwei Hauptthemen geprägt. Nachdem wir in Kapitel \ref{sec:data_methods} die datenlage aufzeigen,  Herrausforderungen illustrieren und verschiedene konzepte definieren, wenden wir uns den zwei Hauptblöcken dieser Thesis zu. 
-
-% Als erstes studieren wir in Kapitel \ref{sec:itpl} parametrische und nicht-parametrische Interpolationsmethoden (Frage i.), verallgemeinern eine iterative robustifikationstechnik (frage ii.) und zeigen eine Möglichkeit zur bewertung von Interpolationen mit out-of-bag residuals auf (frage iii.). In Sektion \ref{sec:discussion_itpl_data_gaps} diskutieren wir, wie verschiedene interpolationmethoden auf datenlücken reagieren und treffen in sektion \ref{sec:itpl_preselection} wir eine vorauswahl an interpolationsmethoden. Die Bewertung für diese vorauswahl beschreiben in \ref{sec:results_itpl} und wählen in sektion \ref{sec:itpl_candiate_selection} von den verschiednen interpolationsmethoden zwei kandidaten.
-
-% Als zweites versuchen wir in Kapitel \ref{sec:corr} fehlerhafte daten mit statistischen modellen zu korrigieren (frage ii.) und utilisieren zuvor ignorierte beobachtungen, wodurch wir uns eine weitere reduktion von Datenlücken erhoffen (frage iv.). Darüber hinaus vergleichen wir mit einem vegetationsorientiertm qualitätsmaß (frage v.) verschiedene interpolationsstrategien und beschreiben die resultate in sektion \ref{sec:results_ndvi_corr}. Auf basis dieser resultate argumentieren wir sektion \ref{sec:discussion_corr} die beste interpolationsstrategie. Zudem rechtfertigen wir, weshalb unsere NDVI korrektur als unsupervized learning verstanden werden kann und weshalb wir für die NDVI korrektur nur die Satelliten bilder und nicht meterologische daten verwendet haben.
-
-% Unsere zusammenfassende Schlussfolgerungen dieser Thesis, sowie ein Ausblick über zukünftige Arbeit wird in kapitel \ref{sec:Conclusion} gegeben. 
 
 
 %%% Local Variables: 

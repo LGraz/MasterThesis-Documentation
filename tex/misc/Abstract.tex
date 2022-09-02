@@ -21,32 +21,6 @@ Instructions and a codebase for reproducibility of the results, as well as an R 
 
 
 
-
-%%  G E R M A N --------------------------------------------------
-% %% Intro
-% Multispektrale Satellitenbilder Zeitreihen (TS) werden benutzt um Zeitreihen von spektralen indizies am Boden zu simulieren. So wird der Zeitliche Verlauf des Normalized Difference Vegetation Index (NDVI) --- ein Proxy für die Vegetationsdichte --- betrachtet, um Informationen über das Vegetationsentwicklung zu gewinnen. 
-% %% Problem Illustration
-% Aufgrund von atmosphärischen effekten (z.B. Wolken oder Schatten) entspricht das durch den Satelliten Beobachtete nicht zwingend dem Bodensignal und daher versuchen traditionelle Ansätze solch korrumpierte Beobachtungen herauszufiltern, bevor sie den NDVI extrahieren und anschließend interpolieren. Nach der Filtration verbliebenen fehlerhafte Beobachtung und entstandene Datenlücken, zählen zu den beiden Herausforderungen für die Interpolation, denen wir in dieser Thesis entgegentreten.
-
-% %% Our Setting
-% Dazu verwenden wir Ernteertragskarten der Jahre 2017-2021 verschiedener Weizensorten von einer Farm in der Schweiz und von der Europäischen Raum Agentur veröffentlichten korrespondierenden Sentinel 2 Satellitenbild Zeitreihen inklusive der  Scene Classification Layer (SCL). 
-
-% %% NDVI itpl
-% Wir geben ein durch Benchmarks gestütztes Review für verschiedene interpolationsmethoden und entscheiden uns für Smoothing Splines als nicht-parametrische (flexible) Methode und für die Double Logistic Approximation als parametrische Methode mit impliziten Formannahmen. Darüber hinaus verallgemeinern wir eine iterative Technik, die interpolationmethoden robuster gegen Ausreisser macht, indem sie diese geringer gewichtet. In den meisten Fällen reduzierte diese robustifizierung die 50\% bzw. 75\% Quantile der absoluten out-of-bag residuals erfolgreich. %oder% Diese robustifizierungstechnik überzeugte indem sie die 50\% bzw. 75\% quantile der absoluten out-of-bag residuals erfolgreich reduzierte
-
-% %% NDVI corr. 
-% Zudem stellen wir am Beispiel des NDVI eine generelle Interpolation-Prozedur vor, welche anhand von zusätzlichen Informationen die Zielvariable mit einer Unsicherheitsschätzung korrigiert und anschliessend gewichtet interpoliert. Somit filtern wir nicht mithilfe der SCL sondern gewichten Observationen nach ihrer Zuverlässigkeit. Durch die Verwendung von verschiedenen Interpolationsmethoden und Korrekturmodellen entstehen somit 28 Interpolationsstrategien. Wir nehmen an dass je besser die resultirende NDVI Zeitreihe das Pflanzenwachstum modelliert, desto geeigneter ist sie, um den Ernteertrag zu schätzen. Die sich daraus ergebene beste interpolationsstrategie verwendet Smoothing Splines und Korrigiert den NDVI mit Unsicherheitsschätzung mit einem einfachen linearen modell, welches nur den beobachteten NDVI und die zugehörige SCL klasse verwendet. Diese strategie führt zu NDVI zeitreihen, welche 5\% mehr der varianz der ertragsschätzung erklären können als die NDVI zeitreihe via konventionell Smoothing Splines
-
-% %% R - package
-% Anleitungen und eine Codebase für die Reproduzierbarkeit der Resultate, sowie ein R-Packet, um die vorgestellte generelle Interpolation-Prozedur für den Anwender zugänglich zu machen, sind mitgeliefert. 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-% - müssen die Ausgangslage (1-2 Sätze) und 
-% - die Fragestellung (1-2 Sätze) der Arbeit klar werden, 
-% - sollten wichtige Informationen zu Material und Methoden gegeben werden (Art, Standorte, Besonderheiten; 2-3 Sätze), 
-% - werden die wichtigen Ergebnisse zusammengefasst (4-5 Sätze), 
-% - werden die Hauptpunkte der Diskussion wiedergegeben (1-2 Sätze).
-
 %%% Local Variables: 
 %%% mode: latex
 %%% TeX-master: "MasterThesisSfS"

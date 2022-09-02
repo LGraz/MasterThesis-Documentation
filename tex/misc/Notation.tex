@@ -26,6 +26,10 @@ $X_{[i,:]}$ 	& the $i$-th row of $X$\\
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
 TS	
 		& Time Series. \\
+IM	
+		& Interpolation Method. That is a simple\footnote{I.e., no combination of various methods.} method that interpolates data $(t_i,y_i)_{i = 1,\dots ,n}$\\ and yields a function $f(t)=y$, approximating the data. 
+IS	
+		& Interpolation Strategy. This is the category of functions that map $(t_i,y_i)_{i=1,\dots,n}$ to a function $f(t)=y$, approximating the data. So a IS describes a strategy of how to arrive at an interpolation starting from the data $(t_i,y_i)_{i=1,\dots,n}$. For this, initial data may be corrected (cf. chapter \ref{sec:corr}), (possible different) IMs (iteratively) used, weightings applied (cf. robustification in section \ref{sec:loess_robustify}). Note, that strictly speaking every IM also is an IS. But usually we expect an IS to involve a more `complex' procedure. \\
 S2	
 		& Sentinel 2 satellites. Two multi-spectral image satellites deployed by the European Space Agency. \\
 SCL	
