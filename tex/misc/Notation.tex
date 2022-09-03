@@ -1,8 +1,10 @@
-\chapter*{Notations}
+\chapter*{\vspace{-3.2cm} Notations}
 \label{c:Notation}
+\vspace{-0.6cm}
+Since this thesis, despite its applied nauture, is located at the Mathematics Department, we adhere to the convention of speaking in the first person plural ``we''.\\
+Moreover, only equations that are referenced elsewhere are equipped with a number.
 
-\section*{Variables}
-
+\section*{Variables}\vspace{-0.2cm}
 \renewcommand{\arraystretch}{1.3} % for non-dense tables
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
 $c$		& a (vector of) constant(s)\\
@@ -17,19 +19,22 @@ $\bar y\in \R$		& sample mean of $y$\\
 $r \in \R^n$		& residuals given by $y - \hat y$\\
 $X\in\R^{n\times p}$ & the design matrix. Each row corresponds to one observation and each column to one covariate.\\
 $X_{[:,j]}$ 	& the $j$-th column of $X$\\
-$X_{[i,:]}$ 	& the $i$-th row of $X$\\
+$X_{[i,:]}$ 	& the $i$-th row of $X$
 % $x\in \R^n$		& covariable in 1-dim interpolation setting
 \end{longtable}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Abbreviations and Objects}
+\section*{Abbreviations and Objects}\vspace{-0.2cm}
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
+NDVI	
+		& Normalized Difference Vegetation Index \citep{rouseMonitoringVernalAdvancement1974}.\\
+
 TS	
 		& Time Series. \\
 IM	
-		& Interpolation Method. That is a simple\footnote{I.e., no combination of various methods.} method that interpolates data $(t_i,y_i)_{i = 1,\dots ,n}$\\ and yields a function $f(t)=y$, approximating the data. 
+		& Interpolation Method. That is a simple\footnote{I.e., no combination of various methods.} method that interpolates data $(t_i,y_i)_{i = 1,\dots ,n}$ and yields a function $f(t)=y$, approximating the data. \\
 IS	
-		& Interpolation Strategy. This is the category of functions that map $(t_i,y_i)_{i=1,\dots,n}$ to a function $f(t)=y$, approximating the data. So a IS describes a strategy of how to arrive at an interpolation starting from the data $(t_i,y_i)_{i=1,\dots,n}$. For this, initial data may be corrected (cf. chapter \ref{sec:corr}), (possible different) IMs (iteratively) used, weightings applied (cf. robustification in section \ref{sec:loess_robustify}). Note, that strictly speaking every IM also is an IS. But usually we expect an IS to involve a more `complex' procedure. \\
+		& Interpolation Strategy. This is the category of functions that map $(t_i,y_i)_{i=1,\dots,n}$ to a function $f(t)=y$, approximating the data. So a IS describes a strategy of how to arrive at an interpolation starting from the data $(t_i,y_i)_{i=1,\dots,n}$. For this, initial data may be corrected (cf. chapter~\ref{sec:corr}), (possible different) IMs (iteratively) used, weightings applied (cf. robustification in section~\ref{sec:loess_robustify}). Note, that strictly speaking every IM also is an IS. But usually we expect an IS to involve a more `complex' procedure. \\
 S2	
 		& Sentinel 2 satellites. Two multi-spectral image satellites deployed by the European Space Agency. \\
 SCL	
@@ -47,63 +52,59 @@ $P$
 $P^{SCL45}$	
 		& is similar to $P$ but we only consider observations that belong to the classes 4 and 5. This is used done to get a subset of observations which are less contaminated by clouds and shadows.\\
 
-NDVI	
-		& Normalized Difference Vegetation Index \citep{rouseMonitoringVernalAdvancement1974}\\
-
 DAS	
 		& Days After Sowing\\
 
 GDD	
 		& Growing Degree Days -- cumulative sum of ``$\max(0, \text{temperature}-\text{threshold})$''\\
 
-RYEA 	
-		& Relative Yield-Estimation-Accuracy. Definition \ref{def:ryea}\\
+YPE 	
+		& (Relative) Yiepld Prediction Error. See Definition~\ref{def:YPE}\\
 
 OOB 	
-		& Out Of the Box. Describes the procedure of  estimating the value for a point by a model that has not seen this point before (see section \ref{sec:OOB_LOOCV}).\\
+		& Out Of the Box. Describes the procedure of  estimating the value for a point by a model that has not seen this point before (see section~\ref{sec:OOB_LOOCV}).\\
 
 LOOCV 	
-		& Leave One Out Cross Validation. Describes the procedure of estimating the value for a point by a model that has seen all the points except the current one (see section \ref{sec:OOB_LOOCV}).\\
+		& Leave One Out Cross Validation. Describes the procedure of estimating the value for a point by a model that has seen all the points except the current one (see section~\ref{sec:OOB_LOOCV}).
 \end{longtable} 
 
-\section*{Statistical Models}
+\section*{Statistical Models}\vspace{-0.2cm}
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
 	DL
-		& Double Logistic (see section \ref{sec:double_logistic})\\
+		& Double Logistic (see section~\ref{sec:double_logistic})\\
 	FS
-		& Fourier Series (see section \ref{sec:fourier_approx})\\
+		& Fourier Series (see section~\ref{sec:fourier_approx})\\
 	NW
-		& Nadaraya-Watson (see section \ref{sec:Kernel})\\
+		& Nadaraya-Watson (see section~\ref{sec:Kernel})\\
 	UK
-		& Universal Kriging (see section \ref{sec:Kriging})\\
+		& Universal Kriging (see section~\ref{sec:Kriging})\\
 	SG
-		& Savitzky-Golay Filter (see section \ref{sec:Savitzky-Golay})\\
+		& Savitzky-Golay Filter (see section~\ref{sec:Savitzky-Golay})\\
 	LOESS
-		& Locally Weighted Regression (see section \ref{sec:loess})\\
+		& Locally Weighted Regression (see section~\ref{sec:loess})\\
 	BS
-		& B-splines (see section \ref{sec:B})\\
+		& B-splines (see section~\ref{sec:B})\\
 	SS
-		& Smoothing Splines (see section \ref{sec:Natural_SS})\\
+		& Smoothing Splines (see section~\ref{sec:Natural_SS})\\
 	OLS
-		& Ordinary Least Squares (see section \ref{sec:corr_model_OLS})\\
-	OLS-SCL
+		& Ordinary Least Squares (see section~\ref{sec:corr_model_OLS})\\
+	OLS\textsuperscript{SCL}
 		& OLS using only the observed NDVI and SCL classes (as factor variables)\\
-	OLS-all
-		& OLS using the covarietes OLS-SCL uses and the spectral bands\\
+	OLS\textsuperscript{all}
+		& OLS using the covarietes OLS\textsuperscript{SCL} uses and the spectral bands\\
 	LASSO
-		& Least Absolute Shrinkage and Selection Operator (see section \ref{sec:corr_model_LASSO})\\
+		& Least Absolute Shrinkage and Selection Operator (see section~\ref{sec:corr_model_LASSO})\\
 	GAM
-		& General Additive Model (see section \ref{sec:corr_model_GAM})\\
+		& General Additive Model (see section~\ref{sec:corr_model_GAM})\\
 	RF
-		& Random Forest (see section \ref{sec:corr_model_RF})\\
+		& Random Forest (see section~\ref{sec:corr_model_RF})\\
 	MARS
-		& Multivariate Adaptive Regression Splines (see section \ref{sec:corr_model_MARS})\\
+		& Multivariate Adaptive Regression Splines (see section~\ref{sec:corr_model_MARS})\\
 \end{longtable} \renewcommand{\arraystretch}{1}
 
+% \bigskip
 
-XXX only equations that are referenced are equipped with a number
 
-XXX itpl method and strategy
 
 
 

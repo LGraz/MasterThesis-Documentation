@@ -13,15 +13,15 @@
 		Where the five free parameters: $y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Such fit can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}.
 
 		\subsubsection*{Robustification}
-		Similar as for the SG (cf. section~\ref{sec:Savitzky-Golay}) one can reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations. For the details on the choice of the weights we refer to \cite{beckImprovedMonitoringVegetation2006}. We will not apply this reestimation but rather the robustification introduced later in section \ref{sec:loess_robustify}.
+		Similar as for the SG (cf. section~\ref{sec:Savitzky-Golay}) one can reestimate (only once) the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations. For the details on the choice of the weights we refer to \cite{beckImprovedMonitoringVegetation2006}. We will not apply this reestimation but rather the robustification introduced later in section~\ref{sec:loess_robustify}.
 
 		\begin{my_pros_cons_table}{
 				\item Incorporates subject specific knowledge in the case of evergreen plants covered in snow.
 				\item Optimized parameters have an intuitive meaning.
 			}{
 				\item Strong shape assumptions on the NDVI curve.
-				\item Parameter optimization might go wrong. This can be mitigated to some extent to provide bounds for the parameters
-				\item Strange behavior in regions with little observations. (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
+				\item Parameter optimization might go wrong. This can be mitigated to some extent to provide bounds for the parameters.
+				\item Strange behavior in regions with little observations (cf. figure~\ref{fig:interpol/fourier_dl_comparison}).
 			}
 		\end{my_pros_cons_table}
 
@@ -34,23 +34,23 @@
 		$$
 		where $\Phi=2 \pi \times(t-1) / n$. Thus, we periodical behavior. If we would set the period to match one year this would coinced with the notion that plans grow every year. 
 		Analogous to section~\ref{sec:double_logistic} we fit it to the data by least squares.
-		Example fits can be seen in figure \ref{fig:interpol/fourier_dl_comparison}
+		Example fits can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}
 
 
 		% \cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
 
 		\begin{my_pros_cons_table}{
-				\item Assumption of periodicity can be helpful if we are modelling multiyear grow cycles
-				\item Flexible curve shape
+				\item Assumption of periodicity can be helpful if we are modelling multiyear grow cycles.
+				\item Flexible curve shape.
 			}{
-				\item Bad behavior in regions with little data (cf. figure~\ref{fig:interpol/fourier_dl_comparison})
-				\item Hard to interpret estimated parameters
+				\item Bad behavior in regions with little data (cf. figure~\ref{fig:interpol/fourier_dl_comparison}).
+				\item Hard to interpret estimated parameters.
 				\item Parameter estimation can go wrong. Introducing bounds can help.
 			}
 		\end{my_pros_cons_table}
 
 		\begin{my_figure}[h]{width=1\textwidth}{interpol/fourier_dl_comparison}
-			\caption{Here we observe the possibilities of a precise fit for the two parametric methods but notice also some misbehavior}
+			\caption[Fourier approximation and Double Logistic]{Here we observe the possibilities of a precise fit for the two parametric methods but notice also some misbehavior.}
 			\label{fig:interpol/fourier_dl_comparison}
 		\end{my_figure}
 
@@ -63,7 +63,7 @@
 
 	\subsection{Kernel Regression: Nadaraya-Watson (NW)}
 		\label{sec:Kernel}
-		As described in section \ref{sec:itpl_setup}, we aim to estimate
+		As described in section~\ref{sec:itpl_setup}, we aim to estimate
 		\begin{equation}
 			\label{eq:nadaraya}
 			\mathbb{E}[Y \mid T=t]
@@ -84,12 +84,12 @@
 		Note that we still need to choose the bandwidth of the function. This can be done with the help of LOOCV while optimizing the RMSE. For non-equidistant data we refere to \cite{brockmannLocallyAdaptiveBandwidth1993} where a local adaptive bandwidth selection is presented.
 
 		\begin{my_pros_cons_table}{
-				\item fletible due to different possible kernels
-				\item can be assigned degrees of freedom (trace of the hat-matrit)
-				\item estimation of the noise variance $\hat \sigma_\varepsilon^2$ (REF cf. CompStat 3.2.2)
+				\item Flexible due to different possible kernels.
+				\item Can be assigned degrees of freedom (trace of the hat-matrix).
+				\item Estimation of the noise variance $\hat \sigma_\varepsilon^2$ (REF cf. CompStat 3.2.2).
 			}{
-				\item if the $t \mapsto K(t)$ is not continuous, $\hat m $ isn't either
-				\item choice of bandwidth, especially if $t_i$ are not equidistant.
+				\item If the $t \mapsto K(t)$ is not continuous, $\hat m $ isn't either.
+				\item Choice of bandwidth, especially if $t_i$ are not equidistant.
 			}
 		\end{my_pros_cons_table}
 
@@ -102,7 +102,7 @@
 		% definition (gaussian process)
 		A Gaussian Process $\{S(t) : t\in \mathbb R\} $ is a stochastic process if $(S(t_1),\dots,S(t_k))$ has a multivariate Gaussian distribution for every collection of times ${t_1, \dots , t_k}$. $S$ can be fully characterized by the mean $\mu(t):=E[S(t)]$ and its covariance function $\gamma\left(t, t^{\prime}\right):=\operatorname{Cov}\left(S(t), S\left(t^{\prime}\right)\right)$. 
 		% stationarity assumtpion
-		Furthermore, we will assume the Gaussian process to be stationary. That is for $\mu(t)$ to be constant in $t$ and $\gamma(t,t')$ to depend only on $h=t-t'$. Thus, we will write in the following only $\gamma(h)$.\footnote{Note that the process is also \textit{isotropic} (i.e., $\gamma(h)=\gamma(\|h\|$) since we are in a one-dimensional setting and the covariance is symmetric.}
+		Furthermore, we will assume the Gaussian process to be stationary. That is for $\mu(t)$ to be constant in $t$ and $\gamma(t,t')$ to depend only on $h=t-t'$. Thus, we will write in the following only $\gamma(h)$.\footnote{Note that the process is also {isotropic} (i.e., $\gamma(h)=\gamma(\|h\|$) since we are in a one-dimensional setting and the covariance is symmetric.}
 
 		% variogram
 		Now, we need to make some assumption on the covariance function. For this we introduce the variogram of a Gaussian process as
@@ -114,16 +114,16 @@
 		Here $h$ denotes the distance, $n$ is the nugget, $r$ is the range and $p$ is the partial sill. The influence of the parameters is visualized in figure~\ref{fig:interpol/kriging_gauss_variogram}.\footnote{Strictly speaking we use a scaled version of the variogram. Thus, only the ratio of $p/n$ matters.}
 
 			\begin{my_figure}[h]{width=0.7\textwidth}{interpol/kriging_gauss_variogram}
-				\caption{Gaussian Variogram with nugget=1, partial sill=3, range=55}
+				\caption[Gaussian Variogram]{Gaussian Variogram with nugget=1, partial sill=3, range=55}
 				\label{fig:interpol/kriging_gauss_variogram}
 			\end{my_figure}
 
 			\begin{my_figure}{width=1\textwidth}{interpol/kriging_parameter}
-				\caption{On the left, we see how the interpolation change if we increase the nugget and the range parameter. On the right, we compare two UK interpolations, where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
+				\caption[Effect of Variogram Parametes and Maximum likelihood failure.]{On the left, we see how the interpolation change if we increase the nugget and the range parameter. On the right, we compare two UK interpolations, where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
 				\label{fig:kriging_parameters}
 			\end{my_figure}
 
-		Finally, we consider a one-dimensional Gaussian process $G_\gamma$ with variogram $\gamma$ and tune the variogram parameters using matimum likelihood\footnote{As illustrated in figure~\ref{fig:kriging_parameters} matimum likelihood estimation can lead to overfitting. Thus, we will in practice sample several such optimized parameters and use their median in the end.}. Let $z$ be a vector with the new values to ettrapolate, then we can determine the values $m(z) = \mathbb{E}\left[G_\gamma(z) | (t,y)\right]$ using Bayes rule\footnote{Bayes rule generally claims that for two random variables $A$ and $B$ we have that $P(A|B) = P(B|A) / P(B)$}. For an etample fit, we refer to figure~\ref{fig:kriging_parameters}. 
+		Finally, we consider a one-dimensional Gaussian process $G_\gamma$ with variogram $\gamma$ and tune the variogram parameters using matimum likelihood\footnote{As illustrated in figure~\ref{fig:kriging_parameters} matimum likelihood estimation can lead to overfitting. Thus, we will in practice sample several such optimized parameters and use their median in the end.}. Let $z$ be a vector with the new values to ettrapolate, then we can determine the values $m(z) = \mathbb{E}\left[G_\gamma(z) | (t,y)\right]$ using Bayes rule\footnote{Bayes rule generally claims that for two random variables $A$ and $B$ we have that $P(A|B) = P(B|A) / P(B)$.}. For an etample fit, we refer to figure~\ref{fig:kriging_parameters}. 
 
 		\subsubsection*{Violated Assumption}
 			Since we observe a clear pattern of a growth period in spring and harvest in the end of summer, we have to admit that our stationarity assumtpion with the constant mean is structurally violated. This is also the reason why we observe (for every variogram parameter) a tendency to the mean, as indicated in figure~\ref{fig:kriging_parameters}.
@@ -154,7 +154,7 @@
 		where the $c_i$ are only dependent on the $m$ and $k$ and are tabulated in the original paper.
 
 		\cite{chenSimpleMethodReconstructing2004a} developed a `robust' {{IM}} for the NDVI based on the SG. 
-		The method is based on the assumption that due to atmospheric effects the observed NDVI tends to be underestimated and that it cannot increase too quickly. The latter is argued by the biological impossibility of such fast vegetation changes. Their proposed algorithm is:\todo{figure / tabelle / pseudocode anstatt aufzählung}
+		The method is based on the assumption that due to atmospheric effects the observed NDVI tends to be underestimated and that it cannot increase too quickly. The latter is argued by the biological impossibility of such fast vegetation changes. Their proposed algorithm is:
 			\begin{enumerate}
 				\item Remove non-SCL45 points.
 				\item Remove points that would indicate an increase greater than 0.4 within 20 days.
@@ -164,7 +164,7 @@
 			\end{enumerate}
 
 		\subsubsection*{Extension: Spatial-Temporal SG}
-			One notable adaptation of the SG is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors, we will waive this extension.
+			One notable adaptation of the SG is the presented by \cite{caoSimpleMethodImprove2018b}. The key difference is the additional assumption of the cloud cover being discontinuous and that we can improve by looking at adjacent pixels\footnote{Here, we say that a pixel is adjacent if it is the same pixel but from a different year (keeping the same day of the year) or (if not enough of such temporal-adjacent pixel are found) it is spatially adjacent.}. Because we are working with rather high resolution satellite data, and we need the variance in the predictors, we will waive this extension.
 
 		\begin{my_pros_cons_table}{
 				\item Popular technique in signal processing.
@@ -199,11 +199,11 @@
 		Finally, the LOESS also can be used for non-equidistant data and allows for arbitrary interpolation.
 
 		\begin{my_pros_cons_table}{
-				\item Flexible generalization of SG
-				\item arbitrary interpolation possible
-				\item Intuitive parameters
+				\item Flexible generalization of SG.
+				\item Arbitrary interpolation possible.
+				\item Intuitive parameters.
 			}{
-				\item The nature of local regression might lead to surprising estimates (no smoothness guarantees for the second derivative)
+				\item The nature of local regression might lead to surprising estimates (no smoothness guarantees for the second derivative).
 			}
 		\end{my_pros_cons_table}
 
@@ -223,23 +223,23 @@
 			B_{i, k}(z)=\frac{z-t_{i}}{t_{i+k}-t_{i}} B_{i, k-1}(z)+\frac{t_{i+k+1}-z}{t_{i+k+1}-t_{i+1}} B_{i+1, k-1}(z).
 		\end{equation}
 		
-		Assuming that all $t_i$ are distinct, this yields an interpolation that fits the data perfectly. To reduce the amount of overfitting and increase the smoothness, we relax the constraint that we have to perfectly interpolate. Thus, we use the minimum number of basis functions\footnote{So we do not require one basis function for each neighboring pair of knots. SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number of knots used} such that:
+		Assuming that all $t_i$ are distinct, this yields an interpolation that fits the data perfectly. To reduce the amount of overfitting and increase the smoothness, we relax the constraint that we have to perfectly interpolate. Thus, we use the minimum number of basis functions\footnote{So we do not require one basis function for each neighboring pair of knots. SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number of knots used.} such that:
 		$$\sum_{i=1}^n(w_i (y_i - \hat y_i))^2 \leq s$$
 
 		\begin{my_pros_cons_table}{
-				\item can be assigned degrees of freedom
-				\item extendable to "smooth" version
-				\item performs also well if points are not equidistant
+				\item Can be assigned degrees of freedom.
+				\item Extendable to "smooth" version.
+				\item Performs also well if points are not equidistant.
 			}{
-				\item smoothing process does not translate well to a interpretation (unlike SS)
-				\item choice of smoothing parameter $s$
+				\item Smoothing process does not translate well to a interpretation (unlike SS).
+				\item Choice of smoothing parameter $s$.
 			}
 		\end{my_pros_cons_table}
 
 
 	\subsection{Smoothing Splines (SS)}
 		\label{sec:Natural_SS}
-		Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the unique\footnote{Strictly speaking it is only unique for $\lambda > 0$} minimizer
+		Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the unique\footnote{Strictly speaking it is only unique for $\lambda > 0$.} minimizer
 		\begin{equation}
 			\label{eq:ss}
 			\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}w_i\left(y_{i}-{f}\left(t_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(t)^{2} dt
@@ -257,6 +257,7 @@
 				\item Intuitive penalty (we don't want the function to be too ``wobbly'' --- change slopes).
 				\item Also performs well if points are not equidistant.
 				\item Fixes the Runge's phenomenon (fluctuation of high degree polynomial interpolation).
+				\item Bounded within the datarange if $\lambda$ is choosen a priori.
 			}{
 				\item The tuning parameter $\lambda$ must be chosen. This can be done via cross validation and optimizing a score function (e.g., the RMSE). 
 			}

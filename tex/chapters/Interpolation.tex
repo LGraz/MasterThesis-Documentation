@@ -6,12 +6,12 @@
 %         \item 2
 %     }
 % \end{my_pros_cons_table}
-\newcommand{\RobItPlot}{fitted to different (SCL45) NDVI {TS}. Iterations of a robustifing refit (as indicated in section~\ref{sec:loess_robustify}) are also displayed}
+\newcommand{\RobItPlot}{fitted to different (SCL45) NDVI {TS}. Iterations of a robustifing refit (as indicated in section~\ref{sec:loess_robustify}) are also displayed.}
 
 
-\chapter{Interpolation Methods ({{IM}}s)} \label{sec:itpl}\todo{verdeutliche dem leser, dass ein auftrag das findne von interpolationmethoden war}
+\chapter{Interpolation Methods ({{IM}}s)} \label{sec:itpl}
 	{% Roadmap
-		In section \ref{sec:s2_challangges} we have established the need for interpolating the NDVI {TS}. In this chapter we first specify a setting for the interpolation and divide the {{IM}}s into those that make fundamental shape assumptions (parametric) and those that are more flexible (non-parametric). We give an introduction for each method with an compact definition, highlight adjustments or give remarks where appropriate, and then point out strengths and weaknesses of each method. Additionally, a brief overview of the considered {{IM}}s is provided in table~\ref{table:pros_cons_overview}.
+		In section~\ref{sec:s2_challangges} we have established the need for interpolating the NDVI {TS}. In this chapter we first specify a setting for the interpolation and divide the {{IM}}s into those that make fundamental shape assumptions (parametric) and those that are more flexible (non-parametric). We give an introduction for each method with an compact definition, highlight adjustments or give remarks where appropriate, and then point out strengths and weaknesses of each method. Additionally, a brief overview of the considered {{IM}}s is provided in table~\ref{table:pros_cons_overview}.
 		% In this section, we take a closer look at several {{IM}}s, which will be used to interpolate and smooth the NDVI {TS}, while considering only SCL45 in this chapter. First, we define the general setting and discuss a general approach to make the interpolation more robust (i.e., reduce the impact of outliers). Afterwards, we introduce and discuss each method.
 		Afterwards, we extract an robustification strategy from the one {{IM}} and generalize it so we can use it for all methods that allow for a priori weighted observations. Finally, using LOOCV, we tune the parameters (where necessary) and get a first idea of the performance of each method.
 
@@ -34,7 +34,7 @@
 	$$
 		m(t)=\mathbb{E}[y \mid t]
 	$$
-	We will introduce parametric and non-parametric approaches to estimate $m$ in section \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric}
+	We will introduce parametric and non-parametric approaches to estimate $m$ in section~\ref{sec:itpl_parametric} and~\ref{sec:itpl_nonparametric}
 	Furthermore, in the subsequent, we denote $w\in \R^n$ as the vector of weights such that $w_i$ corresponds to the weight that $(t_i, y_i)$ should have in the interpolation. 
 }
 
@@ -55,22 +55,22 @@
 % linear regression approach (Swets et al., 1999).
 
 \section{Tuning Parameter Estimation}{ \label{sec:itpl_param_est}
-	Many of the {{IM}}s introduced in section \ref{sec:itpl_parametric} and \ref{sec:itpl_nonparametric} include a free parameter. To determine this parameter for a specific {{IM}}, we will estimate the absolute residuals using OOB estimation and then optimize the parameter using a score function. We clarify the procedure step by step:	
+	Many of the {{IM}}s introduced in section~\ref{sec:itpl_parametric} and~\ref{sec:itpl_nonparametric} include a free parameter. To determine this parameter for a specific {{IM}}, we will estimate the absolute residuals using OOB estimation and then optimize the parameter using a score function. We clarify the procedure step by step:	
 	\begin{Nenumerate}
 		\item Construct a set $\Lambda$ of candidate parameters that generously covers the parameter space.
 		\item Consider $\mathcal{P}$, a set of Pixels.
-		\item For each parameter $\lambda \in \Lambda$ consider the individual pixels and compute the LOOCV\footnote{For a definition of the leave-one-out-cross-validation we refer to section~\ref{sec:OOB_LOOCV}} for the absolute residuals of the specific NDVI {{IM}} for all Pixels in $\mathcal{P}$ and store them in the set $R_\lambda$. 
+		\item For each parameter $\lambda \in \Lambda$ consider the individual pixels and compute the LOOCV\footnote{For a definition of the leave-one-out-cross-validation we refer to section~\ref{sec:OOB_LOOCV}.} for the absolute residuals of the specific NDVI {{IM}} for all Pixels in $\mathcal{P}$ and store them in the set $R_\lambda$. 
 		\item Determine $\lambda_{optimal} = \argmin_{\lambda\in\lambda}q_{90}(R_\lambda)$, where we describe the 90\% quantile with $q_{90}$.
 	\end{Nenumerate}
 
 	\begin{my_figure}[h]{width=1\textwidth}{interpol/statistics_SS_param_optim}
-		\caption{Smoothing splines fit with smoothing parameter optimized by minimizing the given quantile of the absolute leave-one-out residuals. Note that the larger the considered quantile is, the smoother the resulting curve becomes.}
+		\caption[Smoothing splines optimized by minimizing the given quantile of the absolute leave-one-out residuals]{Smoothing splines fit with smoothing parameter optimized by minimizing the given quantile of the absolute leave-one-out residuals. Note that the larger the considered quantile is, the smoother the resulting curve becomes.}
 		\label{fig:interpol/statistics_SS_param_optim}
 	\end{my_figure}
 
 	We choose $\operatorname{quantile}(90)$ as our optimization function because we want to allow 10\% of outliers (corrupt points) but also aim for an accurate fit in 90\% of the cases.  
 	
-	Figure \ref{fig:interpol/statistics_SS_param_optim} exemplifies the effect of the optimization function (different quantiles). To summarize, we may say that the higher the quantile, the stronger the smoothing. 
+	Figure~\ref{fig:interpol/statistics_SS_param_optim} exemplifies the effect of the optimization function (different quantiles). To summarize, we may say that the higher the quantile, the stronger the smoothing. 
 }
 
 
@@ -122,25 +122,25 @@
 		$$
 		for $r,w\in \R^n$. 
 	}
-	\subsection{Examples and Conclusions}{
+	\subsection{Examples and Conclusions}{		
+		Examples of the first four iterative fits using SS are shown in figure~\ref{fig:interpol/2x3_SS_robust} for six pixels. For the analogous figures of the other {{IM}}s cf. figures~\ref{fig:interpol/2x3_loess_robust},~\ref{fig:interpol/2x3_B-Splines_robust},~\ref{fig:interpol/2x3_DL_robust} and~\ref{fig:interpol/2x3_loess_robust}.
+		Indeed, we observe how the interpolated {TS} is less affected by outliers after each iteration. We notice the biggest difference in the first iteration. Furthermore, in the plot at the bottom left\todo{ consider naming the sub-plots} we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always stop after one iteration.
+
 		\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_SS_robust}
-			\caption{Smoothing splines \RobItPlot}
+			\caption[Smoothing splines robustification.]{Smoothing splines \RobItPlot}
 			\label{fig:interpol/2x3_SS_robust}
 		\end{my_figure}
-
-		Examples of the first four iterative fits using SS are shown in figure \ref{fig:interpol/2x3_SS_robust} for six pixels. For the analogous figures of the other {{IM}}s cf. figures \ref{fig:interpol/2x3_loess_robust}, \ref{fig:interpol/2x3_B-Splines_robust}, \ref{fig:interpol/2x3_DL_robust} and \ref{fig:interpol/2x3_loess_robust}.
-		Indeed, we observe how the interpolated {TS} is less affected by outliers after each iteration. We notice the biggest difference in the first iteration. Furthermore, in the plot at the bottom left\todo{ consider naming the sub-plots} we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always stop after one iteration.
 	} 
 	
 	\subsection{Upper Envelope Approach - Penalty for Negative Residuals}
-		If we artificially increase the negative residuals in \refeq{eq:bisquare} by multiplying (e.g., factor 2), the corresponding points will get less weight in the next iteration. This allows us to create an interpolation that resembles an upper envelope. Intuitively, this upper envelope can be thought of as a sheet that is laid on top of the points.
+		If we artificially increase the negative residuals in~\refeq{eq:bisquare} by multiplying (e.g., factor 2), the corresponding points will get less weight in the next iteration. This allows us to create an interpolation that resembles an upper envelope. Intuitively, this upper envelope can be thought of as a sheet that is laid on top of the points.
 			
 		This approach is based on the premise that we tend to underestimate the NDVI \citep{caoSimpleMethodImprove2018b}. Since we want to develop a general method that is in principle not related to the NDVI, we will not pursue this approach further.	
 }
 \section{Performance Assessment}{\label{sec:itpl_perfomance_assessment}
-	Next, we will benchmark the in section \ref{sec:itpl_preselection} preselected {{IM}}s with and without robustification. For this, we will use the same technique as we did for the parameter determination in section \ref{sec:itpl_param_est}. On $B_\lambda$ we apply the RMSE and different quantiles.  
+	Next, we will benchmark the in section~\ref{sec:itpl_preselection} preselected {{IM}}s with and without robustification. For this, we will use the same technique as we did for the parameter determination in section~\ref{sec:itpl_param_est}. On $B_\lambda$ we apply the RMSE and different quantiles.  
 
-	The results are presented in section \ref{sec:results_itpl} and are discussed in section \ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method and from the non-parametric methods we choose the SS.
+	The results are presented in section~\ref{sec:results_itpl} and are discussed in section~\ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method and from the non-parametric methods we choose the SS.
 }
 
 

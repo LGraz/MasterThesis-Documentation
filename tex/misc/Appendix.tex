@@ -25,17 +25,17 @@
 
 \section{Interpolation}
 \begin{my_figure}[H]{width=1\textwidth}{interpol/2x3_loess_robust}
-	\caption{The LOESS smoother \RobItPlot}
+	\caption[The LOESS smoother robustification.]{The LOESS smoother \RobItPlot}
 	\label{fig:interpol/2x3_loess_robust}
 \end{my_figure}
 
 \begin{my_figure}[H]{width=1\textwidth}{interpol/2x3_B-Splines_robust}
-	\caption{B-splines \RobItPlot}
+	\caption[B-splines robustification.]{B-splines \RobItPlot}
 	\label{fig:interpol/2x3_B-Splines_robust}
 \end{my_figure}
 
 \begin{my_figure}[H]{width=1\textwidth}{interpol/2x3_DL_robust}
-	\caption{A Double Logistic curve \RobItPlot}
+	\caption[A Double Logistic curve robustification.]{A Double Logistic curve \RobItPlot}
 	\label{fig:interpol/2x3_DL_robust}
 \end{my_figure}
 
@@ -53,7 +53,7 @@
 
 \begin{table}[H]
 	\begin{center}
-		\caption{Non-relative RMSE for yield prediction}.
+		\caption{Non-relative RMSE for yield prediction in [t/ha].}
 		\small
 		\input{tex/chapters/misc/table_methods_vs_yieldprediction.tex}
 		\label{tab:methods_vs_yieldprediction}
@@ -64,7 +64,7 @@
 
 \begin{table}[H]
 	\begin{center}
-		\caption{Coefficient of determination (R\textsuperscript{2}) of yield prediction}
+		\caption{Coefficient of determination (R\textsuperscript{2}) of yield prediction.}
 		\small
 		\input{tex/chapters/misc/table_methods_vs_yieldprediction_r2.tex}
 		\label{tab:methods_vs_yieldprediction_r2}
@@ -72,17 +72,11 @@
 	\end{center}
 \end{table}
 
-\subsection{OLS-SCL Model Outputs}\label{app:ols-scl-summary}
-\lstinputlisting[title= R Summary of the NDVI correction model (cf. equation \refeq{eq:corr_lm})]{tex/chapters/misc/lm_scl.txt}
-\lstinputlisting[title= R Summary of the NDVI correction model (cf. equation \refeq{eq:corr_lm_res})]{tex/chapters/misc/lm_scl_res.txt}
+\subsection{OLS\textsuperscript{SCL} Model Outputs}\label{app:ols-scl-summary}
+\lstinputlisting[title= R Summary of the NDVI correction model (cf. equation~\refeq{eq:corr_lm})]{tex/chapters/misc/lm_scl.txt}
+\lstinputlisting[title= R Summary of the NDVI correction model (cf. equation~\refeq{eq:corr_lm_res})]{tex/chapters/misc/lm_scl_res.txt}
 
 
-\todo[inline]{replace space before ref by tilda}
-\todo[inline]{check quantile definitions}
-\todo[inline]{schwarz weiss färbung der IS tabelle korrigieren}
+\todo[inline]{check quantile und LOOCV definitions}
 \todo[inline]{so wenig wie möglich abkürzungen in den fig und table captions}
-\todo[inline]{refer to data aviability}
-\todo[inline]{abkürzungen Fourier und in tabellen}
 \todo[inline]{figure spacing (caption zu nah dran --- manuell vspace einfügen wo nötig)}
-\todo[inline]{italics für definitionen wie `variogramm' ja/nein --- einheitlich}
-\todo[inline]{Gross schreiben von Fussnoten \& tabelleneinträgen + Satzzeichen}

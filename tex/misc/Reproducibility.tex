@@ -1,7 +1,7 @@
 \chapter{Reproducibility}\label{app:reproducibility}
 
 \section{Reproduce Results}
-For reproducibility of the whole computations, we refer to our codebase at:\\ \url{https://github.com/LGraz/MasterThesis-Code}\\ In order to reproduce our computations and results, set up the directory as described in the README and execute the computations via \texttt{./shell\_scripts/reproduce.sh} and do not execute the python and R scripts by hand (unless you follow the order in \texttt{./shell\_scripts/reproduce.sh}).
+For reproducibility of the whole computations, we refer to our codebase at:\\ \url{https://github.com/LGraz/MasterThesis-Code}\\ In order to reproduce our computations and results, set up the directory as described in the README. The the `YieldMapping' Data used, is published alongside \cite{perichPixelbasedCropYield2022}. Execute the computations via the script \texttt{./shell\_scripts/reproduce.sh} and do not execute the python and R files by hand (unless you follow the order in \texttt{./shell\_scripts/reproduce.sh}). 
 
 \section{R--Package}
 We also provide an \texttt{R} package for a general time series correction and interpolation if additional data is available at: \\
@@ -14,3 +14,4 @@ We recommend installing it via the \texttt{devtools} package by:\\
 In the following, we shall give a stand-alone example of how the \texttt{R} package can be used:
 
 \lstinputlisting[title= Example of how to use the \texttt{CorrectTimeSeries} package]{tex/misc/CorrectTimeSeries.R}
+

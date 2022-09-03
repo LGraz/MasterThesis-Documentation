@@ -1,6 +1,6 @@
 \begin{table}[!ht]
 	\centering
-	\caption[skip=10pt]{Summary of the studied interpolation methods containing important assumptions, advantages and disadvantages and whether the method supports weighted observations (w) and if the resulting interpolation is bounded w.r.t. a fixed interval (b).}
+	\caption[Summary of the studied interpolation methods.]{Summary of the studied interpolation methods containing important assumptions, advantages and disadvantages and whether the method supports weighted observations (w) and if the resulting interpolation is bounded w.r.t. a fixed interval (b).}
 	\small
 	\begin{tabular}{p{1.6cm}p{3.3cm}p{3.3cm}p{3.4cm}p{0.4cm}p{0.4cm}p{3cm}p{3cm}p{3cm}p{3cm}p{2.7cm}p{3cm}|}
 		\toprule
@@ -13,7 +13,7 @@
 		\textbf{b}                                                                                                                                        \\ \hline
 
 		Double-Logistic                                                                                                                                              &
-		\begin{cptitemize} \item[--]  Function first increases then decreases \item[--]  NDVI has a minimal value                            \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Function first increases then decreases \item[--]  NDVI has a minimal value                       \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Good for evergreen plants (if snow masks NDVI) \item[--]  Upper envelope                                \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Parameter estimation can be very difficult \item[--]  Strange behavior for long data-gaps             \end{cptitemize}        &
 		Yes                                                                                                                                                          &
@@ -74,7 +74,7 @@
 		\begin{cptitemize} \item[--]  Intuitive meaning of penalty \item[--]  General assumptions \item[--]  Flexible shape                         \end{cptitemize} &
 		\begin{cptitemize} \item[--]  Choice of smoothing parameter                                                                                       \end{cptitemize}               &
 		Yes                                                                                                                                                          &
-        No \\                                                                         
+        (Yes) \\                                                                         
 % Penalized Regression Splines &
 		% \begin{itemize}
 		%     \item[--]  High

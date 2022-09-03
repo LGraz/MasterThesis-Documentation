@@ -19,7 +19,7 @@
         \item Computationally cheap.
     }{
         \item Catches only linear relationships.
-        \item No integrated variable selection.\footnote{There is the possibility of stepwise model selection by dropping or adding some covariates but for higher p this gets too expensive since the time complexity grows in $\mathcal{O}(np^4)$ (computing $X^TX$ requires $\mathcal{O}(np^2)$ which assuming $n>p$ dominates $\mathcal{O}(p^3) $ needed for the Cholesky Decomposition of $X^TX$) % p^2 time OLS. 
+        \item No integrated variable selection.\footnote{There is the possibility of stepwise model selection by dropping or adding some covariates but for higher p this gets too expensive since the time complexity grows in $\mathcal{O}(np^4)$ (computing $X^TX$ requires $\mathcal{O}(np^2)$ which assuming $n>p$ dominates $\mathcal{O}(p^3) $ needed for the Cholesky Decomposition of $X^TX$). % p^2 time OLS. 
         }
     }
     \end{my_pros_cons_table}
@@ -27,7 +27,7 @@
 \subsection{Least Absolute Shrinkage and Selection Operator (LASSO)}{\label{sec:corr_model_LASSO}
     The LASSO can be similarly expressed than the OLS but adds a penalty to the minimization problem:
     \begin{equation}
-        \hat \beta_\lambda = \argmin_{\beta \in \R^p}\|y - X\beta\|_2^2 + \lambda \|\beta\|_1 = \argmin_{\beta \in \R^p \text{ and } \|\beta\|_1<\lambda}\|y - X\beta\|_2^2.\footnote{The last two terms are equivalent by lagrangian optimization}
+        \hat \beta_\lambda = \argmin_{\beta \in \R^p}\|y - X\beta\|_2^2 + \lambda \|\beta\|_1 = \argmin_{\beta \in \R^p \text{ and } \|\beta\|_1<\lambda}\|y - X\beta\|_2^2.\footnote{The last two terms are equivalent by lagrangian optimization.}
         \label{eq:lasso}
     \end{equation}
     Even though we do not have a closed form solution for equation \eqref{eq:lasso} we can solve it easily via optimization, since the function $\beta \in \{\beta\in\R^p|\|\beta\|_1<\lambda\}\|\ \mapsto \|y - X\beta\|_2^2$  is continuous and convex.
@@ -39,7 +39,7 @@
     %We use the following definition of the $RMSE$: $\sqrt{\sum_{i=1}^n(y-\hat y)^2/n}$
     } (and its standard deviation $\sigma_\lambda$ using the $k$ folds) and define the $\lambda$ with the smallest corresponding  $RMSE_\lambda$ as $\lambda_{min}$. From here we choose the largest $\lambda$ for which the $RMSE_\lambda$ is smaller than $RMSE_{\lambda_{min}}+\sigma_\lambda$. This yields a simpler model while keeping the $RMSE$ reasonable model.
 
-    We will apply the LASSO using the selected covariates in section \ref{sec:corr_data_table} and their second degree of interactions.\footnote{This is if our covariates are $\{1,a,b\}$, then we will now use $\{1,a,b,ab,a^2,b^2\}.$}
+    We will apply the LASSO using the selected covariates in section~\ref{sec:corr_data_table} and their second degree of interactions.\footnote{This is if our covariates are $\{1,a,b\}$, then we will now use $\{1,a,b,ab,a^2,b^2\}.$}
     
     \begin{my_pros_cons_table}{
         \item Usually yields a sparse solution. This tends to give better generalizability (prediction performance on unseen data).
@@ -56,7 +56,7 @@
     GAMs as described in \cite{hastieGeneralizedAdditiveModels1987} are a special case of Projection Pursuit Regression, where only the $p$ directions parallel to the coordinate axes are considered. The result is different to a linear model since the coordinate functions are not restricted to be linear but are assumed to be non-parametric functions. The model can be written as:
     \begin{equation}
         \label{eq:gam}
-        g_{add}(x) = \mu + \sum_{i=1}^pg_j(x_j).\footnote{wher $g_j$ is a real-valued function. For identifiability we also demand $\mathbb{E}[g_j(X_{:,j})] = 0$ for $j=1,\dots,p$.}
+        g_{add}(x) = \mu + \sum_{i=1}^pg_j(x_j).\footnote{Where $g_j$ is a real-valued function. For identifiability we also demand $\mathbb{E}[g_j(X_{:,j})] = 0$ for $j=1,\dots,p$.}
     \end{equation}  
 
     To estimate the non-parametric functions, we can use SS (ref sec.~\ref{sec:Natural_SS}). For this let $\mathcal{S}_j$ be the function that takes some $z\in\R^n$ and returns the SS fitted to $(X_{:,j}, z)$ where the smoothing parameter is optimized by LOOCV\footnote{For efficiency an proxy of the LOOCV is used called generalized cross validation.}.
@@ -81,7 +81,7 @@
 }
 
 \subsection{Random Forest (RF)}{\label{sec:corr_model_RF}
-    To define a random Forest introduced by \cite{breimanRandomForests2001}  we will first define what a Tree is. A \textit{(decision) Tree} is a graph $(V,E)$ without circles, a distinct root node, every node has at most two children and every leaf has a value assigned to it. At each node there is a boolean condition testing if one variable is greater than some value and a pointer to one child depending on the boolean value. To evaluate a tree we start at the root node, test the boolean expression and go to the node indicated by the resulting pointer. This we repeat until we end up at a leaf-node, where we return the value assigned to it. 
+    To define a random Forest introduced by \cite{breimanRandomForests2001}  we will first define what a Tree is. A {(decision) Tree} is a graph $(V,E)$ without circles, a distinct root node, every node has at most two children and every leaf has a value assigned to it. At each node there is a boolean condition testing if one variable is greater than some value and a pointer to one child depending on the boolean value. To evaluate a tree we start at the root node, test the boolean expression and go to the node indicated by the resulting pointer. This we repeat until we end up at a leaf-node, where we return the value assigned to it. 
     
     To build such a Tree, we will recursively partition the covariate space using greedy splits\footnote{For computational reasons, we will only use splits along one covariate. So we `cut' our covariate space into rectangles.} decreasing the RMSE\footnote{To calculate the RMSE, we need a prediction. Let $P$ be the current partition, then the predicted value for some $x\in A \in P$ is the mean of the responses of all the points in $A$ (included in the training data).} each time. If the set we want to split contains less than a certain amount of training points, we stop.
     
