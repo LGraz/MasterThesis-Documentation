@@ -1,12 +1,12 @@
 \chapter{Reproducibility}\label{app:reproducibility}
 
 \section{Reproduce Results}
-For reproducibility of the whole computations, we refer to our codebase at:\\ \url{https://github.com/LGraz/MasterThesis-Code}\\ In order to reproduce our computations and results, set up the directory as described in the README. The the `YieldMapping' Data used, is published alongside \cite{perichPixelbasedCropYield2022}. Execute the computations via the script \texttt{./shell\_scripts/reproduce.sh} and do not execute the python and R files by hand (unless you follow the order in \texttt{./shell\_scripts/reproduce.sh}). 
+For reproducibility of the whole computations, we refer to our codebase at:\\ \url{https://github.com/LGraz/MasterThesis-Code}\\ In order to reproduce our computations and results, set up the directory as described in the README. The `Yield Mapping' Data used, is published alongside \cite{perichPixelbasedCropYield2022}. Execute the computations via the script \texttt{./shell\_scripts/reproduce.sh} and do not execute the python and R files by hand (unless you follow the order in \texttt{./shell\_scripts/reproduce.sh}). 
 
 \section{R--Package}
 We also provide an \texttt{R} package for a general time series correction and interpolation if additional data is available at: \\
 \url{https://github.com/LGraz/CorrectTimeSeries} \\
-In our case we consider the NDVI time series and the additional data consists of the unused spectral bands.
+In our case, we consider the NDVI time series and the additional data consists of the unused spectral bands.
 
 We recommend installing it via the \texttt{devtools} package by:\\
 \texttt{devtools::install\_github("LGraz/CorrectTimeSeries")}

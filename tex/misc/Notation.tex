@@ -1,7 +1,7 @@
 \chapter*{\vspace{-3.2cm} Notations}
 \label{c:Notation}
 \vspace{-0.6cm}
-Since this thesis, despite its applied nauture, is located at the Mathematics Department, we adhere to the convention of speaking in the first person plural ``we''.\\
+Since this thesis, despite its applied nature, is located at the Mathematics Department, we adhere to the convention of speaking in the first-person plural ``we''.\\
 Furthermore, only equations that are referenced elsewhere are equipped with a number.
 
 \section*{Variables}\vspace{-0.2cm}
@@ -34,7 +34,7 @@ TS
 IM	
 		& Interpolation Method. That is a simple\footnote{I.e., no combination of various methods.} method that interpolates data $(t_i,y_i)_{i = 1,\dots ,n}$ and yields a function $f(t)=y$, approximating the data. \\
 IS	
-		& Interpolation Strategy. This is the category of functions that map $(t_i,y_i)_{i=1,\dots,n}$ to a function $f(t)=y$, approximating the data. So a IS describes a strategy of how to arrive at an interpolation starting from the data $(t_i,y_i)_{i=1,\dots,n}$. For this, initial data may be corrected (cf. chapter~\ref{sec:corr}), (possible different) IMs (iteratively) used, weightings applied (cf. robustification in section~\ref{sec:loess_robustify}). Note, that strictly speaking every IM also is an IS. But usually we expect an IS to involve a more `complex' procedure. \\
+		& Interpolation Strategy. This is the category of functions that map $(t_i,y_i)_{i=1,\dots,n}$ to a function $f(t)=y$, approximating the data. So a IS describes a strategy of how to arrive at an interpolation starting from the data $(t_i,y_i)_{i=1,\dots,n}$. For this, initial data may be corrected (cf. chapter~\ref{sec:corr}), (possible different) IMs (iteratively) used, weightings applied (cf. robustification in section~\ref{sec:loess_robustify}). Note, that strictly speaking, every IM also is an IS. But usually, we expect an IS to involve a more `complex' procedure. \\
 S2	
 		& Sentinel 2 satellites. Two multi-spectral image satellites deployed by the European Space Agency. \\
 SCL	
@@ -59,7 +59,7 @@ GDD
 		& Growing Degree Days -- cumulative sum of ``$\max(0, \text{temperature}-\text{threshold})$''\\
 
 YPE 	
-		& (Relative) Yiepld Prediction Error. See Definition~\ref{def:YPE}\\
+		& (Relative) Yield Prediction Error. See Definition~\ref{def:YPE}\\
 
 OOB 	
 		& Out Of the Box. Describes the procedure of  estimating the value for a point by a model that has not seen this point before (see section~\ref{sec:OOB_LOOCV}).\\
@@ -91,7 +91,7 @@ LOOCV
 	OLS\textsuperscript{SCL}
 		& OLS using only the observed NDVI and SCL classes (as factor variables)\\
 	OLS\textsuperscript{all}
-		& OLS using the covarietes OLS\textsuperscript{SCL} uses and the spectral bands\\
+		& OLS using the covariates OLS\textsuperscript{SCL} uses and the spectral bands\\
 	LASSO
 		& Least Absolute Shrinkage and Selection Operator (see section~\ref{sec:corr_model_LASSO})\\
 	GAM

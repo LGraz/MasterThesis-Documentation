@@ -11,9 +11,9 @@
 
 \chapter{Interpolation Methods ({{IM}}s)} \label{sec:itpl}
 	{% Roadmap
-		In section~\ref{sec:s2_challangges} we have established the need for interpolating the NDVI {TS}. In this chapter we first specify a setting for the interpolation and divide the {{IM}}s into those that make fundamental shape assumptions (parametric) and those that are more flexible (non-parametric). We give an introduction for each method with an compact definition, highlight adjustments or give remarks where appropriate, and then point out strengths and weaknesses of each method. Additionally, a brief overview of the considered {{IM}}s is provided in table~\ref{table:pros_cons_overview}.
+		In section~\ref{sec:s2_challangges} we have established the need for interpolating the NDVI {TS}. In this chapter we first specify a setting for the interpolation and divide the {{IM}}s into those that make fundamental shape assumptions (parametric) and those that are more flexible (non-parametric). We give an introduction for each method with a compact definition, highlight adjustments or give remarks where appropriate, and then point out strengths and weaknesses of each method. Additionally, a brief overview of the considered {{IM}}s is provided in table~\ref{table:pros_cons_overview}.
 		% In this section, we take a closer look at several {{IM}}s, which will be used to interpolate and smooth the NDVI {TS}, while considering only SCL45 in this chapter. First, we define the general setting and discuss a general approach to make the interpolation more robust (i.e., reduce the impact of outliers). Afterwards, we introduce and discuss each method.
-		Afterwards, we extract an robustification strategy from the one {{IM}} and generalize it so we can use it for all methods that allow for a priori weighted observations. Finally, using LOOCV, we tune the parameters (where necessary) and get a first idea of the performance of each method.
+		Afterwards, we extract a robustification strategy from the one {{IM}} and generalize it, so we can use it for all methods that allow for a priori weighted observations. Finally, using LOOCV, we tune the parameters (where necessary) and get a first idea of the performance of each method.
 
 
 	}
@@ -26,7 +26,7 @@
 
 
 \section{Interpolation Setup}{\label{sec:itpl_setup}
-	In this chapter, we will only consider SCL45 observations, since they are more reliably. Hence, data in the form of $\left(t_{i}, y_{i}\right)$ for $i=1, \ldots, n$ is given, where $t_i$ is the time in GDD and $y_i$ denotes the NDVI at time $t_i$. Assume that it can be represented by
+	In this chapter, we will only consider SCL45 observations since they are more reliably. Hence, data in the form of $\left(t_{i}, y_{i}\right)$ for $i=1, \ldots, n$ is given, where $t_i$ is the time in GDD and $y_i$ denotes the NDVI at time $t_i$. Assume that it can be represented by
 	$$
 		y_{i}=m\left(t_{i}\right)+\varepsilon_{i},
 	$$
@@ -83,7 +83,7 @@
 	}
 	
 	{	
-		After an initial fit we calculate the residuals $r_i := y_i - \hat y_i$ and obtain $\tilde r_i$ by scaling with the median of the absolute residuals: 
+		After an initial fit, we calculate the residuals $r_i := y_i - \hat y_i$ and obtain $\tilde r_i$ by scaling with the median of the absolute residuals: 
 		\begin{equation}
 			\tilde r_i := \frac{r_i}{6\operatorname{med}\left(|r_1|,\dots,|r_n|\right)}
 		\end{equation}
@@ -132,7 +132,7 @@
 		\end{my_figure}
 	} 
 	
-	\subsection{Upper Envelope Approach - Penalty for Negative Residuals}
+	\subsection{Upper Envelope Approach --- Penalty for Negative Residuals}
 		If we artificially increase the negative residuals in~\refeq{eq:bisquare} by multiplying (e.g., factor 2), the corresponding points will get less weight in the next iteration. This allows us to create an interpolation that resembles an upper envelope. Intuitively, this upper envelope can be thought of as a sheet that is laid on top of the points.
 			
 		This approach is based on the premise that we tend to underestimate the NDVI \citep{caoSimpleMethodImprove2018b}. Since we want to develop a general method that is in principle not related to the NDVI, we will not pursue this approach further.	
@@ -140,7 +140,7 @@
 \section{Performance Assessment}{\label{sec:itpl_perfomance_assessment}
 	Next, we will benchmark the in section~\ref{sec:itpl_preselection} preselected {{IM}}s with and without robustification. For this, we will use the same technique as we did for the parameter determination in section~\ref{sec:itpl_param_est}. On $B_\lambda$ we apply the RMSE and different quantiles.  
 
-	The results are presented in section~\ref{sec:results_itpl} and are discussed in section~\ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method and from the non-parametric methods we choose the SS.
+	The results are presented in section~\ref{sec:results_itpl} and are discussed in section~\ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method, and from the non-parametric methods we choose the SS.
 }
 
 

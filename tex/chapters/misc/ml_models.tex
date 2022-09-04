@@ -19,7 +19,7 @@
         \item Computationally cheap.
     }{
         \item Catches only linear relationships.
-        \item No integrated variable selection.\footnote{There is the possibility of stepwise model selection by dropping or adding some covariates but for higher p this gets too expensive since the time complexity grows in $\mathcal{O}(np^4)$ (computing $X^TX$ requires $\mathcal{O}(np^2)$ which assuming $n>p$ dominates $\mathcal{O}(p^3) $ needed for the Cholesky Decomposition of $X^TX$). % p^2 time OLS. 
+        \item No integrated variable selection.\footnote{There is the possibility of stepwise model selection by dropping or adding some covariates, but for higher p this gets too expensive since the time complexity grows in $\mathcal{O}(np^4)$ (computing $X^TX$ requires $\mathcal{O}(np^2)$ which assuming $n>p$ dominates $\mathcal{O}(p^3) $ needed for the Cholesky Decomposition of $X^TX$). % p^2 time OLS. 
         }
     }
     \end{my_pros_cons_table}
@@ -59,7 +59,7 @@
         g_{add}(x) = \mu + \sum_{i=1}^pg_j(x_j).\footnote{Where $g_j$ is a real-valued function. For identifiability we also demand $\mathbb{E}[g_j(X_{:,j})] = 0$ for $j=1,\dots,p$.}
     \end{equation}  
 
-    To estimate the non-parametric functions, we can use SS (ref sec.~\ref{sec:Natural_SS}). For this let $\mathcal{S}_j$ be the function that takes some $z\in\R^n$ and returns the SS fitted to $(X_{:,j}, z)$ where the smoothing parameter is optimized by LOOCV\footnote{For efficiency an proxy of the LOOCV is used called generalized cross validation.}.
+    To estimate the non-parametric functions, we can use SS (ref sec.~\ref{sec:Natural_SS}). For this let $\mathcal{S}_j$ be the function that takes some $z\in\R^n$ and returns the SS fitted to $(X_{:,j}, z)$ where the smoothing parameter is optimized by LOOCV\footnote{For efficiency a proxy of the LOOCV is used called generalized cross validation.}.
     Since we cannot fit all $g_j$ simultaneously, we will use a strategy named Backfitting. We basically cycle through the indices $1,\dots p$ and refit $\hat g_j$ each time. The following illustrates the procedure: 
     \begin{eqnarray*}
         1) \quad \hat g_1 &=& \mathcal S_1(y - \mu)    \\
@@ -91,7 +91,7 @@
         \item Captures all interactions and performs automatic variable selection.
         \item Can deal with missing data.
     }{
-        \item The resulting (prediction) function is not continuous but locally constant.
+        \item The resulting (prediction) function is not continuous, but locally constant.
         \item Computationally expensive.
         \item No interpretability.
     }
@@ -105,7 +105,7 @@
     \end{equation}
     where the $h_m$ are simple functions (explained later) and the $\beta_m$ are estimated via Least Squares. 
     
-    In the building procedure of a MARS model, we first select many of those simple functions and later drop some of them to avoid overfitting. For the construction of those simple functions, define $\mathcal{B}$ be the set of pairs of `hockystick functions'
+    In the building procedure of a MARS model, we first select many of those simple functions and later drop some of them to avoid overfitting. For the construction of those simple functions, define $\mathcal{B}$ be the set of pairs of `hockey stick functions'
     \begin{equation}
         \label{eq:mars_basis_fun}
         \mathcal{B}:=\left\{
