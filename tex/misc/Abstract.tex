@@ -14,7 +14,7 @@ We give a benchmark-supported review of different interpolation methods and opt 
 %% NDVI corr. 
 Moreover, we present a general interpolation procedure that utilizes additional information to correct the target variable with an uncertainty estimate and then performs a weighted interpolation. In our setting, the target variable is the NDVI and as additional information we use the SCL, the observed NDVI and the spectral bands. Consequently, we do not filter using the SCL but weight observations according to their reliability. The combination of different interpolation methods and correction models yields 28 interpolation strategies. In order to choose the best one, we assume that the better the interpolated NDVI TS models crop growth, the more suitable it is to predict crop yield. 
 % {The resulting interpolation strategy uses Smoothing Splines and corrects the NDVI with uncertainty estimation through a simple linear model considering only of the observed NDVI and the associated SCL class.} 
-Applying this procedure, the variance in crop yield explained by the resulting NDVI TS decreases by more than 5\%. 
+Applying this procedure, the variance in crop yield explained by the resulting NDVI TS decreases by 5.4\%. 
 
 %% Reproducibility  +  R-package
 Instructions and a codebase for reproducibility of the results, as well as an R package making the presented general interpolation procedure accessible to the user, are supplied. 

@@ -1,4 +1,6 @@
 \chapter{Discussion}\label{sec:discussion}
+    This chapter is a collection of arguments and justifications regarding various decisions. First, we examine IMs for compatibility with data gaps and argue choices for selected IMs. Second, we identify the best IS and investigate issues that have arisen in the context of the NDVI correction.
+
 
 \section{{{IM}}s}{ \label{sec:discussion_itpl}
     \subsection{Data Gaps in Time Series}\label{sec:discussion_itpl_data_gaps}{
@@ -20,9 +22,10 @@
 
     \subsection{Preselection}{\label{sec:itpl_preselection}
         We shall now justify our preselection of the {{IM}}s tested in section~\ref{sec:itpl_perfomance_assessment}. 
-        We decided against NW because it has systematic errors at peaks and valleys. Moreover, this method handles data gaps poorly (cf.~\ref{sec:discussion_itpl_data_gaps}). 
-        Moreover, we will not consider UK since the underlying assumptions are not met and therefore a systematic bias is introduced. On top of that, maximum likelihood parameter estimation occasionally fails.
+        We decided against NW Because of its systematic errors at peaks and valleys. Moreover, this method handles data gaps poorly (cf.~\ref{sec:discussion_itpl_data_gaps}). 
+        Moreover, UK will not be considered since the underlying assumptions are not met and therefore a systematic bias is introduced. On top of that, maximum likelihood parameter estimation occasionally fails.
         Also, we do not include the SG in the next selection, since we see it as a special case of LOESS.
+        The remaining IMs are thus SS LOESS DL BS and FS.
     }
 
     \subsection{Candidate Selection}{\label{sec:itpl_candiate_selection}
@@ -35,23 +38,24 @@
 \section{NDVI Correction}{\label{sec:discussion_corr}
     \subsection{Choose {{IS}}}\label{sec:discussion_iplfstrategy-choose}
 
-    The evaluation of various ISs via the YPE (cf. section~\ref{sec:results_ndvi_corr}) clearly shows that SS are better suited than DL for yield estimation. Moreover, it seems surprising that robustification tends to lead to worse results, despite reducing LOOCV residuals in most cases (cf. section~\ref{sec:results_itpl}). We suspect that the correction models detect outliers to some extent and give them less weight. Indeed, for OLS\textsuperscript{SCL} in equation \refeq{eq:corr_lm_res} we see that the smaller the observed NDVI of a point, the larger the estimated residual and consequently a lower weight. This is consistent with our experience that outliers usually suggest a too small NDVI. This suspicion is consistent with the fact that if we do not correct, robustification produces a marginal improvement. 
-    By using the best IS with correction (OLS\textsuperscript{SCL}), rather than the best IS without correction (SS\textsuperscript{rob}), we gain $(0.148-0.140)/0.148 = 5.4\%$ of information about the underlying vegetation --- that is, 100\% would allow us to model the yield perfectly.
+    The evaluation of various ISs via the YPE (cf. section~\ref{sec:results_ndvi_corr}) clearly shows that SS are better suited than DL for yield estimation. Moreover, it seems surprising that robustification tends to worsen the results, despite reducing LOOCV residuals in most cases (cf. section~\ref{sec:results_itpl}). We suspect that the correction models handles outliers by themselves (by correcting or down-weighting them) and thus do not benefit from an external robustification. Indeed, for OLS\textsuperscript{SCL} we see in equation \refeq{eq:corr_lm_res} that the smaller the observed NDVI of a point, the larger the estimated residual --- yielding a lower weight. This is consistent with our experience that outliers usually suggest a too small NDVI value. Our suspicion is consistent with the fact that if we do not correct, robustification produces a marginal improvement. 
+    By using the best IS with correction (SS+OLS\textsuperscript{SCL}), rather than the best IS without correction (SS\textsuperscript{rob}), we gain $(0.148-0.140)/0.148 = 5.4\%$ of information about the underlying vegetation --- where 100\% would allow us to model the yield perfectly.
     
     Note that the results discussed here depend strongly on the link function used. Once we change this, we should also repeat this analysis.
             
 
 
     \subsection{Investigation of Error Sources in Yield Estimation}{\label{sec:discuss_high-rmse-in-yield-prdiction}
-        Although the YPE was not our primary goal, but was only used as a means to select the best IS, we compare our values with the corresponding ones of \cite{perichPixelbasedCropYield2022}. There, a non-relative YPE 1.00 [t/ha] was obtained using weather data in addition to NDVI TS. Since our error is only about 3.3\% larger (cf. table~\ref{tab:methods_vs_yieldprediction}), we consider our results to be quite competitive. Especially since we did not use meterological data aside from the time-scale transformation (cf. section~\ref{sec:gdd_def}). In the following we ask ourselves how much we can actually expect. We have multiple sources of uncertainty in the data:
+        Although the YPE was not our primary goal, but was only used as a means to select the best IS, we compare our values with the corresponding ones by \cite{perichPixelbasedCropYield2022}. There, a non-relative YPE 1.00 [t/ha] was obtained using weather data in addition to NDVI TS. Since our error is only about 3.3\% larger (cf. table~\ref{tab:methods_vs_yieldprediction}), we consider our results to be competitive. Especially as we did not use meterological data aside from the time-scale transformation (cf. section~\ref{sec:gdd_def}). In the following we ask ourselves how much modelling performance we can actually expect. This will be limited by multiple sources of uncertainty in the data:
         \begin{Nenumerate}
             \item Uncertainty in Yield data collected by the combine harvester.
             \item Uncertainty in Yield data through rasterization.
             \item Uncertainty in satellite images through ``measurement errors'' introduced via clouds and other atmospheric effects.
-            \item Uncertainty introduced by interpolating (especially when long data-gaps are present).
+            \item Uncertainty introduced by assumed homogenity of vegetation on pixel resultion. 
+            \item Uncertainty introduced by interpolating NDVI TS (especially when long data-gaps are present).
         \end{Nenumerate}
         Furthermore, even if we would have a perfect NDVI curve, it contains only a fraction of the information about the underlying vegetation. 
-        Nonetheless, \cite{perichPixelbasedCropYield2022} manages to explain up to 86\% of the variance in crop yield with only the NDVI TS and weather data (Table 5).  Although the authors divided the data into training and test data, this subdivision was done randomly at the pixel level (without subdividing into fields or years). Thus, there are pixels in the training data that are neighbouring pixels from the test data and thus exhibit high correlations (in yield and NDVI). The authors assume that the poor results for the cross-year-validation\footnote{By cross-year-validation we understand a cross validation with respect to the RMSE, where each year represents a single fold.} (table 6) are due to uneven (extreme) weather. We on the other hand, suspect that overfitting via high-correlation pixels is responsible for these high values. This could be investigated by performing a cross-field-validation\footnote{By cross-field-validation we understand a cross validation with respect to the RMSE with a partitioning $\mathcal{F}=\{F_1,\dots,F_m\}$ such that all pairs $(P_i,P_j)$ of pixels from the same year with the same field ID, it holds that $P_i\in F_k \iff P_j\in F_k$.}. 
+        Nonetheless, \cite{perichPixelbasedCropYield2022} manages to explain up to 86\% of the variance in crop yield with only the NDVI TS and weather data (Table 5).  Although the authors divided the data into training and test data, this subdivision was done randomly at pixel level (without subdividing into fields or years). Thus, there are pixels in the training data that are neighbouring pixels from the test data and consequently exhibit high correlations (in yield and NDVI). We suspect that overfitting via high-correlation pixels is responsible for these high values. On the other hand, the authors observe poor results for cross-year-validation\footnote{By cross-year-validation we understand a cross validation with respect to the RMSE, where each year represents a single fold.} (table 6) and account them to uneven (extreme) weather.  If this is not rather caused by the suspected overfitting, could be investigated by performing a cross-field-validation\footnote{By cross-field-validation we understand a cross validation with respect to the RMSE with a partitioning $\mathcal{F}=\{F_1,\dots,F_m\}$ such that all pairs of pixels from the same year with the same field ID, it holds that both pixels are in the same $F_k$.} 
         Nevertheless, we claim, that our results are not corrupted by the correlation of neighboring pixels. This is because our result is not a 'good' YPE, but the selected IS. So all tested ISs benefit equally from this correlation in terms of YPE and we are only interested in the relative differences.
 
     }
@@ -59,13 +63,13 @@
     \subsection{NDVI Correction as Unsupervised Learning}
         The question arises if we can build the correction model on the same year as we want to apply it on. Usually, a similar approach might carry the danger of overfitting. However, we have not used any ground truth at any point (until the evaluation). Instead, we estimated the ``true'' NDVI with the assumption~\ref{true_ndvi_assumption} via OOB. In other words, we have not used any ground truth but rather developed an unsupervised learner of the NDVI. Consequently, we reason that we can apply our method to a new (comparable) dataset.
     \subsection{Using Additional Covariates}{
-        In section~\ref{sec:corr_data_table} we have only used the spectral data (and the observational NDVI calculated from them) as covariates. Since we have the weather data available (cf. REF-SEC), it would be a small effort to incorporate it, together with statistics collected from it (i.e., GDD or `rainfall in the last 30 days'). 
-
-        We decided against using this data, because on the one hand we have the problem that we have practically too few observations (we observe only 5 years) and we expect the weather in our study region to be rather homogeneous which is suggested by the fact that the weather data published by Meteoswiss are for a grid with a resolution of 1 km. On the other hand, we want the underlying model not to learn improper relationships. For example, the model might automatically predict a high NDVI for a day in summer (detected by high GDD / many sunshine hours / high temperature) just because it is ``used'' to observing a lot of vegetation in summer. 
-        Including temporally (e.g., $P_{t-1}$ and $P_{t+1}$) and geographically adjacent pixels would likely improve performance. However, for simplicity, we omit it here\footnote{This is done for simplicity of understanding and using the model, since one would need to adapt to some convention of how to supply the data of adjacent pixels without redundancy (i.e., supplying $P_t$ multiple times).}.
-}
+        In section~\ref{sec:corr_data_table} we have only used covariates derived from spectral data. Even though we included meterological data from \cite{perichPixelbasedCropYield2022} in our implementation,
+        % , it would be a small effort to incorporate it, together with statistics collected from it (i.e., GDD or `rainfall in the last 30 days'). 
+        we decided against using this data. On the one hand we have the problem that we have practically too few observations (we observe only 5 years). Moreover, we expect the weather in our study region to be rather homogeneous which is suggested by the fact that the weather data published by Meteoswiss are for a grid with a resolution of 1 km. On the other hand, we want the underlying model not to learn improper relationships. For example, the model might automatically predict a high NDVI for a day in summer (detected by high GDD / many sunshine hours / high temperature) just because it is ``used'' to observing a lot of vegetation in summer. 
+        Including temporally (e.g., $P_{t-1}$ and $P_{t+1}$) and geographically adjacent pixels would likely improve performance. However, for simplicity, we omit it here\footnote{This is done for simplicity of understanding and using the model, since one would need to adapt to some convention of how to supply the data of adjacent pixels without redundancy (i.e., supplying $P_t$ multiple times). Another complication is a border-pixel with some adjacent pixels outside of the field.}.
+    }
 }
 
 % Comment from Gregor:
     % {You already capture the "main" structure of your thesis with the interpolation and the NDVi correction sections. Can you combine them both in a "synthesis" subsection at the end of the discussion?}
-        % --> NO, synthesis is given in Conclusion
+        % --> NO; synthesis is given in Conclusion
