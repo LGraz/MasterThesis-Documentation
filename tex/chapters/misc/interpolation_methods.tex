@@ -4,9 +4,9 @@
 	\label{sec:itpl_parametric}
 	Parametric Curve estimation tries to fit a parametric function, such as, for example, a Gaussian function with parameters $\mu$ and $\sigma$, to a dataset. In the following, we introduce two parametric approaches.
 
-	\subsection{Double Logistic (DL)}
+	\subsection{Double Logistic}
 		\label{sec:double_logistic}
-		The Double Logistic smoothing as described in \cite{beckImprovedMonitoringVegetation2006} heavily relies on shape assumptions of the fitted curve (i.e., the NDVI {TS}). First, we assume that there  is a minimum NDVI level $y_{\min}$ in the winter (e.g., due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking several years into account. Second, we assume that the growth cycle can be divided into an increase and a decrease period, where the {TS} follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$). The equation of the double-logistic fit is given by:
+		The Double Logistic (DL) smoothing as described in \cite{beckImprovedMonitoringVegetation2006} heavily relies on shape assumptions of the fitted curve (i.e., the NDVI {TS}). First, we assume that there  is a minimum NDVI level $y_{\min}$ in the winter (e.g., due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking several years into account. Second, we assume that the growth cycle can be divided into an increase and a decrease period, where the {TS} follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$). The equation of the double-logistic fit is given by:
 		\begin{equation*}
 			y(t) = y_{\min} + \left(y_{\max}-y_{\min}\right)\left(\frac{1}{1+e^{-d_0(t-t_0)}}+\frac{1}{1+e^{-d_1(t-t_1)}}-1\right)
 		\end{equation*}
@@ -26,9 +26,9 @@
 		\end{my_pros_cons_table}
 
 
-	\subsection{Fourier Series (FS)}
+	\subsection{Fourier Series}
 		\label{sec:fourier_approx}
-		\cite{stockliEuropeanPlantPhenology2004} approximates the NDVI curve using a second order FS:
+		\cite{stockliEuropeanPlantPhenology2004} approximates the NDVI curve using a second order Fourier Series (FS):
 		$$
 			\operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}  \right)
 		$$
@@ -61,7 +61,7 @@
 	\label{sec:itpl_nonparametric}
 	In non-parametric curve estimation, the curve does no longer have to be fully determined by parameters, but we allow it to flexibly approximate the data. Note that we do not exclude the use of tuning-parameters.
 
-	\subsection{Kernel Regression: Nadaraya-Watson (NW)}
+	\subsection{Kernel Regression: Nadaraya-Watson}
 		\label{sec:Kernel}
 		As described in section~\ref{sec:itpl_setup}, we aim to estimate
 		\begin{equation}
@@ -76,7 +76,7 @@
 			\hat{f}_{T}(t)=\frac{\sum_{i=1}^{n} K\left(\frac{t-t_{i}}{h}\right)}{n h}, \quad \hat{f}_{T, Y}(t, y)=\frac{\sum_{i=1}^{n} K\left(\frac{t-t_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}},
 			\label{eq:kernel_with_bandwidt}
 		\end{equation}
-		where $h$, the bandwidth, symbolizes the window size of to consider. By using the above function in equation \eqref{eq:nadaraya} we arrive at the NW kernel estimator:
+		where $h$, the bandwidth, symbolizes the window size of to consider. By using the above function in equation \eqref{eq:nadaraya} we arrive at the Nadaraya-Watson kernel estimator (NW):
 		$$\hat{m}(t)=\frac{\sum_{i=1}^{n} K\left(\left(t-t_{i}\right) / h\right) Y_{i}}{\sum_{i=1}^{n} K\left(\left(t-t_{i}\right) / h\right)}$$
 
 		Common choices for the kernel are the normal function or a uniform function (also called `bot' function). 
@@ -94,10 +94,10 @@
 		\end{my_pros_cons_table}
 
 
-	\subsection{Universal Kriging (UK)}
+	\subsection{Universal Kriging}
 		\label{sec:Kriging}
 
-		UK as described in \cite{diggleGaussianModelsGeostatistical2007} was developed in geostatistics to deal with autocorrelation of the response variable at locations that are spatially close. By applying the notion that two spectral indices that are timewise close should also take similar values, we justify the application of UK. In the end, we would like to fit a smooth Gaussian process to the data.
+		Universal Kriging (UK) as described in \cite{diggleGaussianModelsGeostatistical2007} was developed in geostatistics to deal with autocorrelation of the response variable at locations that are spatially close. By applying the notion that two spectral indices that are timewise close should also take similar values, we justify the application of UK. In the end, we would like to fit a smooth Gaussian process to the data.
 
 		% definition (gaussian process)
 		A Gaussian Process $\{S(t) : t\in \mathbb R\} $ is a stochastic process if $(S(t_1),\dots,S(t_k))$ has a multivariate Gaussian distribution for every collection of times ${t_1, \dots , t_k}$. $S$ can be fully characterized by the mean $\mu(t):=E[S(t)]$ and its covariance function $\gamma\left(t, t^{\prime}\right):=\operatorname{Cov}\left(S(t), S\left(t^{\prime}\right)\right)$. 
@@ -119,7 +119,7 @@
 			\end{my_figure}
 
 			\begin{my_figure}{width=1\textwidth}{interpol/kriging_parameter}
-				\caption[Effect of Variogram Parameters and Maximum likelihood failure.]{On the left, we see how the interpolation changes if we increase the nugget and the range parameter. On the right, we compare two UK interpolations, where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
+				\caption[Effect of variogram parameters and failure of maximum likelihood.]{On the left, we see how the interpolation changes if we increase the nugget and the range parameter. On the right, we compare two UK interpolations, where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
 				\label{fig:kriging_parameters}
 			\end{my_figure}
 
@@ -140,9 +140,9 @@
 		\end{my_pros_cons_table}
 
 
-	\subsection{Savitzky-Golay Filter (SG)}
+	\subsection{Savitzky-Golay Filter}
 		\label{sec:Savitzky-Golay}
-		The SG, introduced in \cite{savitzkySmoothingDifferentiationData1964} is a technique in signal processing and can be used to filter out high frequencies (low-pass filter) \citep{schaferWhatSavitzkyGolayFilter2011}. Furthermore, it can also be used for smoothing by filtering high frequency noise while keeping the low frequency signal.
+		The Savitzky-Golay Filter (SG), introduced in \cite{savitzkySmoothingDifferentiationData1964} is a technique in signal processing and can be used to filter out high frequencies (low-pass filter) \citep{schaferWhatSavitzkyGolayFilter2011}. Furthermore, it can also be used for smoothing by filtering high frequency noise while keeping the low frequency signal.
 
 		First, we choose a window size $m$. Then, for each point, $j \in \{m, m+1, \dots, n-m\}$ we fit a polynomial of degree $k$ by:
 		$$\hat y_j=\min_{p\in P_k}\sum_{i=-m}^{m}(p (t_{j+i})-y_{i+j})^{2},$$
@@ -179,12 +179,12 @@
 		\end{my_pros_cons_table}
 
 
-	\subsection{Locally Weighted Regression (LOESS)}
+	\subsection{Locally Weighted Regression}
 		\label{sec:loess}
 		% Introduced by : \cite{clevelandRobustLocallyWeighted1979}
 		% implemented here \cite{cappellariATLAS3DProjectXX2013}
 
-		The LOESS introduced by \cite{clevelandRobustLocallyWeighted1979} can be understood as a generalization of the SG (cf. section~\ref{sec:Savitzky-Golay}).
+		The Locally Weighted Regression (LOESS) introduced by \cite{clevelandRobustLocallyWeighted1979} can be understood as a generalization of the SG (cf. section~\ref{sec:Savitzky-Golay}).
 
 		Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ separately by fitting a polynomial of order $d$ by weighted least squares. The weights are (usually) defined by
 		$$w_i(t_j)=\begin{cases}
@@ -208,9 +208,9 @@
 		\end{my_pros_cons_table}
 
 
-	\subsection{B-Splines (BS)}
+	\subsection{B-Splines}
 		\label{sec:B}
-		BS as discussed in \cite{lycheSplineMethods2005} are piecewise cubic polynomials defined by 
+		B-Splines (BS) as discussed in \cite{lycheSplineMethods2005} are piecewise cubic polynomials defined by 
 		$$
 			S(t)=\sum_{j=0}^{n-1} c_{j} B_{j, k ; t}(t),
 		$$
@@ -237,17 +237,16 @@
 		\end{my_pros_cons_table}
 
 
-	\subsection{Smoothing Splines (SS)}
+	\subsection{Smoothing Splines}
 		\label{sec:Natural_SS}
-		Let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the unique\footnote{Strictly speaking, it is only unique for $\lambda > 0$.} minimizer
+		To define the Smoothing Splines (SS) as in \cite{cravenSmoothingNoisyData1978}, let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the SS are the unique\footnote{Strictly speaking, it is only unique for $\lambda > 0$.} minimizer of
 		\begin{equation}
 			\label{eq:ss}
 			\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}w_i\left(y_{i}-{f}\left(t_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(t)^{2} dt
 		\end{equation}
-			
-		is a % natural\footnote{It is called natural since it is affine outside the data range ($\forall t\notin [t_1, t_n]:\hat m''(t) = 0$)} 
-		cubic spline (i.e., a piecewise cubic polynomial function).
-		The objective function ensures that we decrease the curvature while keeping the RMSE low.
+		 % natural\footnote{It is called natural since it is affine outside the data range ($\forall t\notin [t_1, t_n]:\hat m''(t) = 0$)} 
+		 The objective function ensures that we decrease the curvature while keeping the RMSE low.
+		SS can be represented as cubic splines i.e., piecewise cubic polynomial functions.
 
 		\subsubsection{Whittaker --- Discrete Version with Higher Order Derivatives}
 			The Whittaker smoother introduced in \cite{eilersPerfectSmoother2003} is closely reminiscent of the SS and is also used for the NDVI TS \citep{atzbergerTimeSeriesMonitoring2011}. Similar to SS, we minimize the following expression over $z\in \R^n$:

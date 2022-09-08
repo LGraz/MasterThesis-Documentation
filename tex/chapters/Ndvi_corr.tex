@@ -14,7 +14,7 @@
 \section{Considering other SCL Classes}{\label{sec:corr_otherSCL}
     In figure~\ref{fig:ndvi_corr/residuals_scl_classes} we plot the observed NDVI and notice that some blue points which correspond to the SCL-class 10 (thin cirrus clouds) follow the interpolated line closely. Hence, they might be useful in improving an interpolation fit.
 
-    \begin{my_figure}[ht]{width=0.6\textwidth}{ndvi_corr/residuals_scl_classes}
+    \begin{my_figure}[ht]{width=0.7\textwidth}{ndvi_corr/residuals_scl_classes}
         \caption[Smoothing splines fit considering SCL45.]{A smoothing splines fit considering green and yellow points (SCL45).}
         \label{fig:ndvi_corr/residuals_scl_classes}
     \end{my_figure}
@@ -97,9 +97,9 @@
     In this fashion, we obtain 28 distinct {{IS}}s, which we will benchmark in the next section.
 }
 
-\section{Evaluation via (relative) Yield Prediction Error (relative YPE)}{
+\section{Evaluation via (relative) Yield Prediction Error}{
     \label{sec:ndvi_corr_eval}
-    In this section, we introduce the relative YPE and utilize it to evaluate the 28 {{IS}}s from section~\ref{sec:corr_itpl_stat}. 
+    In this section, we introduce the (relative) Yield Prediction Error (relative YPE) and utilize it to evaluate the 28 {{IS}}s from section~\ref{sec:corr_itpl_stat}. 
     % idea
     The fundamental assumption is that the closer the interpolated NDVI {TS} is to the true one, the better it can be used to determine crop yield. Implicitly, we believe that an NDVI {TS} that better models yield will incorporate more true information about the underlying vegetation. 
     Therefore, we want to determine a comparable YPE for each {{IS}} and choose it as a benchmark criterion. 

@@ -135,7 +135,7 @@
 	\input{tex/chapters/misc/2x3_satelite_ts_plot_grid.tex}
 	% Description of plot
 	Using an example pixel, we illustrate the challenges in working with S2 image data. Figure~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, one selected Pixel and the NDVI {TS} of this pixel. 		
-	In February (image a), we see no vegetation but bare soil and thus also a low NDVI. At the beginning of May (b), we observe a cloudless dark green field with a high NDVI. In (c) heavy cloud cover (SCL class 9) leads to a complete loss of plant information in this S2 observation. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds which is also reflected in a sudden NDVI drop. Even though SCL indicates that (e) are thin cirrus clouds, we see a pale green, and we also note a NDVI. Therefore, we remark that some SCL45 observations are not accurate and even though a few non-SCL45 observations contain useful information, most of them are too unreliable (e.g., all SCL 9 observations). Thus, we aim to substitute the unreliable ones with interpolated versions and correct corrupt ones.
+	In February (image a), we see no vegetation but bare soil and thus also a low NDVI. At the beginning of May (b), we observe a cloudless dark green field with a high NDVI. In (c) heavy cloud cover (SCL class 9) leads to a complete loss of plant information in this S2 observation. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds which is also reflected in a sudden NDVI drop. Even though SCL indicates that (e) are thin cirrus clouds, we see a pale green, and we also note a NDVI. Therefore, we remark that some SCL45 observations are not accurate and even though a few non-SCL45 observations contain useful information, most of them are too unreliable (e.g., all SCL 9 observations). Thus, we aim to substitute the unreliable ones with interpolated versions and correct contaminated ones.
 		
 		%% subfigures references:
 		% (see.~\ref{fig:satelite/time_series_2021_P112/15_scl5_2021-02-23.png})
@@ -151,7 +151,7 @@
 
 	\subsection{Score Functions}\label{sec:scorefun}
 	    Now, we define the Root Mean Square Error (RMSE), a prominent and outlier-sensitive score function.
-	    \begin{definition}(RMSE)
+	    \begin{definition}(RMSE)\label{def:rmse}
 		Given a vector $y\in \R^n$ and its estimator $\hat y$, we define the RMSE as:
 		\begin{equation}
 			\label{eq:rmse}

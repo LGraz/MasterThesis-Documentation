@@ -1,8 +1,8 @@
 
 %     ML-methoden: muss ich sie beschreiben? Es scheint mir wissen zu sein, was ich vorraussetzen kann. 
     % --> ja, kurz und bündig erklären
-\subsection{Ordinary Least Squares (OLS)}{\label{sec:corr_model_OLS}
-    The OLS is a linear model that aims to minimize the sum of the squared residuals. We assume a linear relationship between $y$ and $X$ and allow for Gaussian noise. That is:
+\subsection{Ordinary Least Squares}{\label{sec:corr_model_OLS}
+    The Ordinary Least Squares estimator (OLS) is a linear model that aims to minimize the sum of the squared residuals. We assume a linear relationship between $y$ and $X$ and allow for Gaussian noise. That is:
     \begin{equation}
         \label{eq:ols}
         y = X\beta  + \epsilon \quad \text{ where }\epsilon \overset{i.i.d.}{\sim}\mathcal{N}(0,\sigma^2)
@@ -24,8 +24,8 @@
     }
     \end{my_pros_cons_table}
 }
-\subsection{Least Absolute Shrinkage and Selection Operator (LASSO)}{\label{sec:corr_model_LASSO}
-    The LASSO can be similarly expressed than the OLS but adds a penalty to the minimization problem:
+\subsection{Least Absolute Shrinkage and Selection Operator}{\label{sec:corr_model_LASSO}
+    The Least Absolute Shrinkage and Selection Operator (LASSO) can be similarly expressed than the OLS but adds a penalty to the minimization problem:
     \begin{equation}
         \hat \beta_\lambda = \argmin_{\beta \in \R^p}\|y - X\beta\|_2^2 + \lambda \|\beta\|_1 = \argmin_{\beta \in \R^p \text{ and } \|\beta\|_1<\lambda}\|y - X\beta\|_2^2.\footnote{The last two terms are equivalent by lagrangian optimization.}
         \label{eq:lasso}
@@ -52,8 +52,8 @@
     \end{my_pros_cons_table}
 }
 
-\subsection{General Additive Model (GAM)}{\label{sec:corr_model_GAM}
-    GAMs as described in \cite{hastieGeneralizedAdditiveModels1987} are a special case of Projection Pursuit Regression, where only the $p$ directions parallel to the coordinate axes are considered. The result is different to a linear model since the coordinate functions are not restricted to be linear but are assumed to be non-parametric functions. The model can be written as:
+\subsection{General Additive Model}{\label{sec:corr_model_GAM}
+    General Additive Models (GAM) as described in \cite{hastieGeneralizedAdditiveModels1987} are a special case of Projection Pursuit Regression, where only the $p$ directions parallel to the coordinate axes are considered. The result is different to a linear model since the coordinate functions are not restricted to be linear but are assumed to be non-parametric functions. The model can be written as:
     \begin{equation}
         \label{eq:gam}
         g_{add}(x) = \mu + \sum_{i=1}^pg_j(x_j).\footnote{Where $g_j$ is a real-valued function. For identifiability we also demand $\mathbb{E}[g_j(X_{:,j})] = 0$ for $j=1,\dots,p$.}
@@ -80,8 +80,8 @@
     \end{my_pros_cons_table}
 }
 
-\subsection{Random Forest (RF)}{\label{sec:corr_model_RF}
-    To define a random Forest introduced by \cite{breimanRandomForests2001}  we will first define what a Tree is. A {(decision) Tree} is a graph $(V,E)$ without circles, a distinct root node, every node has at most two children and every leaf has a value assigned to it. At each node there is a boolean condition testing if one variable is greater than some value and a pointer to one child depending on the boolean value. To evaluate a tree we start at the root node, test the boolean expression and go to the node indicated by the resulting pointer. This we repeat until we end up at a leaf-node, where we return the value assigned to it. 
+\subsection{Random Forest}{\label{sec:corr_model_RF}
+    To define a Random Forests (RF) introduced by \cite{breimanRandomForests2001}  we will first define what a Tree is. A {(decision) Tree} is a graph $(V,E)$ without circles, a distinct root node, every node has at most two children and every leaf has a value assigned to it. At each node there is a boolean condition testing if one variable is greater than some value and a pointer to one child depending on the boolean value. To evaluate a tree we start at the root node, test the boolean expression and go to the node indicated by the resulting pointer. This we repeat until we end up at a leaf-node, where we return the value assigned to it. 
     
     To build such a Tree, we will recursively partition the covariate space using greedy splits\footnote{For computational reasons, we will only use splits along one covariate. So we `cut' our covariate space into rectangles.} decreasing the RMSE\footnote{To calculate the RMSE, we need a prediction. Let $P$ be the current partition, then the predicted value for some $x\in A \in P$ is the mean of the responses of all the points in $A$ (included in the training data).} each time. If the set we want to split contains less than a certain amount of training points, we stop.
     
@@ -97,8 +97,8 @@
     }
     \end{my_pros_cons_table}
 }
-\subsection{Multivariate Adaptive Regression Splines (MARS)}{\label{sec:corr_model_MARS}
-    A MARS model as introduced in \cite{friedmanMultivariateAdaptiveRegression1991} can be described by 
+\subsection{Multivariate Adaptive Regression Splines}{\label{sec:corr_model_MARS}
+    A Multivariate Adaptive Regression Splines (MARS) model as introduced in \cite{friedmanMultivariateAdaptiveRegression1991} can be described by 
     \begin{equation}
         \label{eq:mars}
         g(x) = \sum_{m=0}^M \beta_m h_m(x),

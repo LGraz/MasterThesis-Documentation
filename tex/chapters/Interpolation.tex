@@ -71,7 +71,7 @@
 		\label{fig:interpol/statistics_SS_param_optim}
 	\end{my_figure}
 
-	We choose $\operatorname{QAR}^{90}$ as our optimization function because we want to allow 10\% of outliers (corrupt points) but also aim for an accurate fit in 90\% of the cases.  
+	We choose $\operatorname{QAR}^{90}$ as our optimization function because we want to allow 10\% of outliers (contaminated points) but also aim for an accurate fit in 90\% of the cases.  
 	
 	Figure~\ref{fig:interpol/statistics_SS_param_optim} exemplifies the effect of the chosen quantile in the optimization function (QAR\textsuperscript{x}). To summarize, we may say that the higher the quantile, the stronger the smoothing. 
 }
@@ -126,12 +126,16 @@
 		for $r,w\in \R^n$. 
 	}
 	\subsection{Examples and Conclusions}{		
-		Examples of the first four iterative fits using SS are shown in figure~\ref{fig:interpol/2x3_SS_robust} for six pixels. For the analogous figures of the other {{IM}}s cf. figures~\ref{fig:interpol/2x3_loess_robust},~\ref{fig:interpol/2x3_B-Splines_robust},~\ref{fig:interpol/2x3_DL_robust} and~\ref{fig:interpol/2x3_loess_robust}.
-		Indeed, we observe how the interpolated {TS} is less affected by outliers after each iteration. We notice the biggest difference in the first iteration. Furthermore, in the plot at the bottom left\todo{ consider naming the sub-plots} we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always stop after one iteration.
+		Examples of the first four iterative fits using SS and LOESS are shown in figure~\ref{fig:interpol/2x3_SS_robust} and~\ref{fig:interpol/2x3_loess_robust} for six pixels. For the analogous figures of BS and DL we refere to the appendix~\ref{fig:interpol/2x3_B-Splines_robust} and~\ref{fig:interpol/2x3_DL_robust}.
+		Indeed, we observe how the interpolated {TS} is less affected by outliers after each iteration. We notice the biggest difference in the first iteration. Furthermore, in the plot at the bottom left we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always stop after one iteration.
 
 		\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_SS_robust}
 			\caption[Smoothing splines robustification.]{Smoothing splines \RobItPlot}
 			\label{fig:interpol/2x3_SS_robust}
+		\end{my_figure}
+		\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_loess_robust}
+			\caption[The LOESS smoother robustification.]{The LOESS smoother \RobItPlot}
+			\label{fig:interpol/2x3_loess_robust}
 		\end{my_figure}
 	} 
 	
