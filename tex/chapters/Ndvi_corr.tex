@@ -57,12 +57,12 @@
 % \section{Uncertainty Estimation}{
     \label{sec:corr_uncertainty}
     Once we corrected the NDVI using the models described in the previous section, we are left with the problem that not every correction is equally reliable.\footnote{One correction is illustrated in the figure~\ref{fig:step_plot/2017-206_corr.pdf}. In this figure, the outer points (labeled as clouds) have a large scatter.}. Hence, we are interested in a measure of how uncertain an estimate is. 
-    We achieve this analogously as we corrected the NDVI, by replacing the response ($\operatorname{NDVI}_\text{``true''}$) with the absolute residuals $v := \left|y -\hat y\right|$ and modeling their relationship with the covariates defined by $X$.  In this way, we obtain a model for the absolute residuals $v$ and the estimator $\hat v$. 
+    We achieve this analogously as we corrected the NDVI, by replacing the response $\operatorname{NDVI}_\text{``true''}$ with the absolute residuals $v := \left|y -\hat y\right|$ and modeling their relationship with the covariates defined by $X$.  In this way, we obtain a model for the absolute residuals $v$ and the estimator $\hat v$. 
     % }
     
 % \section{Interpolation}{
     \label{sec:corr_link}
-    In the following, we will convert our uncertainty estimate into weights that can be used for interpolation. For this, consider a pixel $P$, $\hat y^{(P)}$ its corrected NDVI and $\hat v^{(P)}$ the estimated uncertainties of $\hat y^{(P)}$. In order to interpolate $\hat y^{(P)}$, we will give less weight to unreliable observations. Thus, we define the weight function: 
+    In the following, we will convert our uncertainty estimate into weights that can be used for interpolation. For this, consider a pixel $P$, $\hat y^{(P)}$ its corrected NDVI values and $\hat v^{(P)}$ the estimated uncertainties of $\hat y^{(P)}$. In order to interpolate $\hat y^{(P)}$, we will give less weight to unreliable observations. Thus, we define the link function connecting $\hat v$ with weights: 
     \begin{equation}
         \label{eq:corr_link}
         w^{(P)}_\tau:=\frac{1}{R} \frac{1}{\hat v^{(P)}_\tau}, 
@@ -83,7 +83,7 @@
     \end{Nenumerate}
     At each step we have a choice, more precisely:
     \begin{Nitemize}
-        \item Interpolation: Smoothing Splines / Double Logistic
+        \item Interpolation: SS / DL
         \item Robustify: Yes / No
         \item Correction \& uncertainty estimation: RF / OLS -- considering only SCL-classes / OLS -- considering all selected covariates / MARS / GAM / LASSO / no correction.
     \end{Nitemize}
@@ -111,7 +111,7 @@
         \begin{equation}
             YPE = \frac{\sqrt{\sum_{i=1}^n(y_i - \hat y_i)}}{\bar y}, %Y bar wird nicht erklärt
         \end{equation}
-        where $\bar y$ denotes the sample mean. For the non-relative YPE do not divide by $\bar y$.
+        where $\bar y$ denotes the sample mean. For the (non-relative) YPE do not divide by $\bar y$.
     \end{definition}
 
     % \subsubsection*{Yield Estimation}
@@ -142,7 +142,7 @@
         For the choice we were inspired by (cf. table 2 in \cite{kamirEstimatingWheatYields2020}). However, we deliberately omit any statistic that involves the minimum (e.g., the NDVI-range), since we regard the minimum as a very error-prone measure due to the large influence of clouds in the {TS}. 
         
         As a result, for each {{IS}}, a matrix is obtained in which each row corresponds to a pixel and both the yield and the covariates (computed by applying the above statistics) are contained.
-        Using this matrix, we train a random forest for yield estimation, and compute the integrated OOB estimates\footnote{By the integrated OOB estimates, we denote the predictions for each pixel where only trees are used, where the pixel has not been used (as $n_{tree}$, the number of Trees, grows the fraction of trees which do not contain a certain pixel converges to $\frac{1}{e}$).} $\hat y$. Note that the choice of the modeling approach does not matter much, as long as it is general enough (i.e., able to approximate any function) and we use the same one for each {{IS}}. 
+        Using this matrix, we train a random forest for yield estimation, and compute the integrated OOB\footnote{By the integrated OOB estimates, we denote the predictions for each pixel where only trees are used, where the pixel has not been used (as $n_{tree}$, the number of Trees, grows the fraction of trees which do not contain a certain pixel converges to $\frac{1}{e}$).} estimates $\hat y$. Note that the choice of the modeling approach does not matter much, as long as it is general enough (i.e., able to approximate any function) and we use the same one for each {{IS}}. 
         Finally, for each {{IS}}, we calculate the YPE and describe the results in section~\ref{sec:results_ndvi_corr}.
     }
 

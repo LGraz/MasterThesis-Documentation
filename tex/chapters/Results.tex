@@ -2,7 +2,7 @@
 
 \section{Goodness of Fit for Selected {{IM}}s}{
 	\label{sec:results_itpl}
-	Table~\ref{tab:cv-statistics_itpl-methods} benchmarks the selected\footnote{\label{note:selected-IM} For the discussion which IMs have been selected cf. section~\ref{sec:itpl_preselection}.} {{IM}}s (on $P^{SCL45}$) with respect to various score functions. The score functions take the absolute values of the LOOCV residuals and summarize them in a number (the smaller, the better). For each of the 5 selected {{IM}}s, we consider the basic and the robustified (see section~\ref{sec:loess_robustify}) version.
+	Table~\ref{tab:cv-statistics_itpl-methods} shows the benchmarks of the selected\footnote{\label{note:selected-IM} For the discussion which IMs have been selected cf. section~\ref{sec:itpl_preselection}.} {{IM}}s (on $P^{SCL45}$) with respect to various score functions. The score functions summarize the absolute values of the LOOCV residuals (the smaller, the better). For each of the 5 selected {{IM}}s, we consider the basic and the robustified (see section~\ref{sec:loess_robustify}) version.
 
 	\begin{table}[h]
 		\begin{center}
@@ -14,7 +14,7 @@
 		\end{center}
 	\end{table}
 	
-	DL is the best among both robustified and non-robustified with respect to most of the score functions used (all except q95) and is especially superior to the other parametric approach, which is FS. Especially the robust FS performs poorly. The LOESS dominates (i.e., is superior on every score function) all other non-parametric methods, but is closely followed by the SS. The BSPL, on the other hand, is the worst non-parametric method tested here. 
+	DL performs the best among both robustified and non-robustified with respect to most of the score functions used (all except q95) and is especially superior to the other parametric approach, which is FS. Especially the robust FS performs poorly. The LOESS is superior on every score function than all other non-parametric methods, but is closely followed by the SS. The BSPL exhibits the worst performance out of all non-parametric method tested here. 
 }
 
 
@@ -28,8 +28,8 @@
 			\normalsize
 		\end{center}
 	\end{table}
-	The YPE for the 28 (in section~\ref{sec:corr_itpl_stat}) chosen {{IS}}s is given in table~\ref{tab:methods_vs_yieldprediction_relative}. We note that robustification, does not improve the quality of the fit (measured via the YPE) in most cases. 
-	In addition, SS(rob) tend to better than DL(rob) in terms of YPE, especially if no correction is made. The {{IS}} that leads to the lowest YPE is the OLS\textsuperscript{SCL} with SS. Given that the OLS\textsuperscript{SCL} models have very good interpretability, we also present the regression equations below. The corrected NDVI is calculated using 
+	The YPE for the 28 chosen {{IS}}s (cf. section~\ref{sec:corr_itpl_stat}) is given in table~\ref{tab:methods_vs_yieldprediction_relative}. We note that robustification does not improve the quality of the fit (measured via the YPE) in most cases. 
+	In addition, SS tend to be better than DL (with and without robustification) in terms of YPE, especially if no correction is made. The {{IS}} that leads to the lowest YPE is the OLS\textsuperscript{SCL} with SS. Given that the OLS\textsuperscript{SCL} models have very good interpretability, we also present the regression equations below. The corrected NDVI is calculated using 
 	\begin{equation}\label{eq:corr_lm}
 		\begin{aligned}		
 			{\operatorname{NDVI}}_{\text{corr}}  = &
@@ -46,7 +46,7 @@
 			+ \mathbbm 1_{{SCL = 11}} 0.512 
 		\end{aligned}
 	\end{equation} 
-	where $\mathbbm 1_{{SCL = 2}}$ is equal to one if the current observation corresponds to SCL class 2 and zero otherwise.\footnote{$\mathbbm 1$ is also called an indicator function or characteristic function in mathematics.}. Whereas, we obtain the estimated absolute residuals by: 
+	where $\mathbbm 1_{{SCL = 2}}$ is equal to one if the current observation corresponds to SCL class 2 and zero otherwise\footnote{$\mathbbm 1$ is also called an indicator function or characteristic function in mathematics.}. Whereas, we obtain the estimated absolute residuals by: 
 	\begin{equation}\label{eq:corr_lm_res}
 		\begin{aligned}		
 			\widehat{\operatorname{abs}}\left({\operatorname{NDVI}_\text{``true''} - \operatorname{NDVI}}_{\text{corr}}\right)  = &
@@ -63,6 +63,7 @@
 			+ \mathbbm 1_{{SCL = 11}} 0.172 
 		\end{aligned}
 	\end{equation} 
+	Thus, if we observe a pixel with SCL class 4 (`vegetation') but a NDVI of only 0.4, the corrected NDVI would be $0.711 \cdot 0.4 + 0.21 = 0.494$ with an estimated absolute residual of $-0.133 \cdot 0.4 + 0.146 = 0.93$.
 	In the equation~\refeq{eq:corr_lm}, we notice the strongest upwards correction for SCL classes 8, 9 and 11 (correspond to `medium probability clouds', `high probability clouds' and `thin cirrus clouds'). The estimated absolute residuals, however, are the smallest for SCL classes 4 and 5 (`vegetation' and `bare soil'). Furthermore, the higher the observed NDVI the lower are the estimated absolute residuals.
 
 	For the \texttt{R}-output of the \texttt{summary} function of the two models, we refer to the appendix~\ref{app:ols-scl-summary}. 
