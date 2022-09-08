@@ -3,9 +3,7 @@
 	This section describes the available data and the challenges associated with it.
 	Our study region is a farm of over 800ha, which is located in western Switzerland. From \cite{perichPixelbasedCropYield2022}  we acquired Sentinel-2 (S2) satellite image data (section~\ref{sec:s2_img_data}), yield maps of several cereals from 2017 to 2021 (section~\ref{sec:yieldmapping_data}), and meteorological data (section~\ref{sec:gather_data_to_pixel}). Methods to evaluate an estimator or model are given in section~\ref{sec:general_methods}.
 	
-	For {{IM}}s we refer to sections~\ref{sec:itpl_parametric} and~\ref{sec:itpl_nonparametric}, for a robust {{IS}} to section~\ref{sec:loess_robustify}. In section~\ref{sec:itpl_param_est} we describe a method to objectively determine the quality of an interpolation, and in chapter~\ref{sec:corr} we present the NDVI correction together with an adapted {{IS}}.
-	
-	xxx define IMs and ISs?
+	For {{IM}}s we refer to sections~\ref{sec:itpl_parametric} and~\ref{sec:itpl_nonparametric}, for a robust interpolation technique to section~\ref{sec:loess_robustify}. In section~\ref{sec:itpl_param_est} we describe a method to objectively determine the quality of an interpolation, and in chapter~\ref{sec:corr} we present a strategy which involves correction of the NDVI with a weighted interpolation.	
 }
 
 
@@ -167,8 +165,8 @@
 		\end{definition}
 		Note that QAR\textsuperscript{50} coincides with the median of absolute residuals and QAR\textsuperscript{100} with the maximum of absolute residuals. Hence, the higher, $x$ the fewer outliers QAR\textsuperscript{x} can handle. Consequently, if we expect the data to have 5\% outliers, we should choose $x$ smaller than 95. Furthermore, if an estimator attains lower QAR\textsuperscript{x} values than a competing estimator for $x=50,75,85$, we conclude\footnote{Strictly speaking, this conclusion assumes that the distribution of the residuals is unimodal (i.e., has only one `peak').} that it also produces smaller residuals in most cases.  
 		
-	\subsection{Out-Of-Bag ({OOB}) and Leave-One-Out-Cross-Validation ({LOOCV})}{ \label{sec:OOB_LOOCV}
-		The rationale for OOB and LOOCV is that we intend to evaluate a model $M$ with unseen data. That is, if $D$ describes the entire dataset, and we train a model on a subset of $D$, we can use the remaining data to evaluate the model. 
+	\subsection{Out-Of-Bag and Leave-One-Out-Cross-Validation}{ \label{sec:OOB_LOOCV}
+		The rationale for Out-Of-Bag ({OOB}) and Leave-One-Out-Cross-Validation ({LOOCV}) is that we intend to evaluate a model $M$ with unseen data. That is, if $D$ describes the entire dataset, and we train a model on a subset of $D$, we can use the remaining data to evaluate the model. 
 		To formally introduce this, let:
 		$$
 			D=\{(X_{[j,:]},y_j)|\; X\in\R^{n\times p}, y\in \R^n, j=1,\dots,n\}

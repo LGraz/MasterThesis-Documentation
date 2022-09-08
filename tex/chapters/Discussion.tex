@@ -2,7 +2,7 @@
     In the first part of the discussion, we examine IMs for compatibility with data gaps and argue choices for selected IMs. In the second part, we identify the best IS and discuss issues that have arisen in the context of the NDVI correction.
 
 
-\section{{{IM}}s}{ \label{sec:discussion_itpl}
+\section{Interpolation}{ \label{sec:discussion_itpl}
     \subsection{Data Gaps in Time Series}\label{sec:discussion_itpl_data_gaps}{
         NW estimates the value for $t$ by relating to the points near $t$. To determine what `near' means, a bandwidth $h$ is used (cf. equation~\refeq{eq:kernel_with_bandwidt}). This gets problematic as soon as the data gaps become larger than $h$, since no points are left that are close to $t$. 
 
@@ -53,10 +53,9 @@
             \item Uncertainty in yield data collected by the combine harvester \citep{robinsonComparingPerformanceTechniques2005}.
             \item Uncertainty in yield data through rasterization.
             \item Uncertainty in satellite images through `measurement errors' introduced via clouds and other atmospheric effects (cf. section~\ref{sec:s2_challangges}).
-            \item Heterogeneity within one pixel that includes, for example, very dense vegetation (and thus according to \cite{guNDVISaturationAdjustment2013} saturation of the NDVI) on the one half and dry soil at the other half leads to a less informative NDVI value.
+            \item Heterogeneity within one pixel that includes, for example, very dense vegetation (and thus according to \citeauthor{guNDVISaturationAdjustment2013} saturation of the NDVI) on the one half and dry soil at the other half leads to a less informative NDVI value.
             \item Uncertainty introduced by interpolating NDVI TS (especially when long data-gaps are present).
         \end{Nenumerate}
-        \todo[inline]{find citations for the above}
         Furthermore, even if we would have a perfect NDVI curve, it contains only a fraction of the information about the underlying vegetation. 
         Nonetheless, \cite{perichPixelbasedCropYield2022} manages to explain up to 86\% of the variance in crop yield with only the NDVI TS and weather data (Table 5).  Although the authors divided the data into training and test data, this subdivision was done randomly at pixel level (without subdividing into fields or years). Thus, there are pixels in the training data that are neighboring pixels from the test data and consequently exhibit high correlations (in yield and NDVI). We suspect that overfitting via high-correlation pixels is responsible for these high values. On the other hand, the authors observe poor results for cross-year-validation\footnote{By cross-year-validation we understand a cross validation with respect to the RMSE, where each year represents a single fold.} (table 6) and account them to uneven (extreme) weather.  If this is not rather caused by the suspected overfitting, could be investigated by performing a cross-field-validation\footnote{By cross-field-validation we understand the same as with cross-year-validation but with splitting each fold (i.e., a year) further into the respective fields. Since we have multiple fields per year, during evaluation each model trained will have seen the weather of all years but no adjacent pixels.}.%\footnote{By cross-field-validation we understand a cross validation with respect to the RMSE with a partitioning $\mathcal{F}=\{F_1,\dots,F_m\}$ such that all pairs of pixels from the same year with the same field ID, it holds that both pixels are in the same $F_k$.}.
         Nevertheless, we claim, that our results are affected by spatial correlation of neighboring pixels. This is because we expect all tested ISs to benefit equally from this correlation in terms of YPE, and we are only interested in the relative differences. our result is not a 'good' YPE, but the selected IS. So 
