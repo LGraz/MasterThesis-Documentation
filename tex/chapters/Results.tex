@@ -6,7 +6,7 @@
 
 	\begin{table}[h]
 		\begin{center}
-			\caption[Goodness of fit for {{IM}}s (on $P^{SCL45}$) measured with the score functions.]{Comparing the goodness of fit for selected {{IM}}s (on $P^{SCL45}$) measured with the score functions (that take the LOOCV residuals as input) listed in the left column. $q_X$ denotes here the $X\%$ quantile. Colored row-wise.}
+			\caption[Goodness of fit for {{IM}}s (on $P^{SCL45}$) measured with score functions.]{Comparing the goodness of fit for selected {{IM}}s (on $P^{SCL45}$) measured with score functions (see section~\ref{sec:scorefun}) that take the LOOCV residuals as input. Colored row-wise.}
 			\scriptsize
 			\input{tex/chapters/misc/table_cv-statistics_itpl-methods}
 			\normalsize
@@ -34,33 +34,33 @@
 		\begin{aligned}		
 			{\operatorname{NDVI}}_{\text{corr}}  = &
 			0.711 \operatorname{NDVI}_\text{observed}  
-			+ \mathbbm 1_{{SCL = 2}} 0.215 
-			+ \mathbbm 1_{{SCL = 3}} 0.237 
-			+ \mathbbm 1_{{SCL = 4}} 0.210 \\ &
-			+ \mathbbm 1_{{SCL = 5}} 0.116 
-			+ \mathbbm 1_{{SCL = 6}} 0.162 
-			+ \mathbbm 1_{{SCL = 7}} 0.327 
-			+ \mathbbm 1_{{SCL = 8}} 0.474 \\ &
-			+ \mathbbm 1_{{SCL = 9}} 0.575 
-			+ \mathbbm 1_{{SCL = 10}} 0.306 
-			+ \mathbbm 1_{{SCL = 11}} 0.512 
+			+ 0.215 \,\mathbbm 1_{{SCL = 2}} 
+			+ 0.237 \,\mathbbm 1_{{SCL = 3}} 
+			+ 0.210 \,\mathbbm 1_{{SCL = 4}} \\ &
+			+ 0.116 \,\mathbbm 1_{{SCL = 5}} 
+			+ 0.162 \,\mathbbm 1_{{SCL = 6}} 
+			+ 0.327 \,\mathbbm 1_{{SCL = 7}} 
+			+ 0.474 \,\mathbbm 1_{{SCL = 8}} \\ &
+			+ 0.575 \,\mathbbm 1_{{SCL = 9}} 
+			+ 0.306 \,\mathbbm 1_{{SCL = 10}} 
+			+ 0.512 \,\mathbbm 1_{{SCL = 11}} 
 		\end{aligned}
 	\end{equation} 
 	where $\mathbbm 1_{{SCL = 2}}$ is equal to one if the current observation corresponds to SCL class 2 and zero otherwise\footnote{$\mathbbm 1$ is also called an indicator function or characteristic function in mathematics.}. Whereas, we obtain the estimated absolute residuals by: 
 	\begin{equation}\label{eq:corr_lm_res}
 		\begin{aligned}		
-			\widehat{\operatorname{abs}}\left({\operatorname{NDVI}_\text{``true''} - \operatorname{NDVI}}_{\text{corr}}\right)  = &
+			\widehat{\operatorname{abs}}\left({\operatorname{NDVI}_\text{`true'} - \operatorname{NDVI}}_{\text{corr}}\right)  = &
 			-0.133 \operatorname{NDVI}_\text{observed}  
-			+ \mathbbm 1_{{SCL = 2}} 0.186 
-			+ \mathbbm 1_{{SCL = 3}} 0.185 \\ &
-			+ \mathbbm 1_{{SCL = 4}} 0.146 
-			+ \mathbbm 1_{{SCL = 5}} 0.089 
-			+ \mathbbm 1_{{SCL = 6}} 0.167 \\ &
-			+ \mathbbm 1_{{SCL = 7}} 0.203 
-			+ \mathbbm 1_{{SCL = 8}} 0.181  
-			+ \mathbbm 1_{{SCL = 9}} 0.173 \\ &
-			+ \mathbbm 1_{{SCL = 10}} 0.180 
-			+ \mathbbm 1_{{SCL = 11}} 0.172 
+			+ 0.186 \, \mathbbm 1_{{SCL = 2}} 
+			+ 0.185 \, \mathbbm 1_{{SCL = 3}} \\ &
+			+ 0.146 \, \mathbbm 1_{{SCL = 4}} 
+			+ 0.089 \, \mathbbm 1_{{SCL = 5}} 
+			+ 0.167 \, \mathbbm 1_{{SCL = 6}} \\ &
+			+ 0.203 \, \mathbbm 1_{{SCL = 7}} 
+			+ 0.181 \, \mathbbm 1_{{SCL = 8}}  
+			+ 0.173 \, \mathbbm 1_{{SCL = 9}} \\ &
+			+ 0.180 \, \mathbbm 1_{{SCL = 10}} 
+			+ 0.172 \, \mathbbm 1_{{SCL = 11}} 
 		\end{aligned}
 	\end{equation} 
 	Thus, if we observe a pixel with SCL class 4 (`vegetation') but a NDVI of only 0.4, the corrected NDVI would be $0.711 \cdot 0.4 + 0.21 = 0.494$ with an estimated absolute residual of $-0.133 \cdot 0.4 + 0.146 = 0.93$.

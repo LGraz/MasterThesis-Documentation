@@ -59,7 +59,7 @@
         g_{add}(x) = \mu + \sum_{i=1}^pg_j(x_j).\footnote{Where $g_j$ is a real-valued function. For identifiability we also demand $\mathbb{E}[g_j(X_{:,j})] = 0$ for $j=1,\dots,p$.}
     \end{equation}  
 
-    To estimate the non-parametric functions, we can use SS (ref sec.~\ref{sec:Natural_SS}). For this let $\mathcal{S}_j$ be the function that takes some $z\in\R^n$ and returns the SS fitted to $(X_{:,j}, z)$ where the smoothing parameter is optimized by LOOCV\footnote{For efficiency a proxy of the LOOCV is used called generalized cross validation.}.
+    To estimate the non-parametric functions, we can use SS (cf. section~\ref{sec:Natural_SS}). For this let $\mathcal{S}_j$ be the function that takes some $z\in\R^n$ and returns the SS fitted to $(X_{:,j}, z)$ where the smoothing parameter is optimized by LOOCV\footnote{For efficiency a proxy of the LOOCV is used called generalized cross validation.}.
     Since we cannot fit all $g_j$ simultaneously, we will use a strategy named Backfitting. We basically cycle through the indices $1,\dots p$ and refit $\hat g_j$ each time. The following illustrates the procedure: 
     \begin{eqnarray*}
         1) \quad \hat g_1 &=& \mathcal S_1(y - \mu)    \\
@@ -85,7 +85,7 @@
     
     To build such a Tree, we will recursively partition the covariate space using greedy splits\footnote{For computational reasons, we will only use splits along one covariate. So we `cut' our covariate space into rectangles.} decreasing the RMSE\footnote{To calculate the RMSE, we need a prediction. Let $P$ be the current partition, then the predicted value for some $x\in A \in P$ is the mean of the responses of all the points in $A$ (included in the training data).} each time. If the set we want to split contains less than a certain amount of training points, we stop.
     
-    To build a {Random Forest} we will bootstrap-aggregate\footnote{That is we will sample (with replacement) several times n observations from our original data and fit a Tree to each such sample.} many such Trees\footnote{Building the Tree, this time we will not test every covariate at each node (for the RMSE minimization) but a node-specific subsample of the covariates. Thus, also the ``second best split'' can be selected.}. The prediction of the Random Forest for a new point $x$ is then the mean of the predictions from all the Trees. 
+    To build a {Random Forest} we will bootstrap-aggregate\footnote{That is we will sample (with replacement) several times n observations from our original data and fit a Tree to each such sample.} many such Trees\footnote{Building the Tree, this time we will not test every covariate at each node (for the RMSE minimization) but a node-specific subsample of the covariates. Thus, also the `second best split' can be selected.}. The prediction of the Random Forest for a new point $x$ is then the mean of the predictions from all the Trees. 
     \begin{my_pros_cons_table}{
         \item Captures non-linear relationships.
         \item Captures all interactions and performs automatic variable selection.

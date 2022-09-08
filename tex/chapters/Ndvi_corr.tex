@@ -23,14 +23,14 @@
     \stepcounter{equation}
     \begin{assumption}{\theequation}%(true NDVI)
         \label{true_ndvi_assumption}
-        The ``true'' NDVI value at time $t$ can be successfully estimated by robustified LOOCV interpolation using high-quality observations. That is, the interpolated value  (using a robustified {{IM}} from chapter~\ref{sec:itpl})  considering the points $P^{SCL45}\setminus P_t$. In the following, we will call this estimate the ``true''-NDVI.
+        The `true' NDVI value at time $t$ can be successfully estimated by robustified LOOCV interpolation using high-quality observations. That is, the interpolated value  (using a robustified {{IM}} from chapter~\ref{sec:itpl})  considering the points $P^{SCL45}\setminus P_t$. In the following, we will call this estimate the `true'-NDVI.
     \end{assumption}
 
-    We would like to get an idea if there is any information that can be recovered from non-SCL45 observations. For that, we will check for the other SCL-classes if there is a relation between the ``true'' NDVI (derived with robustified SS) and the observed NDVI. Thus, we pair each ``true'' NDVI with its observed one, collect all pairs, and create a scatter plot for each SCL-class in fig~\ref{fig:ndvi_corr/scl_residuals_scatter}.
-    As expected, the ``true'' and the observed NDVI seem to be highly correlated for SCL45. But we can also detect some patterns of correlation in the SCL-classes 2, 3, 7, 8 and 10.  
+    We would like to get an idea if there is any information that can be recovered from non-SCL45 observations. For that, we will check for the other SCL-classes if there is a relation between the `true' NDVI (derived with robustified SS) and the observed NDVI. Thus, we pair each `true' NDVI with its observed one, collect all pairs, and create a scatter plot for each SCL-class in fig~\ref{fig:ndvi_corr/scl_residuals_scatter}.
+    As expected, the `true' and the observed NDVI seem to be highly correlated for SCL45. But we can also detect some patterns of correlation in the SCL-classes 2, 3, 7, 8 and 10.  
 
     \begin{my_figure}[h]{width=1\textwidth}{ndvi_corr/scl_residuals_scatter}
-        \caption[``True'' vs. observed NDVI --- for each SCL class]{For each SCL class, we compare the true NDVI with the observed NDVI. (The true NDVI was estimated with LOOCV smoothing splines, and we used all observations of 10\% of the total pixels.)}
+        \caption[`True' vs. observed NDVI --- for each SCL class]{For each SCL class, we compare the true NDVI with the observed NDVI. (The true NDVI was estimated with LOOCV smoothing splines, and we used all observations of 10\% of the total pixels.)}
         \label{fig:ndvi_corr/scl_residuals_scatter}
     \end{my_figure}
 
@@ -43,10 +43,10 @@
         \label{sec:corr_data_table}
         \label{sec:corr_methods}
 
-    For training an NDVI correction model, we require ground-truth data which we will aim to model using informative covariates. Since ground-truth NDVI data is not available, we will again use the assumption~\ref{true_ndvi_assumption} and use the ``true'' NDVI instead. There is no canonical answer to the question of which covariates we should use. It is a tradeoff between simplicity, generalizability, and performance (with the danger of overfitting). 
+    For training an NDVI correction model, we require ground-truth data which we will aim to model using informative covariates. Since ground-truth NDVI data is not available, we will again use the assumption~\ref{true_ndvi_assumption} and use the `true' NDVI instead. There is no canonical answer to the question of which covariates we should use. It is a tradeoff between simplicity, generalizability, and performance (with the danger of overfitting). 
     Our desire with the NDVI correction is to develop a product that is simple to use and understand. Therefore, in the subsequent, we will only take the spectral data of the satellite (i.e., all the bands) and the observed NDVI derived from it as covariates. We organize the chosen covariates in the design matrix $X$\footnote{Strictly speaking, we include also the intercept and introduce one dummy variable for each SCL-class.}, where each row corresponds to a $P_t$ (i.e., a pixel at a time $t$) and each column to one covariate.    
 
-    In the following, we will introduce different approaches, to model the relationship between the response $y:=\operatorname{NDVI}_\text{``true''}\in \R^n$ and the design matrix $X\in\R^{n \times p}$. First, we will study the basic OLS. Second, we look at the LASSO, a penalized adaptation of the OLS which is known to successfully deal with highly correlated covariates. Afterwards, GAMs are introduced, which model the response similar to OLS but allow for non-linear relations. Last but not least, we discuss RF and MARS, which are both flexible modelling approaches. % since only weak assumptions on the relationship between the response and covariates are made. 
+    In the following, we will introduce different approaches, to model the relationship between the response $y:=\operatorname{NDVI}_\text{`true'}\in \R^n$ and the design matrix $X\in\R^{n \times p}$. First, we will study the basic OLS. Second, we look at the LASSO, a penalized adaptation of the OLS which is known to successfully deal with highly correlated covariates. Afterwards, GAMs are introduced, which model the response similar to OLS but allow for non-linear relations. Last but not least, we discuss RF and MARS, which are both flexible modelling approaches. % since only weak assumptions on the relationship between the response and covariates are made. 
 
     Note that in order to reduce computation time, only $10\%$ of the data has been used to fit the subsequent models, which are still more than 120'000 observations. 
     
@@ -57,7 +57,7 @@
 % \section{Uncertainty Estimation}{
     \label{sec:corr_uncertainty}
     Once we corrected the NDVI using the models described in the previous section, we are left with the problem that not every correction is equally reliable.\footnote{One correction is illustrated in the figure~\ref{fig:step_plot/2017-206_corr.pdf}. In this figure, the outer points (labeled as clouds) have a large scatter.}. Hence, we are interested in a measure of how uncertain an estimate is. 
-    We achieve this analogously as we corrected the NDVI, by replacing the response $\operatorname{NDVI}_\text{``true''}$ with the absolute residuals $v := \left|y -\hat y\right|$ and modeling their relationship with the covariates defined by $X$.  In this way, we obtain a model for the absolute residuals $v$ and the estimator $\hat v$. 
+    We achieve this analogously as we corrected the NDVI, by replacing the response $\operatorname{NDVI}_\text{`true'}$ with the absolute residuals $v := \left|y -\hat y\right|$ and modeling their relationship with the covariates defined by $X$.  In this way, we obtain a model for the absolute residuals $v$ and the estimator $\hat v$. 
     % }
     
 % \section{Interpolation}{
@@ -76,7 +76,7 @@
     \label{sec:corr_itpl_stat}
     We have developed the following procedure to obtain a new interpolation (keyword-wise):
     \begin{Nenumerate}
-        \item LOOCV Interpolation (+ robustify?) to get ``true'' NDVI
+        \item LOOCV Interpolation (+ robustify?) to get `true' NDVI
         \item Correction 
         \item Uncertainty estimation
         \item Interpolation (+ robustify?)

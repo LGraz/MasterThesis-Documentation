@@ -4,14 +4,14 @@
 
 \section{{{IM}}s}{ \label{sec:discussion_itpl}
     \subsection{Data Gaps in Time Series}\label{sec:discussion_itpl_data_gaps}{
-        NW estimates the value for $t$ by relating to the points near $t$. To determine what ``near'' means, a bandwidth $h$ is used (cf. equation~\refeq{eq:kernel_with_bandwidt}). This gets problematic as soon as the data gaps become larger than $h$, since no points are left that are close to $t$. 
+        NW estimates the value for $t$ by relating to the points near $t$. To determine what `near' means, a bandwidth $h$ is used (cf. equation~\refeq{eq:kernel_with_bandwidt}). This gets problematic as soon as the data gaps become larger than $h$, since no points are left that are close to $t$. 
 
         Regarding the GK, we expect that due to the stationarity assumption, the interpolation will always tend to the mean if data gaps are present (cf. figure~\ref{fig:kriging_parameters}). 
 
-        Since the SG requires equidistant points, data gaps will break it. REFXXX proposes a linear interpolation to restore missing data points. However, due to the timescale transformation to GDD in section \ref{sec:gdd_def}, the requirement of equidistant remains an unresolved issue.
+        Since the SG requires equidistant points, data gaps will break it. REFXXX proposes a linear interpolation to restore missing data points. However, due to the timescale transformation to GDD in section~\ref{sec:gdd_def}, the requirement of equidistant remains an unresolved issue.
 
         % FS SS LOESS DL BSPL 
-        We do not trust the FS interpolation if there are noticeable data gaps. As could be observed in figure \ref{fig:interpol/fourier_dl_comparison} the curve can escape there. Additionally, the poor goodness-of-fit values for the robustified variant in table~\ref{tab:cv-statistics_itpl-methods} illustrate the unreliability of this IM method.
+        We do not trust the FS interpolation if there are noticeable data gaps. As could be observed in figure~\ref{fig:interpol/fourier_dl_comparison} the curve can escape there. Additionally, the poor goodness-of-fit values for the robustified variant in table~\ref{tab:cv-statistics_itpl-methods} illustrate the unreliability of this IM method.
         These are meaningful in describing the ability to cope with data gaps, since more data points are ignored during the robustification and thus data gaps are simulated. 
 
         Similarly, for SS, LOESS, DL, and BS we compare the values in table~\ref{tab:cv-statistics_itpl-methods} between the robustified and non-robust variant. We find that the robust variant does not differ strongly from the non-robust variant (unlike as for FS). Thus, we conclude that these methods do not have systematic failures.
@@ -23,14 +23,14 @@
 
     \subsection{Preselection}{\label{sec:itpl_preselection}
         Here we justify our preselection of the {{IM}}s tested in section~\ref{sec:itpl_perfomance_assessment}. 
-        We decided against NW Because of its systematic errors at peaks and valleys. Moreover, this method handles data gaps poorly (cf.~\ref{sec:discussion_itpl_data_gaps}). 
-        Moreover, UK will not be considered since the underlying stationarity assumption is not met and therefore a systematic bias is introduced. On top of that, maximum likelihood parameter estimation occasionally might lead to overfitting (cf.~\ref{fig:kriging_parameters}).
+        We decided against NW Because of its systematic errors at peaks and valleys. Moreover, this method handles data gaps poorly (cf. section~\ref{sec:discussion_itpl_data_gaps}). 
+        Moreover, UK will not be considered since the underlying stationarity assumption is not met and therefore a systematic bias is introduced. On top of that, maximum likelihood parameter estimation occasionally might lead to overfitting (cf. figure~\ref{fig:kriging_parameters}).
         Also, we do not include the SG in the next selection, since we see it as a special case of LOESS.
         The remaining IMs are thus SS LOESS DL BS and FS.
     }
 
     \subsection{Candidate Selection}{\label{sec:itpl_candiate_selection}
-        Given that DL convinces regarding most of the selected score functions in table~\ref{tab:cv-statistics_itpl-methods} we will apply this method also in chapter~\ref{sec:corr}. Moreover, we see that the robustification mostly improved the score regarding the 50, 75, 85, and 90 \% Quantiles. Only for the outlier-sensitive score functions (RMSE and q95)\footnote{For the RMSE one outlier is enough to take away the usefulness of the statics, in the case of q95 it is enough if 5\% of the data are corrupt to break the statics.} we notice significant worsening (we consider the robust FS separately in section~\ref{sec:discussion_itpl_data_gaps}). Consequently, we will also use the robustification in section~\ref{sec:corr}.
+        Given that DL convinces regarding most of the selected score functions in table~\ref{tab:cv-statistics_itpl-methods} we will apply this method also in chapter~\ref{sec:corr}. Moreover, we see that the robustification mostly improved the score regarding QAR\textsuperscript{50}, QAR\textsuperscript{75}, QAR\textsuperscript{85} and QAR\textsuperscript{90}. Only for the outlier-sensitive score functions (RMSE and QAR\textsuperscript{95})\footnote{For the RMSE one outlier is enough to take away the usefulness of the statics, in the case of QAR\textsuperscript{95} it is enough if 5\% of the data are corrupt to break the statics.} we notice significant worsening (we consider the robust FS separately in section~\ref{sec:discussion_itpl_data_gaps}). Consequently, we will also use the robustification in section~\ref{sec:corr}.
         In order to not only rely on the form assumptions of the DL, we further choose a non-parametric method for further consideration. Despite the LOESS slightly dominating the SS in table~\ref{tab:cv-statistics_itpl-methods}, we choose the SS. This is due to the strange behavior of the LOESS in case of data gaps (see section~\ref{sec:discussion_itpl_data_gaps}) and the good interpretability of the SS using the minimization function~\refeq{eq:ss}.
     }
 }
@@ -39,7 +39,7 @@
 \section{NDVI Correction}{\label{sec:discussion_corr}
     \subsection{Choose {{IS}}}\label{sec:discussion_iplfstrategy-choose}
 
-    The evaluation of various ISs via the YPE (cf. section~\ref{sec:results_ndvi_corr}) shows that SS are better suited than DL for yield estimation. Moreover, it seems surprising that robustification tends to worsen the results, despite reducing LOOCV residuals in most cases (cf. section~\ref{sec:results_itpl}). We conjecture that the correction models handle outliers by themselves (by correcting or down-weighting them) and thus do not benefit from an external robustification. Indeed, for OLS\textsuperscript{SCL} we see in equation \refeq{eq:corr_lm_res} that the smaller the observed NDVI of a point, the larger the estimated residual --- yielding a lower weight. This is consistent with our experience that outliers usually underestimate the NDVI. Our conjecture is consistent with the fact that if we do not correct, robustification produces a marginal improvement. 
+    The evaluation of various ISs via the YPE (cf. section~\ref{sec:results_ndvi_corr}) shows that SS are better suited than DL for yield estimation. Moreover, it seems surprising that robustification tends to worsen the results, despite reducing LOOCV residuals in most cases (cf. section~\ref{sec:results_itpl}). We conjecture that the correction models handle outliers by themselves (by correcting or down-weighting them) and thus do not benefit from an external robustification. Indeed, for OLS\textsuperscript{SCL} we see in equation~\refeq{eq:corr_lm_res} that the smaller the observed NDVI of a point, the larger the estimated residual --- yielding a lower weight. This is consistent with our experience that outliers usually underestimate the NDVI. Our conjecture is consistent with the fact that if we do not correct, robustification produces a marginal improvement. 
     
     Using the best IS with correction (SS+OLS\textsuperscript{SCL}), instead of the best IS without correction (SS\textsuperscript{rob}), we can additionally explain $(0.148-0.140)/0.148 = 5.4\%$ of the variance in yield prediction (cf. table~\ref{tab:methods_vs_yieldprediction_relative}. To give a context, 100\% would allow us to model the yield perfectly.
     
@@ -52,7 +52,7 @@
         \begin{Nenumerate}
             \item Uncertainty in yield data collected by the combine harvester.
             \item Uncertainty in yield data through rasterization.
-            \item Uncertainty in satellite images through ``measurement errors'' introduced via clouds and other atmospheric effects.
+            \item Uncertainty in satellite images through `measurement errors' introduced via clouds and other atmospheric effects.
             \item Uncertainty introduced by assumed homogeneity of vegetation on pixel resolution. 
             \item Uncertainty introduced by interpolating NDVI TS (especially when long data-gaps are present).
         \end{Nenumerate}
@@ -63,10 +63,10 @@
     }
 
     \subsection{NDVI Correction as Unsupervised Learning}
-        The question arises if we can build the correction model on the same year as we want to apply it on. Usually, a similar approach might carry the danger of overfitting. However, we have not used any ground truth at any point (until the evaluation). Instead, we estimated the ``true'' NDVI with the assumption~\ref{true_ndvi_assumption} via OOB. In other words, we have not used any ground truth but rather developed an unsupervised learner of the NDVI. Consequently, we reason that we can apply our method to a new (comparable) dataset.
+        The question arises if we can build the correction model on the same year as we want to apply it on. Usually, a similar approach might carry the danger of overfitting. However, we have not used any ground truth at any point (until the evaluation). Instead, we estimated the `true' NDVI with the assumption~\ref{true_ndvi_assumption} via OOB. In other words, we have not used any ground truth but rather developed an unsupervised learner of the NDVI. Consequently, we reason that we can apply our method to a new (comparable) dataset.
     \subsection{Using Additional Covariates}{
         In section~\ref{sec:corr_data_table} we have only used covariates derived from spectral data. 
-        We decided against using meteorological data, since we consider five years of data not to be sufficient to model patter of how vegetation reacts to various weather events. Moreover, we expect the weather in our study region to be rather homogeneous, which is suggested by the fact that the weather data published by Meteoswiss are for a grid with a resolution of 1 km. On the other hand, we want the underlying model not to learn improper relationships. For example, the model might automatically predict a high NDVI for a day in summer (detected by high GDD or many sunshine hours) just because it is ``used'' to observing a lot of vegetation in summer. 
+        We decided against using meteorological data, since we consider five years of data not to be sufficient to model patter of how vegetation reacts to various weather events. Moreover, we expect the weather in our study region to be rather homogeneous, which is suggested by the fact that the weather data published by Meteoswiss are for a grid with a resolution of 1 km. On the other hand, we want the underlying model not to learn improper relationships. For example, the model might automatically predict a high NDVI for a day in summer (detected by high GDD or many sunshine hours) just because it is `used' to observing a lot of vegetation in summer. 
         Including temporally (e.g., $P_{t-1}$ and $P_{t+1}$) and geographically adjacent pixels would likely improve performance. However, for simplicity, we omit it here\footnote{This is done for simplicity of understanding and using the model, since one would need to adapt to some convention of how to supply the data of adjacent pixels without redundancy (i.e., supplying $P_t$ multiple times). Another complication is a border-pixel with some adjacent pixels outside the field.}.
     }
 }

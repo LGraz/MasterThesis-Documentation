@@ -16,7 +16,7 @@
 		
 		\input{tex/chapters/misc/table_S2-bands.tex}
 		
-		The S2 images contain 12 spectral bands with spatial resolutions of up to 10 meters (see table ~\ref{table:S2-bands}). Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation \citep{perichPixelbasedCropYield2022}. In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used. %\footnote{According to \cite{perichPixelbasedCropYield2022}: ``Data prior to March 2018 was only available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by the European Space Agency''.} 
+		The S2 images contain 12 spectral bands with spatial resolutions of up to 10 meters (see table~\ref{table:S2-bands}). Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation \citep{perichPixelbasedCropYield2022}. In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used. %\footnote{According to \cite{perichPixelbasedCropYield2022}: ``Data prior to March 2018 was only available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by the European Space Agency''.} 
 		\cite{esaLevel2AAlgorithmOverview2022} supplies the Scene Classification Layer ({SCL}). It is a model output that for each location assigns the observed pixel to one of 11 SCL-classes (cf. table~\ref{tab:satelite/scl_classes}). 
 		In this thesis, we will use this classification to filter out data points that we believe to be less informative. These are all observations in which the SCL-class does not correspond to vegetation or bare soils (classes 4 and 5). We define the set SCL45 as the observations that are labelled as SCL-class 4 or 5.
 		
@@ -35,10 +35,10 @@
 
 \section{Crop Yield Data}{
 	\label{sec:yieldmapping_data}
-	The crop yield data were collected from a combine harvester. Equipped with a satellite-based navigation system, the harvester drives over the fields and continuously estimates the dry crop yield density in $t/ha$ (see fig.~\ref{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}). 
-	We use the data set presented in \cite{perichPixelbasedCropYield2022}, where error-prone measurement points (such as during a tight curve of the combine harvester) were removed and then the yield map was rasterized using linear interpolation (cf. fig.~\ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}). We summarize the rasterized dry yield values by the following statistics:
+	The crop yield data were collected from a combine harvester. Equipped with a satellite-based navigation system, the harvester drives over the fields and continuously estimates the dry crop yield density in $t/ha$ (see figure~\ref{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}). 
+	We use the data set presented in \cite{perichPixelbasedCropYield2022}, where error-prone measurement points (such as during a tight curve of the combine harvester) were removed and then the yield map was rasterized using linear interpolation (cf. figure~\ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}). We summarize the rasterized dry yield values by the following statistics:
 
-	% tabelle anstadt histogramm, da schon zu viele figuren ``herumschwirren'' und es so kompakter ist.
+	% tabelle anstadt histogramm, da schon zu viele figuren `herumschwirren' und es so kompakter ist.
 	\begin{tabular}{l l l l l l l} 
 		Minimum & 1st Quartile & Median & Mean  & 3rd Quartile & Maximum & Variance \\
 		0.107   & 6.186        & 7.560  & 7.359 & 8.756        & 13.35   & 4.035
@@ -50,19 +50,26 @@
 
 	\begin{figure}
 		\centering
-		\begin{subfigure}{.5\textwidth}
+		\begin{subfigure}{.42\textwidth}
 			\centering
 			\includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_harvester_cropped.png}
-			\caption{Raw combine harvester data (cleaned).}
+			\caption{\small Cleaned combine harvester data}
 			\label{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}
 		\end{subfigure}%
-		\begin{subfigure}{.5\textwidth}
+		\begin{subfigure}{.42\textwidth}
 			\centering
 			\includegraphics[height=.75\linewidth]{satelite/witzwil_2021_P112_yield_cropped.png}
-			\caption{Rasterized to Sentinel 2 resolution.}
+			\caption{\small Rasterized to Sentinel 2 resolution.}
 			\label{fig:satelite/witzwil_2021_P112_yield_cropped.png}
 		\end{subfigure}
-		\caption[Crop yield density map of a field]{Crop yield density map of a field. Ranges from 0.1 t/ha (black) to 5.35 t/ha (white) }
+		\begin{subfigure}{.14\textwidth}
+			\centering
+			\includegraphics[width=\linewidth]{misc/yield_legend.pdf}
+			% \caption{\small Rasterized to Sentinel 2 resolution.}
+			% \label{fig:satelite/witzwil_2021_P112_yield_cropped.png}
+			\vspace{0.5cm}
+		\end{subfigure}
+		\caption[Crop yield density map of a field]{Crop yield density map of a field. }
 		\label{fig:satelite_witzwil_yield}
 	\end{figure}
 }
@@ -142,9 +149,9 @@
 \section{Estimation Evaluation Criteria}{ \label{sec:general_methods}
 	In this section, we define score functions for estimation accuracy and techniques to adequately apply it. 
 
-	\subsection{Score Functions}
+	\subsection{Score Functions}\label{sec:scorefun}
 	    Now, we define the Root Mean Square Error (RMSE), a prominent and outlier-sensitive score function.
-	    \begin{definition}{XXX} (RMSE)
+	    \begin{definition}(RMSE)
 		Given a vector $y\in \R^n$ and its estimator $\hat y$, we define the RMSE as:
 		\begin{equation}
 			\label{eq:rmse}
@@ -152,10 +159,10 @@
 		\end{equation}
 		\end{definition}
 		Thus, the RMSE measures how close the estimated $\hat y$ are to the original $y$ by considering the squares of errors. The lower the RMSE, the more similar are the fitted values to the original values. Note that one strong outlier may corrupt this score function. Therefore, we will also define the $x^\text{th}\%$ Quantile of Absolute Residuals (QAR\textsuperscript{x}) that can handle some fraction of outliers:
-		\begin{definition} (QAR\textsuperscript{x})
+		\begin{definition} (QAR\textsuperscript{x}) \label{def:qar}
 		    Given a percentage $x\in \{1,2,\dots,100\}$, a vector $y\in \R^n$ and its estimator $\hat y$, we assume that $|y_1-\hat y_1|\leq |y_2-\hat y_2|\leq \dots \leq |y_n-\hat y_n|$. Then, we define the QAR\textsuperscript{x} as the biggest residual under the x\% smallest ones. Formally:  
 		    \begin{equation}
-		        \operatorname{QAR}^{\text{x\%}}:=\max \left\{|y_i-\hat y_i|:i\leq \frac{x}{100}n \right\}
+		        \operatorname{QAR}^{\text{x}}:=\max \left\{|y_i-\hat y_i|:i\leq \frac{x}{100}n \right\}
 		    \end{equation}
 		\end{definition}
 		Note that QAR\textsuperscript{50} coincides with the median of absolute residuals and QAR\textsuperscript{100} with the maximum of absolute residuals. Hence, the higher, $x$ the fewer outliers QAR\textsuperscript{x} can handle. Consequently, if we expect the data to have 5\% outliers, we should choose $x$ smaller than 95. Furthermore, if an estimator attains lower QAR\textsuperscript{x} values than a competing estimator for $x=50,75,85$, we conclude\footnote{Strictly speaking, this conclusion assumes that the distribution of the residuals is unimodal (i.e., has only one `peak').} that it also produces smaller residuals in most cases.  
