@@ -73,7 +73,7 @@
 }
 
 \section{Normalized Difference Vegetation Index}{% NDVI
-	The well-known {NDVI} introduced by \cite{rouseMonitoringVernalAdvancement1974} is used to approximate vegetation in remote sensing due to a healthy, photosynthesizing plant exhibiting a large increase in reflectance between the red and infrared region of the light spectrum. It is calculated using the S2 bands $B4$ (red) and $B8$ (infrared) (table~\ref{table:S2-bands}) by:
+	The well-known {NDVI} introduced by \cite{rouseMonitoringVernalAdvancement1974} is used to approximate vegetation in remote sensing. It utilizes the fact that healthy, photosynthesizing vegetation exhibits a large increase in reflectance between the red and infrared region of the light spectrum (cf. appendix figure \ref{fig:misc/Reflectance-spectra-of-photosynthetic-green-vegetation-non-photosynthetic-dry.png}). It is calculated using the S2 bands $B4$ (red) and $B8$ (infrared) (table~\ref{table:S2-bands}) by:
 	\begin{equation}
 		NDVI = \frac{B8 - B4}{B8 + B4}
 		\label{eq:ndvi}
@@ -109,14 +109,14 @@
 % \end{my_figure}
 \section{Transformation of Timescale}\label{sec:gdd_def}
 	{% GDD & DAS
-		Two drawbacks become apparent when using Days After Sowing (DAS) as the timescale (see figure~\ref{interpol/ndvi_ts_das_grey.pdf}): First, this scale makes it difficult to compare two NDVI {TS} because wheat is not always sown on the same day of the year and in some years plants begin to emerge earlier. Second, because there are only few SCL45 observations in autumn and winter, we face significant data gaps during this period. To fix both problem \cite{mcmasterGrowingDegreedaysOne1997} proposes a transform the timescale into a meaningful temperature based one. The resulting Growing Degree Days ({GDD}) are defined as the cumulative sum of temperature above a given base temperature $T_{base}$ since sowing. For cereals, we use $T_{base}=0$ \citep{holzkamperSpatialTemporalTrends2015}. Thus, the GGD for $n$ days after sowing will be equal to:
+		Two drawbacks become apparent when using Days After Sowing (DAS) as the timescale (see figure~\ref{interpol/ndvi_ts_das_grey.pdf}): First, this scale makes it difficult to compare two NDVI {TS} because wheat is not always sown on the same day of the year and in some years plants begin to emerge earlier. Second, because there are only few SCL45 observations in autumn and winter, we face significant data gaps during this period. To fix both problems, \cite{mcmasterGrowingDegreedaysOne1997} propose to transform the timescale into a meaningful temperature based one. The resulting Growing Degree Days ({GDD}) are defined as the cumulative sum of temperature above a given base temperature $T_{base}$ since sowing. For cereals, we use $T_{base}=0$ \citep{holzkamperSpatialTemporalTrends2015}. Thus, the GGD for $n$ days after sowing will be equal to:
 		\begin{equation}
 			\label{eq:gdd}
 			GDD_n := \sum_{i=0}^n \max(T_i - T_{base}, 0).
 		\end{equation}
 		Important plant growth stages and their corresponding GDD values are tabulated in~\ref{app:gdd_examples}
 
-		In figure~\ref{fig:raw_ndvi_ts} we see an example for comparison of the DAS and GDD timescale. Here we see that the first 120 DAS are compressed to just 500 GDD and hence the gap in observations was successfully compressed. Due to the reasons mentioned above, from now on we will only consider GDD.
+		In figure~\ref{fig:raw_ndvi_ts} we see an example for comparison of the DAS and GDD timescale. Here we see that the first 120 DAS are compressed to just 500 GDD and hence the gap in observations was successfully compressed. Given the reasons mentioned above, from now on we will only consider GDD.
 	} 
 
 \section{The Concept of a `Pixel'}{ \label{sec:gather_data_to_pixel}
@@ -133,7 +133,7 @@
 	\input{tex/chapters/misc/2x3_satelite_ts_plot_grid.tex}
 	% Description of plot
 	Using an example pixel, we illustrate the challenges in working with S2 image data. Figure~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, one selected Pixel and the NDVI {TS} of this pixel. 		
-	In February (image a), we see no vegetation but bare soil and thus also a low NDVI. At the beginning of May (b), we observe a cloudless dark green field with a high NDVI. In (c) heavy cloud cover (SCL class 9) leads to a complete loss of plant information in this S2 observation. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds which is also reflected in a sudden NDVI drop. Even though SCL indicates that (e) are thin cirrus clouds, we see a pale green, and we also note a NDVI. Therefore, we remark that some SCL45 observations are not accurate and even though a few non-SCL45 observations contain useful information, most of them are too unreliable (e.g., all SCL 9 observations). Thus, we aim to substitute the unreliable ones with interpolated versions and correct contaminated ones.
+	In February (image a), we see no vegetation but bare soil and thus also a low NDVI. At the beginning of May (b), we observe a cloudless dark green field with a high NDVI. In (c) heavy cloud cover (SCL class 9) leads to a complete loss of plant information in this S2 observation. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds, which is also reflected in a sudden NDVI drop. Even though SCL indicates that (e) are thin cirrus clouds, a pale green shimmers through, and we also note a reasonably high NDVI. Therefore, we remark that some SCL45 observations are not accurate and even though a few non-SCL45 observations contain useful information, most of them are too unreliable (e.g., all SCL 9 observations). Thus, we aim to substitute the unreliable ones with interpolated versions and correct contaminated ones.
 		
 		%% subfigures references:
 		% (see.~\ref{fig:satelite/time_series_2021_P112/15_scl5_2021-02-23.png})
@@ -145,7 +145,7 @@
 }
 
 \section{Estimation Evaluation Criteria}{ \label{sec:general_methods}
-	In this section, we define score functions for estimation accuracy and techniques to adequately apply it. 
+	In this section, we define score functions for estimation accuracy and techniques to adequately apply them. 
 
 	\subsection{Score Functions}\label{sec:scorefun}
 	    Now, we define the Root Mean Square Error (RMSE), a prominent and outlier-sensitive score function.

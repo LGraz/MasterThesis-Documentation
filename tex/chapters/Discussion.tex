@@ -4,21 +4,21 @@
 
 \section{Interpolation}{ \label{sec:discussion_itpl}
     \subsection{Data Gaps in Time Series}\label{sec:discussion_itpl_data_gaps}{
-        NW estimates the value for $t$ by relating to the points near $t$. To determine what `near' means, a bandwidth $h$ is used (cf. equation~\refeq{eq:kernel_with_bandwidt}). This gets problematic as soon as the data gaps become larger than $h$, since no points are left that are close to $t$. 
+        NW estimates the value for $t$ by relating to the points near $t$. To determine what `near' means, a bandwidth $h$ is used (cf. equation~\refeq{eq:kernel_with_bandwidt}). This gets problematic as soon as the data gaps become larger than $h$, since no points are left that are close to $t$. Using a locally adaptive bandwidth fix \citep{brockmannLocallyAdaptiveBandwidth1993}, we pay with a greater variability of the estimator. According to the authors, a small sample size (as we have it for the NDVI TS) worsens this situation. 
 
         Regarding the GK, we expect that due to the stationarity assumption, the interpolation will always tend to the mean if data gaps are present (cf. figure~\ref{fig:kriging_parameters}). 
 
         Since the SG requires equidistant points, data gaps will break it. \cite{chenSimpleMethodReconstructing2004a} proposes a linear interpolation to restore missing data points. However, due to the timescale transformation to GDD in section~\ref{sec:gdd_def}, the requirement of equidistant remains an unresolved issue.
 
         % FS SS LOESS DL BSPL 
-        We do not trust the FS interpolation if there are noticeable data gaps. As could be observed in figure~\ref{fig:interpol/fourier_dl_comparison} the curve can escape there. Additionally, the poor goodness-of-fit values for the robustified variant in table~\ref{tab:cv-statistics_itpl-methods} illustrate the unreliability of this IM method.
+        The FS interpolation can be corrupted if there are noticeable data gaps, as can be observed in figure~\ref{fig:interpol/fourier_dl_comparison}.  Additionally, the poor goodness-of-fit values for the robustified variant in table~\ref{tab:cv-statistics_itpl-methods} illustrate the unreliability of this IM method.
         These are meaningful in describing the ability to cope with data gaps, since more data points are ignored during the robustification and thus data gaps are simulated. 
 
         Similarly, for SS, LOESS, DL, and BS we compare the values in table~\ref{tab:cv-statistics_itpl-methods} between the robustified and non-robust variant. We find that the robust variant does not differ strongly from the non-robust variant (unlike as for FS). Thus, we conclude that these methods do not have systematic failures.
 
         Regarding the LOESS, in case of data gaps, the weights can attain non-intuitive values. The result can be a strongly fluctuating behavior, as observed in figure~\ref{fig:interpol/2x3_loess_robust} in plot (c). There, a strange peak between the first and second observation is visible. This peak originates from local weighting. In this case, the first data point in the plot, although adjacent to the peak, is given a low weight compared to the points to the right of the peak (for estimating the value at this peak).
 
-        In our experience, the DL handles data gaps well, but it may happen that the model describes the NDVI increase as abrupt. This, however, was fixed, by bounding the first derivative (cf. section~\ref{sec:itpl_param_optimizationissues}).
+        In our experience, the DL handles data gaps well due to stong shape assumptions (no jumps, but it may happen that the model describes the NDVI increase as abrupt. This, however, was fixed, by bounding the first derivative (cf. section~\ref{sec:itpl_param_optimizationissues}).
     }
 
     \subsection{Preselection}{\label{sec:itpl_preselection}
