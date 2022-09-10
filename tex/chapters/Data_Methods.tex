@@ -15,7 +15,7 @@
 		\input{tex/chapters/misc/table_S2-bands.tex}
 		
 		The S2 images contain 12 spectral bands with spatial resolutions of up to 10 meters (see table~\ref{table:S2-bands}). Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation \citep{perichPixelbasedCropYield2022}. In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used. %\footnote{According to \cite{perichPixelbasedCropYield2022}: ``Data prior to March 2018 was only available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by the European Space Agency''.} 
-		\cite{esaLevel2AAlgorithmOverview2022} supplies the Scene Classification Layer ({SCL}). It is a model output that for each location assigns the observed pixel to one of 11 SCL-classes (cf. table~\ref{tab:satelite/scl_classes}). 
+		\cite{esaEuropeanSpaceAgency2022} supplies the Scene Classification Layer ({SCL}). It is a model output that for each location assigns the observed pixel to one of 11 SCL-classes (cf. table~\ref{tab:satelite/scl_classes}). 
 		In this thesis, we will use this classification to filter out data points that we believe to be less informative. These are all observations in which the SCL-class does not correspond to vegetation or bare soils (classes 4 and 5). We define the set SCL45 as the observations that are labelled as SCL-class 4 or 5.
 		
 		% \begin{figure}[h]

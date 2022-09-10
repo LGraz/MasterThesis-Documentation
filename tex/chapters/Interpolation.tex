@@ -11,7 +11,7 @@
 
 \chapter{Interpolation} \label{sec:itpl}
 	{% Roadmap
-		In section~\ref{sec:s2_challangges} we have established the need for interpolating the NDVI {TS}. In this chapter, we first specify a setting for the interpolation and divide the {{IM}}s into those that make fundamental shape assumptions (parametric) and those that are more flexible (non-parametric). We give an introduction for each method with a compact definition, highlight adjustments or give remarks where appropriate, and then point out strengths and weaknesses of each method. Additionally, a brief overview of the considered {{IM}}s is provided in table~\ref{table:pros_cons_overview}.
+		The need for interpolating the NDVI {TS} was established in the precious chpater. In this chapter, we first specify a setting for the interpolation and categorize the {{IM}}s into those that make fundamental shape assumptions (parametric) and those that are more flexible (non-parametric). We give an introduction for each method with a compact definition, highlight adjustments or give remarks where appropriate, and point out strengths and weaknesses of each method. A brief overview of the considered {{IM}}s is provided in table~\ref{table:pros_cons_overview}.
 		% In this section, we take a closer look at several {{IM}}s, which will be used to interpolate and smooth the NDVI {TS}, while considering only SCL45 in this chapter. First, we define the general setting and discuss a general approach to make the interpolation more robust (i.e., reduce the impact of outliers). Afterwards, we introduce and discuss each method.
 		Afterwards, we extract a robustification strategy from one {{IM}} and generalize it, so we can use it for all methods that allow for a priori weighted observations. Finally, using LOOCV, we tune the parameters (where necessary) and get a first idea of the performance of each method.
 
@@ -26,7 +26,7 @@
 
 
 \section{Interpolation Setup}{\label{sec:itpl_setup}
-	In this chapter, we will only consider SCL45 observations since they are more reliable. Hence, data in the form of $\left(t_{i}, y_{i}\right)$ for $i=1, \ldots, n$ is given, where $t_i$ is the time in GDD and $y_i$ denotes the NDVI at $t_i$. We assume that it can be represented by
+	For now, we will only consider SCL45 observations since they are more reliable. Hence, data in the form of $\left(t_{i}, y_{i}\right)$ for $i=1, \ldots, n$ is given, where $t_i$ is the time in GDD and $y_i$ denotes the NDVI at $t_i$. We assume that it can be represented by
 	$$
 		y_{i}=m\left(t_{i}\right)+\varepsilon_{i},
 	$$
