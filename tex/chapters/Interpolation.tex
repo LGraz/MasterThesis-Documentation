@@ -6,7 +6,7 @@
 %         \item 2
 %     }
 % \end{my_pros_cons_table}
-\newcommand{\RobItPlot}{fitted to different (SCL45) NDVI {TS}. Iterations of a robustifing refit (as indicated in section~\ref{sec:loess_robustify}) are also displayed.}
+\newcommand{\RobItPlot}{fitted to different (SCL45) NDVI {TS}. Iterations of a robustifying refit (as indicated in section~\ref{sec:loess_robustify}) are also displayed.}
 
 
 \chapter{Interpolation} \label{sec:itpl}
@@ -67,7 +67,7 @@
 	\end{Nenumerate}
 
 	\begin{my_figure}[h]{width=1\textwidth}{interpol/statistics_SS_param_optim}
-		\caption[Smoothing splines optimized by minimizing the given quantile of the absolute leave-one-out residuals]{Smoothing splines fit with smoothing parameter optimized by minimizing the LOOCV QAR. Note that the larger the considered quantile is, the smoother the resulting curve becomes.}
+		\caption[Smoothing splines optimized by minimizing the given quantile of the absolute leave-one-out residuals]{Smoothing splines fit with smoothing parameter optimized by minimizing the LOOCV QAR. Note that the larger the considered quantile is, the more the curvature of the resulting curve decreases.}
 		\label{fig:interpol/statistics_SS_param_optim}
 	\end{my_figure}
 
