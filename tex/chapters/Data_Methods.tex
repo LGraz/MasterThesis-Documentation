@@ -3,7 +3,7 @@
 	This section describes the available data and the challenges associated with it.
 	Our study region is a farm of over 800ha, which is located in western Switzerland. From \cite{perichPixelbasedCropYield2022}  we acquired Sentinel-2 (S2) satellite image data (section~\ref{sec:s2_img_data}), yield maps of several cereals from 2017 to 2021 (section~\ref{sec:yieldmapping_data}), and meteorological data (section~\ref{sec:gather_data_to_pixel}). Methods to evaluate an estimator or model are given in section~\ref{sec:general_methods}.
 	
-	For {{IM}}s we refer to sections~\ref{sec:itpl_parametric} and~\ref{sec:itpl_nonparametric}, for a robust interpolation technique to section~\ref{sec:loess_robustify}. In section~\ref{sec:itpl_param_est} we describe a method to objectively determine the quality of an interpolation, and in chapter~\ref{sec:corr} we present a strategy which involves correction of the NDVI with a weighted interpolation.	
+	For {{IM}}s we refer to sections~\ref{sec:itpl_parametric} and~\ref{sec:itpl_nonparametric} for a robust interpolation technique to section~\ref{sec:loess_robustify}. In section~\ref{sec:itpl_param_est} we describe a method to objectively determine the quality of an interpolation, and in chapter~\ref{sec:corr} we present a strategy which involves correction of the NDVI with a weighted interpolation.	
 }
 
 
@@ -67,13 +67,14 @@
 			% \label{fig:satelite/witzwil_2021_P112_yield_cropped.png}
 			\vspace{0.5cm}
 		\end{subfigure}
+		\vspace{0.2cm}
 		\caption[Crop yield density map of a field]{Crop yield density map of a field. }
 		\label{fig:satelite_witzwil_yield}
 	\end{figure}
 }
 
 \section{Normalized Difference Vegetation Index}{% NDVI
-	The well-known {NDVI} introduced by \cite{rouseMonitoringVernalAdvancement1974} is used to approximate vegetation in remote sensing. It utilizes the fact that healthy, photosynthesizing vegetation exhibits a large increase in reflectance between the red and infrared region of the light spectrum (cf. appendix figure \ref{fig:misc/Reflectance-spectra-of-photosynthetic-green-vegetation-non-photosynthetic-dry.png}). It is calculated using the S2 bands $B4$ (red) and $B8$ (infrared) (table~\ref{table:S2-bands}) by:
+	The well-known {NDVI} introduced by \cite{rouseMonitoringVernalAdvancement1974} is used to approximate vegetation in remote sensing. It utilizes the fact that healthy, photosynthesizing vegetation exhibits a large increase in reflectance between the red and infrared region of the light spectrum (cf. appendix figure~\ref{fig:misc/Reflectance-spectra-of-photosynthetic-green-vegetation-non-photosynthetic-dry.png}). It is calculated using the S2 bands $B4$ (red) and $B8$ (infrared) (table~\ref{table:S2-bands}) by:
 	\begin{equation}
 		NDVI = \frac{B8 - B4}{B8 + B4}
 		\label{eq:ndvi}
@@ -94,6 +95,7 @@
 			\caption{Growing Degree Days (GDD)}
 			\label{interpol/ndvi_ts_gdd_grey.pdf}
 		\end{subfigure}
+		\vspace{0.3cm}
 		\caption[NDVI {TS} plotted against DAS and GDD]{NDVI {TS} plotted against DAS and GDD. GDD are introduced in section~\ref{sec:gdd_def}.}
 		\label{fig:raw_ndvi_ts}
 	\end{figure}
@@ -114,7 +116,7 @@
 			\label{eq:gdd}
 			GDD_n := \sum_{i=0}^n \max(T_i - T_{base}, 0).
 		\end{equation}
-		Important plant growth stages and their corresponding GDD values are tabulated in~\ref{app:gdd_examples}
+		Important plant growth stages and their corresponding GDD values are tabulated in the appendix~\ref{app:gdd_examples}.
 
 		In figure~\ref{fig:raw_ndvi_ts} we see an example for comparison of the DAS and GDD timescale. Here we see that the first 120 DAS are compressed to just 500 GDD and hence the gap in observations was successfully compressed. Given the reasons mentioned above, from now on we will only consider GDD.
 	} 

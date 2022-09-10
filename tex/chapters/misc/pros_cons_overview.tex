@@ -13,16 +13,16 @@
 		\textbf{b}                                                                                                                                        \\ \hline
 
 		Double-Logistic                                                                                                                                              &
-		\begin{cptitemize} \item[--]  Function first increases then decreases \item[--]  NDVI has a minimal value                       \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Good for evergreen plants (if snow masks NDVI) \item[--]  Upper envelope                                \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Parameter estimation can be very difficult \item[--]  Strange behavior for long data-gaps             \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Bell shape of curve \item[--]  NDVI has a minimal value                       \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Good for evergreen plants (if snow masks NDVI) \item[--] Handles data gaps well                            \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Parameter estimation can be challanging, to solve this the parameter space can be bounded             \end{cptitemize}        &
 		Yes                                                                                                                                                          &
 		(Yes)                                                                                                                                                         \\ \hline%comment out?
 
 		Fourier Series                                                                                                                                              &
-		\begin{cptitemize} \item[--]  NDVI can be approximated by a \nth{2} order Fourier series.                            \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  NDVI can be approximated by a \nth{2} order Fourier series.      \item[--] Prominent approach                      \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Incorporates periodical growth-cycles                                 \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Parameter estimation can be very difficult \item[--]  Curve easily exceeds the bounds of the NDVI             \end{cptitemize}        &
+		\begin{cptitemize}  \item[--]  Curve easily exceeds the bounds of the NDVI within data gaps    \item[--]  Parameter estimation can be challanging, to solve this the parameter space can be bounded        \end{cptitemize}        &
 		Yes                                                                                                                                                          &
 		No                                                                                                                                                         \\ \hline%comment out?
 
@@ -36,7 +36,7 @@
 		Universal Kriging                                                                                                                                            &
 		\begin{cptitemize} \item[--]  Function is a realization of a stationary Gaussian process                                      \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  Informative parameters \item[--]  Flexible                                                             \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Regression to the mean \item[--]  Assumptions clearly not met                                          \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Assumption not met for NDVI TS \item[--] Regression to the mean, especially within data gaps          \end{cptitemize}        &
 		Yes                                                                                                                                                          &
 		(Yes)                \\ \hline%comment out?                                                                                                                                         \\ %\hline%comment out?
 
@@ -44,7 +44,7 @@
 		\begin{cptitemize}
 			\item[--]  High frequencies are noise (Low-Pass-Filter) \item[--]  Equidistant points \item[--]  Local polynomials\end{cptitemize}                                              &
 		\begin{cptitemize} \item[--]  Computationally very fast                                                                   \end{cptitemize}                   &
-		\begin{cptitemize} \item[--]  Cannot deal natively with missing data (need some interpolation)                              \end{cptitemize}                 &
+		\begin{cptitemize} \item[--]  Cannot deal natively with non-equidistant data                             \end{cptitemize}                 &
 		No                                                                                                                                                           &
 		(Yes)                                                                                                                                                         \\ \hline%comment out?
 
@@ -57,7 +57,7 @@
 
 		LOESS                                                                                                                                                        &
 		\begin{cptitemize} \item[--]  Local  polynomial with points closer to the estimated point are more important                  \end{cptitemize}               &
-		\begin{cptitemize} \item[--]  Flexible \item[--]  Generalization of SG \item[--]  Weighting function makes intuitive sense                  \end{cptitemize} &
+		\begin{cptitemize} \item[--]  Flexible \item[--]  Generalization of SG \item[--] Intuitive weighting function                   \end{cptitemize} &
 		\begin{cptitemize} \item[--]  Computationally expensive                                                                       \end{cptitemize}               &
 		Yes                                                                                                                                                          &
 		(Yes)                                                                                                                                                         \\ \hline%comment out?
@@ -65,7 +65,7 @@
 		B-Splines (Smoothed)                                                                                                                                         &
 		\begin{cptitemize} \item[--]  Function can be approximated by a linear combination of B-splines basis functions               \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  General assumption \item[--]  Flexible shape                                                            \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Unbounded \item[--]  No intuitive meaning for smoothing                                                \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Unbounded \item[--]  Non-intuitive smoothing process                                                \end{cptitemize}        &
 		Yes                                                                                                                                                            &
 		No                                            \\ \hline%comment out?
 

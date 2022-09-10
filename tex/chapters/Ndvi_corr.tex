@@ -56,7 +56,7 @@
 \section{Weighted Interpolation}{
 % \section{Uncertainty Estimation}{
     \label{sec:corr_uncertainty}
-    Once we have corrected the NDVI using the models described in the previous section, we are left with the problem that not every correction is equally reliable.\footnote{One correction is illustrated in the figure~\ref{fig:step_plot/2017-206_corr.pdf}. In this figure, the outer points (labeled as clouds) have a large scatter.}. Hence, we are interested in a measure of how uncertain an estimate is. 
+    Once we have corrected the NDVI using the models described in the previous section, we are left with the problem that not every correction is equally reliable.\footnote{One correction is illustrated in figure~\ref{fig:step_plot/2017-206_corr.pdf}. In this figure, the outer points (labeled as clouds) have a large scatter.}. Hence, we are interested in a measure of how uncertain an estimate is. 
     We achieve this analogously as we corrected the NDVI, by replacing the response $\operatorname{NDVI}_\text{`true'}$ with the absolute residuals $v := \left|y -\hat y\right|$ and modeling their relationship with the covariates defined by $X$.  In this way, we obtain a model for the absolute residuals $v$ and the estimator $\hat v$. 
     % }
     

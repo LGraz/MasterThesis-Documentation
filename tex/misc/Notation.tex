@@ -7,61 +7,61 @@ Furthermore, only equations that are referenced elsewhere are equipped with a nu
 \section*{Variables}\vspace{-0.3cm}
 \renewcommand{\arraystretch}{1.3} % for non-dense tables
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
-$c$		& a (vector of) constant(s)\\
-$\lambda \in \R$		& a scalar\\
-$n\in \mathbb{N}$		& sample size\\
-$i,j$		& indices in $\{1,\dots,n\}$\\
-$t\in \R^n$		& time, usually in GDD\\
-$w \in \R^n$		& a vector of weights for each location $x$\\
-$y\in \R^n$		& response in 1-dim interpolation setting\\
-$\hat y\in \R^n$		& estimate of $y$\\
-$\bar y\in \R$		& sample mean of $y$\\
-$r \in \R^n$		& residuals given by $y - \hat y$\\
-$X\in\R^{n\times p}$ & the design matrix. Each row corresponds to one observation and each column to one covariate.\\
-$X_{[:,j]}$ 	& the j\textsuperscript{th} column of $X$\\
-$X_{[i,:]}$ 	& the i\textsuperscript{th} row of $X$
+$c$		& A (vector of) constant(s).\\
+$\lambda \in \R$		& A scalar.\\
+$n\in \mathbb{N}$		& Sample size.\\
+$i,j$		& Indices in $\{1,\dots,n\}$.\\
+$t\in \R^n$		& Time --- usually in GDD.\\
+$w \in \R^n$		& Vector of weights for each location $x$.\\
+$y\in \R^n$		& Response in 1-dim interpolation setting.\\
+$\hat y\in \R^n$		& Estimate of $y$.\\
+$\bar y\in \R$		& Sample mean of $y$.\\
+$r \in \R^n$		& Residuals given by $y - \hat y$.\\
+$X\in\R^{n\times p}$ & Design matrix. Each row corresponds to one observation and each column to one covariate.\\
+$X_{[:,j]}$ 	& j\textsuperscript{th} column of $X$.\\
+$X_{[i,:]}$ 	& i\textsuperscript{th} row of $X$.
 % $x\in \R^n$		& covariable in 1-dim interpolation setting
 \end{longtable}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section*{Abbreviations and Objects}\vspace{-0.3cm}
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
-	DAS       & Days After Sowing\\
-	GDD       & Growing Degree Days -- cumulative sum of ``$\max(0, \text{temperature}-\text{threshold})$''\\
-	IM       & Interpolation Method. That is a simple\footnote{I.e., no combination of various methods.} method that interpolates data $(t_i,y_i)_{i = 1,\dots ,n}$ and yields a function $f(t)=y$, approximating the data. \\
-	IS       & Interpolation Strategy. This is the category of functions that map $(t_i,y_i)_{i=1,\dots,n}$ to a function $f(t)=y$, approximating the data. So a IS describes a strategy of how to arrive at an interpolation starting from the data $(t_i,y_i)_{i=1,\dots,n}$. For this, initial data may be corrected (cf. chapter~\ref{sec:corr}), (possible different) IMs (iteratively) used, weightings applied (cf. robustification in section~\ref{sec:loess_robustify}). Note, that strictly speaking, every IM also is an IS. But usually, we expect an IS to involve a more `complex' procedure. \\
+	DAS       & Days After Sowing.\\
+	GDD       & Growing Degree Days -- cumulative sum of ``$\max(0, \text{temperature}-\text{threshold})$''.\\
+	IM       & Interpolation Method. That is a  method that interpolates data $(t_i,y_i)_{i = 1,\dots ,n}$ and yields a function $f(t)=y$, approximating the data.\\
+	IS       & Interpolation Strategy. By combining various correction models with different IMs (with and without robustification) in section~\ref{sec:corr_itpl_stat} 28 ISs were obtained.\\% This is the category of functions that map $(t_i,y_i)_{i=1,\dots,n}$ to a function $f(t)=y$, approximating the data. So a IS describes a strategy of how to arrive at an interpolation starting from the data $(t_i,y_i)_{i=1,\dots,n}$. For this, initial data may be corrected (cf. chapter~\ref{sec:corr}), (possible different) IMs (iteratively) used, weightings applied (cf. robustification in section~\ref{sec:loess_robustify}). Note, that strictly speaking, every IM also is an IS. But usually, we expect an IS to involve a more `complex' procedure.\\
 	LOOCV        & Leave One Out Cross Validation. Describes the procedure of estimating the value for a point by a model that has seen all the points except the current one (see section~\ref{sec:OOB_LOOCV}).\\
 	NDVI       & Normalized Difference Vegetation Index \citep{rouseMonitoringVernalAdvancement1974}.\\
 	OOB        & Out Of the Box. Describes the procedure of  estimating the value for a point by a model that has not seen this point before (see section~\ref{sec:OOB_LOOCV}).\\
 	Pixel       & A pixel originates of an image pixel and describes a square of 10 x 10 meters in the field that coincides with the resolution (and location) of the Sentinel-2 pixels. Such pixels are illustrated in figure~\ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}. Additional information like yield is also attached.\\
-	$P_t$       & the observed data (weather and spectral bands) at time $t$ and the location of one pixel. \\
-	$P$       & a pixel. We see it as a collection of all the observations at the specified location within one season. More formally, $P := \left\{P_t | t\text{ is a valid sample time within a defined season}\right\}$\\
+	$P_t$       & the observed data (weather and spectral bands) at time $t$ and the location of one pixel.\\
+	$P$       & a pixel. We see it as a collection of all the observations at the specified location within one season. More formally, $P := \left\{P_t | t\text{ is a valid sample time within a defined season}\right\}$.\\
 	$P^{SCL45}$       & is similar to $P$ but we only consider observations that belong to the classes 4 and 5. This is used done to get a subset of observations which are less contaminated by clouds and shadows.\\
-	QAR\textsuperscript{x}       & x\% Quantile of Absolute Residuals  (see definition \ref{def:qar})\\
-	RMSE         & Root Mean Square Error (see definition \ref{def:rmse})\\
-	S2       & Sentinel 2 satellites. Two multi-spectral image satellites deployed by the European Space Agency. \\
-	SCL       & Scene Classification Layer provided by the European Space Agency that gives an estimation of the land cover class of each pixel. It indicates what one can expect at a pixel at a sampled time. For an overview, see table~\ref{tab:satelite/scl_classes}\\
-	TS       & Time Series. \\
-	YPE        & (Relative) Yield Prediction Error (see definition~\ref{def:YPE})\\
+	QAR\textsuperscript{x}       & x\% Quantile of Absolute Residuals  (see definition~\ref{def:qar}).\\
+	RMSE         & Root Mean Square Error (see definition~\ref{def:rmse}).\\
+	S2       & Sentinel 2 satellites. Two multi-spectral image satellites deployed by the European Space Agency.\\
+	SCL       & Scene Classification Layer provided by the European Space Agency that gives an estimation of the land cover class of each pixel. It indicates what one can expect at a pixel at a sampled time. For an overview, see table~\ref{tab:satelite/scl_classes}.\\
+	TS       & Time Series.\\
+	YPE        & (Relative) Yield Prediction Error (see definition~\ref{def:YPE}).\\
 \end{longtable} 
 
 \section*{Statistical Models}\vspace{-0.3cm}
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
-	BS & B-splines (see section~\ref{sec:B})\\
-	DL & Double Logistic (see section~\ref{sec:double_logistic})\\
-	FS & Fourier Series (see section~\ref{sec:fourier_approx})\\
-	GAM & General Additive Model (see section~\ref{sec:corr_model_GAM})\\
-	LASSO & Least Absolute Shrinkage and Selection Operator (see section~\ref{sec:corr_model_LASSO})\\
-	LOESS & Locally Weighted Regression (see section~\ref{sec:loess})\\
-	MARS & Multivariate Adaptive Regression Splines (see section~\ref{sec:corr_model_MARS})\\
-	NW & Nadaraya-Watson (see section~\ref{sec:Kernel})\\
-	OLS & Ordinary Least Squares (see section~\ref{sec:corr_model_OLS})\\
-	OLS\textsuperscript{SCL} & OLS using only the observed NDVI and SCL classes (as factor variables)\\
-	OLS\textsuperscript{all} & OLS using the covariates OLS\textsuperscript{SCL} uses and the spectral bands\\
-	RF & Random Forest (see section~\ref{sec:corr_model_RF})\\
-	SG & Savitzky-Golay Filter (see section~\ref{sec:Savitzky-Golay})\\
-	SS & Smoothing Splines (see section~\ref{sec:Natural_SS})\\
-	UK & Universal Kriging (see section~\ref{sec:Kriging})\\
+	BS & B-splines (see section~\ref{sec:B}).\\
+	DL & Double Logistic (see section~\ref{sec:double_logistic}).\\
+	FS & Fourier Series (see section~\ref{sec:fourier_approx}).\\
+	GAM & General Additive Model (see section~\ref{sec:corr_model_GAM}).\\
+	LASSO & Least Absolute Shrinkage and Selection Operator (see section~\ref{sec:corr_model_LASSO}).\\
+	LOESS & Locally Weighted Regression (see section~\ref{sec:loess}).\\
+	MARS & Multivariate Adaptive Regression Splines (see section~\ref{sec:corr_model_MARS}).\\
+	NW & Nadaraya-Watson (see section~\ref{sec:Kernel}).\\
+	OLS & Ordinary Least Squares (see section~\ref{sec:corr_model_OLS}).\\
+	OLS\textsuperscript{SCL} & OLS using only the observed NDVI and SCL classes (as factor variables).\\
+	OLS\textsuperscript{all} & OLS using the covariates OLS\textsuperscript{SCL} uses and the spectral bands.\\
+	RF & Random Forest (see section~\ref{sec:corr_model_RF}).\\
+	SG & Savitzky-Golay Filter (see section~\ref{sec:Savitzky-Golay}).\\
+	SS & Smoothing Splines (see section~\ref{sec:Natural_SS}).\\
+	UK & Universal Kriging (see section~\ref{sec:Kriging}).\\
 \end{longtable} \renewcommand{\arraystretch}{1}
 
 % \bigskip

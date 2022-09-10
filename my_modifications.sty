@@ -2,6 +2,7 @@
   \usepackage{tikz}
   \usetikzlibrary{shapes, arrows}
 
+\usepackage{nameref}
 \usepackage[super]{nth}
 \usepackage{longtable}
 \usepackage{tabularray}
@@ -37,16 +38,16 @@
 \mathtoolsset{showonlyrefs}
 
 
-\newenvironment{my_figure}[3][t]{
+\newenvironment{my_figure}[3][h]{
   \begin{figure}[#1]
     \begin{center}
       % \fbox % trim= left bottom right top  % trim= 0.8cm 0.8cm 0.6cm 0.8cm
       \includegraphics[#2]{#3}
       % for more options: https://latexref.xyz/_005cincludegraphics.html 
       \label{fig:#3}
-}{
-    \end{center}
-  \end{figure}
+      }{
+      \end{center}
+    \end{figure}
 }
 
 % Environment for pros and cons table

@@ -139,13 +139,13 @@
 		\end{my_figure}
 	} 
 	
-	\subsection{Upper Envelope Approach --- Penalty for Negative Residuals}
-		If we artificially increase the negative residuals in~\refeq{eq:bisquare} by multiplying (e.g., factor 2), the corresponding points will get less weight in the next iteration. This allows us to create an interpolation that resembles an upper envelope. Intuitively, this upper envelope can be thought of as a sheet that is laid on top of the points.
+	\subsection{Upper Envelope Approach}
+		If we artificially increase the negative residuals in~\refeq{eq:bisquare} (e.g.,  by multiplying with 2), the corresponding points will get less weight in the next iteration. This allows us to create an interpolation that resembles an upper envelope. Intuitively, this upper envelope can be thought of as a sheet that is laid on top of the points.
 			
 		This approach is based on the premise that we tend to underestimate the NDVI \citep{caoSimpleMethodImprove2018b}. Since we want to develop a general method that is in principle not related to the NDVI, we will not pursue this approach further.	
 }
 \section{Performance Assessment}{\label{sec:itpl_perfomance_assessment}
-	Next, we will benchmark the in section~\ref{sec:itpl_preselection} preselected {{IM}}s with and without robustification. For this, we will use the same technique as we did for the parameter determination in section~\ref{sec:itpl_param_est}. On $B_\lambda$ we apply the score functions from section \ref{sec:scorefun}.  
+	Next, we will benchmark the in section~\ref{sec:itpl_preselection} preselected {{IM}}s with and without robustification. For this, we will use the same technique as we did for the parameter determination in section~\ref{sec:itpl_param_est}. On $B_\lambda$ we apply the score functions from section~\ref{sec:scorefun}.  
 
 	The results are presented in section~\ref{sec:results_itpl} and are discussed in section~\ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method, and from the non-parametric methods we choose the SS.
 }
