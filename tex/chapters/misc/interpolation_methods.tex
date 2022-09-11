@@ -86,7 +86,7 @@
 
 		\begin{my_pros_cons_table}{
 				\item Flexible due to different possible kernels.
-				\item Can be assigned degrees of freedom (trace of the hat-matrix).
+				\item Can be assigned degrees of freedom.
 				\item Estimation of the noise variance $\hat \sigma_\varepsilon^2$.\footnote{Cf. lecture notes of \cite{buhlmanComputationalStatistics2020} section 3.2.2.}
 			}{
 				\item If the $t \mapsto K(t)$ is not continuous, $\hat m $ isn't either.
@@ -192,7 +192,7 @@
 				\left(1-\left(\frac{|t_j-t_i|}{h_i}\right)^{3}\right)^{3}, & \text{for } |t_j-t_i|<h_i           \\
 				0,                                                   & \text{for } |t_j-t_i| \geqslant h_i
 			\end{cases} ,$$
-		where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(t_i)$.\footnote{\label{footnote:LOESS}If too many weights are set to zero, we might end up considering not enough observations and thus get a singular design-matrix (for the least squares estimation). Therefore, we substitute $h_i$ with $1.01 h_i$, so that the observation on the boundary of $B_{h_i}(t_i)$ does not get completely ignored. But we also have to assure that $\alpha$ is big enough.} So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
+		where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(t_i)$.\footnote{\label{footnote:LOESS}If too many weights are set to zero, we might end up considering not enough observations and thus get a singular design-matrix (for the least squares estimation). To extend good behavior, we substitute $h_i$ with $1.01 h_i$, so that the observations on the boundary of $B_{h_i}(t_i)$ do not get completely ignored. But we also have to assure that $\alpha$ is big enough.} So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
 
 		\subsubsection{Differences between the Robust LOESS and the SG}
 		The LOESS smoother takes a fraction of points instead of a fixed number, and therefore automatically adapts to the size of the data we wish to interpolate. However, we run into the danger of considering too little observations, since the estimation breaks down if $\lceil \alpha n\rceil < d+1$.\footnoteref{footnote:LOESS}
@@ -224,8 +224,8 @@
 			B_{i, k}(z)=\frac{z-t_{i}}{t_{i+k}-t_{i}} B_{i, k-1}(z)+\frac{t_{i+k+1}-z}{t_{i+k+1}-t_{i+1}} B_{i+1, k-1}(z).
 		\end{equation}
 		
-		Assuming that all $t_i$ are distinct, this yields an interpolation that fits the data perfectly. To reduce the amount of overfitting and increase the smoothness, we relax the constraint that we must perfectly interpolate. Thus, we use the minimum number of basis functions\footnote{So we do not require one basis function for each neighboring pair of knots. SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number of knots used.} such that:
-		$$\sum_{i=1}^n(w_i (y_i - \hat y_i))^2 \leq s$$
+		Assuming that all $t_i$ are distinct, this yields an interpolation that fits the data perfectly. To reduce the amount of overfitting and increase the smoothness, we relax the constraint that we must perfectly interpolate. Thus, we use the minimum number of basis functions\footnote{So we do not require one basis function for each neighboring pair of knots. SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number of knots used.} such that keeps the sum of squares below some threshold $\lambda$:
+		$$\sum_{i=1}^n(w_i (y_i - \hat y_i))^2 \leq \lambda$$
 
 		\begin{my_pros_cons_table}{
 				\item Can be assigned degrees of freedom.
@@ -233,14 +233,14 @@
 				\item Also performs well if points are not equidistant.
 			}{
 				\item Smoothing process does not translate well to an interpretation (unlike SS).
-				\item Choice of smoothing parameter $s$.
+				\item Choice of smoothing parameter $\lambda$.
 			}
 		\end{my_pros_cons_table}
 
 
 	\subsection{Smoothing Splines}
 		\label{sec:Natural_SS}
-		To define the Smoothing Splines (SS) as in \cite{cravenSmoothingNoisyData1978}, let $\mathcal F$ be the Sobolev space (the space of functions of which the second derivative is integrable). Then the SS are the unique\footnote{Strictly speaking, it is only unique for $\lambda > 0$.} minimizer of
+		To define the Smoothing Splines (SS) as in \cite{cravenSmoothingNoisyData1978}, let $\mathcal F$ be the Sobolev space\footnote{I.e., the space of functions of which the second derivative is integrable.}. Then the SS are the unique\footnote{Strictly speaking, it is only unique for $\lambda > 0$.} minimizer of
 		\begin{equation}
 			\label{eq:ss}
 			\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}w_i\left(y_{i}-{f}\left(t_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(t)^{2} dt
@@ -254,14 +254,14 @@
 			$$
 			({y}-{z})^{{T}} {W}({y}-{z})+\lambda {z}^{{T}} {D}^{{T}} {D} \mathbf{z},
 			$$
-			where $W$ is a diagonal weight-matrix, $\lambda$ our parameter and $D$ a matrix that serves the purpose of approximating a differentiation of $k$-th order. In essence, this minimization function is the same as equation~\refeq{eq:ss}. The only differences are, that we substitute the integral by a sum and that we are more flexible with the order of the derivatives we are using. The main drawback is that we do not get a smooth function that interpolates, and that the sum behaves worse than the integral for non-equidistant data points. Thus, we will not consider the Whittaker further but consider the more general SS. 
+			where $W$ is a diagonal weight-matrix, $\lambda$ our smoothing parameter and $D$ a matrix that serves the purpose of approximating a differentiation of $k$-th order. In essence, this minimization function is the same as equation~\refeq{eq:ss}. The only differences are, that we substitute the integral by a sum and that we are more flexible with the order of the derivatives we are using. The main drawback is that we do not get a smooth function that interpolates, and that the sum behaves worse than the integral for non-equidistant data points. Thus, we will not consider the Whittaker further in favor of the more general SS. 
 
 		\begin{my_pros_cons_table}{
-				\item Can be assigned degrees of freedom (trace of the hat-matrix).
+				\item Can be assigned degrees of freedom.
 				\item Efficient estimation (closed form solution).
-				\item Intuitive penalty (we don't want the function to be too `wobbly' --- change slopes).
-				\item Also performs well if points are not equidistant.
-				\item Fixes the Runge's phenomenon (fluctuation of high degree polynomial interpolation).
+				\item Intuitive penalty reduces curvature.
+				\item Performs well if points are not equidistant.
+				\item Fixes the Runge's phenomenon\footnote{I.e., fluctuation of high degree polynomial interpolation.}.
 				\item Bounded within the data range if $\lambda$ is chosen a priori.
 			}{
 				\item The tuning parameter $\lambda$ must be chosen. This can be done via cross validation and optimizing a score function (e.g., the RMSE). 

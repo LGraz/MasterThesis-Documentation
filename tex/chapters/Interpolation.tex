@@ -35,7 +35,7 @@
 		m(t)=\mathbb{E}[y \mid t]
 	$$
 	We will introduce parametric and non-parametric approaches to estimate $m$ in section~\ref{sec:itpl_parametric} and~\ref{sec:itpl_nonparametric}.
-	Furthermore, in the subsequent, we denote $w\in \R^n$ as the vector of weights such that $w_i$ corresponds to the weight that $(t_i, y_i)$ should have in the interpolation. 
+	Furthermore, in the subsequent, we denote $w\in \R^n$ as the vector of weights such that $w_i$ corresponds to the weight that $(t_i, y_i)$ should have in the interpolation. Since not all of the following IMs support extrapolation outside of the data range, we will always extrapolate with the closest value within the data range. 
 }
 
 
@@ -65,15 +65,14 @@
 		\item Consider its LOOCV estimator $\hat z_\lambda$ using the specific IM and the parameter $\lambda$ for each pixel individually.
 		\item Determine $\lambda_{optimal} = \argmin_{\lambda\in\lambda}\operatorname{QAR}^{90}(\hat z_\lambda)$
 	\end{Nenumerate}
+	We choose $\operatorname{QAR}^{90}$ as our optimization function because we want to allow 10\% of outliers (contaminated points) but also aim for an accurate fit in 90\% of the cases.  
+	Figure~\ref{fig:interpol/statistics_SS_param_optim} exemplifies the effect of the chosen quantile in the optimization function (QAR\textsuperscript{x}). To summarize, we may say that the higher the quantile, the stronger the smoothing. 
 
 	\begin{my_figure}[h]{width=1\textwidth}{interpol/statistics_SS_param_optim}
 		\caption[Smoothing splines optimized by minimizing the given quantile of the absolute leave-one-out residuals]{Smoothing splines fit with smoothing parameter optimized by minimizing the LOOCV QAR. Note that the larger the considered quantile is, the more the curvature of the resulting curve decreases.}
 		\label{fig:interpol/statistics_SS_param_optim}
 	\end{my_figure}
 
-	We choose $\operatorname{QAR}^{90}$ as our optimization function because we want to allow 10\% of outliers (contaminated points) but also aim for an accurate fit in 90\% of the cases.  
-	
-	Figure~\ref{fig:interpol/statistics_SS_param_optim} exemplifies the effect of the chosen quantile in the optimization function (QAR\textsuperscript{x}). To summarize, we may say that the higher the quantile, the stronger the smoothing. 
 }
 
 
@@ -81,10 +80,8 @@
 	\label{sec:loess_robustify}
 	{ % Intro
 		Now we discuss a general approach of how to make an interpolation more robust against outliers. The main idea is to give less weight to observations that have high residuals after the initial (or if we reiterate, the previous) fit.
-
 		Even though the procedure is taken from the robust version of the LOESS smoother (cf. section~\ref{sec:loess} and \cite{clevelandRobustLocallyWeighted1979}), we can apply it to every {{IM}} that allows for prior weighting of observations.
 	}
-	
 	{	
 		After an initial fit, we calculate the residuals $r_i := y_i - \hat y_i$ and obtain $\tilde r_i$ by scaling with the median of the absolute residuals: 
 		\begin{equation}
@@ -99,7 +96,6 @@
 			\label{eq:bisquare}
 		\end{equation}
 		Using the new weights, we can re-interpolate. This reweighting can be iterated for several steps or till the change of the values is smaller than some tolerance.
-
 	% Old more complicated version
 		% Before we describe the procedure, we define a function that will determine the weight given to each observation, such that observations with large-scaled residuals will have less weight. That is the bisquare function B:
 		% 	$$
@@ -116,18 +112,18 @@
 		% 	\end{equation}
 		% 	and interpolate again using the new weights. We can iterate this reweighting and stop after several steps or when the change of the values is smaller than some tolerance.
 	}
-
-	Note that this procedure is indeed robust since we use the median for the normalization which has a breakdown point\footnote{Intuitively, the breakdown point denotes the fraction of observations a `vicious' player can replace without breaking the estimator. For example, the median has a breakdown point of $50 \%$.} of $50 \%$.\footnote{The breakdown point relates only to outliers in the $y$ values. Note that we do not require the {{IM}}s to be robust, since the residual for an outlier will  still be larger than for non-outliers and thus will be down weighted more and more in each iteration (because for the next iteration the residual of the outlier will be even larger, since we gave less weight to it).}
+	This procedure is indeed robust since we use the median for the normalization which has a breakdown point\footnote{Intuitively, the breakdown point denotes the fraction of observations a `vicious' player can replace without breaking the estimator. For example, the median has a breakdown point of $50 \%$.} of $50 \%$.\footnote{The breakdown point relates only to outliers in the $y$ values. Note that we do not require the {{IM}}s to be robust, since the residual for an outlier will  still be larger than for non-outliers and thus will be down weighted more and more in each iteration (because for the next iteration the residual of the outlier will be even larger, since we gave less weight to it).}
 	\subsection{Our Adjustment:}{
-		During the iterations or when supplying prior weights, low-weighted observations can corrupt our estimation of scale (the median of absolute residuals). Thus, we introduce the weighted median as
+		During the iterations or when supplying prior weights, low-weighted observations can corrupt our estimation of scale (the median of absolute residuals). Thus, we will use the weighted median defined by
 		$$
-			\med_\text{weighted}(r,w) := \argmin_{\lambda \in \R} \sum_{i=1}^n |r_iw_i -\lambda|
+			\med_\text{weighted}(r,w) := \argmin_{\lambda \in \R} \sum_{i=1}^n |r_iw_i -\lambda|,
+			\quad\text{ for }r,w\in \R^n.
 		$$
-		for $r,w\in \R^n$. 
+		
 	}
 	\subsection{Examples and Conclusions}{		
-		Examples of the first four iterative fits using SS and LOESS are shown in figure~\ref{fig:interpol/2x3_SS_robust} and~\ref{fig:interpol/2x3_loess_robust} for six pixels. For the analogous figures of BS and DL we refere to the appendix~\ref{fig:interpol/2x3_B-Splines_robust} and~\ref{fig:interpol/2x3_DL_robust}.
-		Indeed, we observe how the interpolated {TS} is less affected by outliers after each iteration. We notice the biggest difference in the first iteration. Furthermore, in the plot at the bottom left we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always stop after one iteration.
+		Examples of the first four iterations using SS and LOESS are shown in figure~\ref{fig:interpol/2x3_SS_robust} and~\ref{fig:interpol/2x3_loess_robust} for six pixels. For the analogous figures of BS and DL we refere to the appendix~\ref{fig:interpol/2x3_B-Splines_robust} and~\ref{fig:interpol/2x3_DL_robust}.
+		Indeed, we observe how the interpolated {TS} is less affected by outliers after each iteration. The most notable change happens during the first iteration. In figure~\ref{fig:interpol/2x3_SS_robust} plot (d) we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always stop after one iteration.
 
 		\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_SS_robust}
 			\caption[Smoothing splines robustification.]{Smoothing splines \RobItPlot}
