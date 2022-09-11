@@ -48,7 +48,7 @@
     
     If we use the best IS without correction (SS\textsuperscript{rob}) the relative RMSE of the NDVI-based yield prediction is 0.148 (cf. table~\ref{tab:methods_vs_yieldprediction_relative}). Using the best IS with correction (SS+OLS\textsuperscript{SCL}), instead results in a relative RMSE of 0.140. Later, in section~\ref{sec:discuss_high-rmse-in-yield-prdiction}, we explain why those results might be too optimistic but argue that they are still valid for relative comparison. Hence, we compare the amount of unexplained variance of the NDVI-based yield prediction. That is $1-R^2$ (for $R^2$ values, see appendix table~\ref{tab:methods_vs_yieldprediction_r2}). Consequently, when correcting our NDVI TS, the unexplained variance decreases by:
     $$
-        \frac{(1-0.705)  -  (1-0.736)}{ 1-0.705}   = 10.5\%\footnote{The calculation could be also done using the relative RMSE values from table~\ref{tab:methods_vs_yieldprediction_relative} via: $(0.148^2-0.140^2)/0.148^2$$.}
+        \frac{(1-0.705)  -  (1-0.736)}{ 1-0.705}   = 10.5\%\footnote{The calculation could be also done using the relative RMSE values from table~\ref{tab:methods_vs_yieldprediction_relative} via: $(0.148^2-0.140^2)/0.148^2$.}
     $$
     Note that the results discussed here depend strongly on the link function used (cf. equation~\refeq{eq:corr_link}). Once we change it, we should also repeat this analysis.
             
