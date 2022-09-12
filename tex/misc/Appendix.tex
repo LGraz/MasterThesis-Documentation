@@ -2,13 +2,13 @@
 
 \section{Data and Methods}{
     \subsection{NDVI}
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{misc/Reflectance-spectra-of-photosynthetic-green-vegetation-non-photosynthetic-dry.png}
-	\vspace{0.15cm}
-    \caption[Spectral reflectance of the green/dry vegetation]{Spectral reflectance of the green/dry vegetation compared with soil. Note the strong jump at $0.7\mu m$ which is utilized in the NDVI. Figure taken from \cite{verhoevenLookingBlackTintedGlasses2006}}
-    \label{fig:misc/Reflectance-spectra-of-photosynthetic-green-vegetation-non-photosynthetic-dry.png}
-\end{figure}
+		\begin{figure}[H]
+			\centering
+			\includegraphics[width=0.8\textwidth]{misc/Reflectance-spectra-of-photosynthetic-green-vegetation-non-photosynthetic-dry.png}
+			\vspace{0.15cm}
+			\caption[Spectral reflectance of the green/dry vegetation]{Spectral reflectance of the green/dry vegetation compared with soil. Note the strong jump at $0.7\mu m$ which is utilized in the NDVI. Figure taken from \cite{verhoevenLookingBlackTintedGlasses2006}}
+			\label{fig:misc/Reflectance-spectra-of-photosynthetic-green-vegetation-non-photosynthetic-dry.png}
+		\end{figure}
 	\subsection{GDD}\label{app:gdd_examples}
 		\cite{millerUsingGrowingDegree2018} tabulates the corresponding GDD for each stage of wheat.
 		
@@ -33,6 +33,26 @@
 
 
 \section{Interpolation}
+	\subsection{Parameter Bounds}
+		As discussed in section~\ref{sec:itpl_param_optimizationissues} we encoutered parameter optimization issiues which we solved via bounding them. \\
+		For the DL (cf. section~\ref{sec:double_logistic}) we assumed  
+		$ymin \in [0,0.7],$ 
+		$ymax \in [0.4,1]$,
+		$t_0 \in [100,1500]$,
+		$t_1 \in [800,3000]$,
+		$d_0 \in [0,0.01]$,
+		$d_1 \in [-0.01,0]$. 
+		\\
+		For the FS (cf. section~\ref{sec:fourier_approx} we assumed)
+		\Phi
+		a0
+		a1
+		a2
+		b1
+		b2
+		"p0": [2000, 1, 1, 1, 1, 1],
+            "bounds": ([1200, -1, -5, -5, -5, -5], [4000, 2, 5, 5, 5, 5]),
+			\todo{definition überprüfen mit periode stimmt es nicht ganz in der gleichung }
 
 \begin{my_figure}[H]{width=1\textwidth}{interpol/2x3_B-Splines_robust}
 	\caption[B-splines robustification.]{B-splines \RobItPlot}
