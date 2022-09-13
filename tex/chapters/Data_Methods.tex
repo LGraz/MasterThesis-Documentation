@@ -3,7 +3,7 @@
 	This section describes the available data and the challenges associated with it.
 	Our study region is a farm of over 800ha, which is located in western Switzerland. From \cite{perichPixelbasedCropYield2022}  we acquired Sentinel-2 (S2) satellite image data (section~\ref{sec:s2_img_data}), yield maps of several cereals from 2017 to 2021 (section~\ref{sec:yieldmapping_data}), and meteorological data (section~\ref{sec:gather_data_to_pixel}). Methods to evaluate an estimator or model are given in section~\ref{sec:general_methods}.
 	
-	For {{IM}}s we refer to sections~\ref{sec:itpl_parametric} and~\ref{sec:itpl_nonparametric} for a robust interpolation technique to section~\ref{sec:loess_robustify}. In section~\ref{sec:itpl_param_est} we describe a method to objectively determine the quality of an interpolation, and in chapter~\ref{sec:corr} we present a strategy which involves correction of the NDVI with a weighted interpolation.	
+	% For {{IM}}s we refer to sections~\ref{sec:itpl_parametric} and~\ref{sec:itpl_nonparametric} for a robust interpolation technique to section~\ref{sec:loess_robustify}. In section~\ref{sec:itpl_param_est} we describe a method to objectively determine the quality of an interpolation, and in chapter~\ref{sec:corr} we present a strategy which involves correction of the NDVI with a weighted interpolation.	
 }
 
 
@@ -11,12 +11,10 @@
 	\label{sec:s2_img_data}
 	%\subsection*{General Information}
 		The European Space Agency \citep{esaSentinel22022} freely distributes images of the S2 satellites. Together, both satellites have a revisit time of 5 days in our study region.
-		
+		The S2 images contain 12 spectral bands with spatial resolutions of up to 10 meters (see table~\ref{table:S2-bands}). Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation \citep{perichPixelbasedCropYield2022}. In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used \citep{esaEuropeanSpaceAgency2022}. %\footnote{According to \cite{perichPixelbasedCropYield2022}: ``Data prior to March 2018 was only available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by the European Space Agency''.} 
+		\cite{esaEuropeanSpaceAgency2022} also supplies the Scene Classification Layer ({SCL}). It is a model output that for each location assigns the observed pixel to one of 11 SCL-classes (cf. table~\ref{tab:satelite/scl_classes}). 
 		\input{tex/chapters/misc/table_S2-bands.tex}
-		
-		The S2 images contain 12 spectral bands with spatial resolutions of up to 10 meters (see table~\ref{table:S2-bands}). Bands with a lower resolution (20 and 60 meters) were upscaled to 10 meter resolution using cubic interpolation \citep{perichPixelbasedCropYield2022}. In order to decrease the effect of atmospheric conditions like reflections and scattering, bottom-of-atmosphere, radiometric corrected Level-2A data was used. %\footnote{According to \cite{perichPixelbasedCropYield2022}: ``Data prior to March 2018 was only available in the top-of-atmosphere L1C format and was downloaded as such [...] L1C data was processed to L2A product level using the `Sen2Cor' processor provided by the European Space Agency''.} 
-		\cite{esaEuropeanSpaceAgency2022} supplies the Scene Classification Layer ({SCL}). It is a model output that for each location assigns the observed pixel to one of 11 SCL-classes (cf. table~\ref{tab:satelite/scl_classes}). 
-		In this thesis, we will use this classification to filter out data points that we believe to be less informative. These are all observations in which the SCL-class does not correspond to vegetation or bare soils (classes 4 and 5). We define the set SCL45 as the observations that are labelled as SCL-class 4 or 5.
+		In this thesis, we will use this classification to filter out data points that we assume to be less informative. These are all observations for which the SCL-class does not correspond to vegetation or bare soils (classes 4 and 5). We define the set SCL45 as the observations that are labelled as SCL-class 4 or 5.
 		
 		% \begin{figure}[h]
 		% 	\label{fig:satelite/sentinel-2-bands}
@@ -33,8 +31,8 @@
 
 \section{Crop Yield Data}{
 	\label{sec:yieldmapping_data}
-	The crop yield data were collected from a combine harvester. Equipped with a satellite-based navigation system, the harvester drives over the fields and continuously estimates the dry crop yield density in $t/ha$ (see figure~\ref{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}). 
-	We use the data set presented in \cite{perichPixelbasedCropYield2022}, where error-prone measurement points (such as during a tight curve of the combine harvester) were removed and then the yield map was rasterized using linear interpolation (cf. figure~\ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}). We summarize the rasterized dry yield values by the following statistics:
+	The crop yield data were collected from a combine harvester. Equipped with a satellite-based navigation system, the harvester drives over the fields and continuously estimates the dry crop yield density in $t/ha$ (cf. figure~\ref{fig:satelite/witzwil_2021_P112_yield_harvester_cropped}). 
+	We use the data set presented in \cite{perichPixelbasedCropYield2022}, where error-prone measurement points (such as during a tight curve of the combine harvester) were removed and then the yield maps were rasterized using linear interpolation (cf. figure~\ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}). We summarize the rasterized dry yield values by the following statistics:
 
 	% tabelle anstadt histogramm, da schon zu viele figuren `herumschwirren' und es so kompakter ist.
 	\begin{tabular}{l l l l l l l} 
@@ -74,12 +72,12 @@
 }
 
 \section{Normalized Difference Vegetation Index}{% NDVI
-	The well-known {NDVI} introduced by \cite{rouseMonitoringVernalAdvancement1974} is used to approximate vegetation in remote sensing. It utilizes the fact that healthy, photosynthesizing vegetation exhibits a large increase in reflectance between the red and infrared region of the light spectrum (cf. appendix figure~\ref{fig:misc/Reflectance-spectra-of-photosynthetic-green-vegetation-non-photosynthetic-dry.png}). It is calculated using the S2 bands $B4$ (red) and $B8$ (infrared) (table~\ref{table:S2-bands}) by:
+	The well-known {NDVI} introduced by \cite{rouseMonitoringVernalAdvancement1974} is used to detect vegetation and to estimate photosynthetic activity in remote sensing \citep{gamonRelationshipsNDVICanopy1995a}. It utilizes the fact that healthy, photosynthesizing vegetation exhibits a large increase in reflectance between the red and infrared region of the light spectrum (cf. appendix figure~\ref{fig:misc/Reflectance-spectra-of-photosynthetic-green-vegetation-non-photosynthetic-dry.png}). It is calculated using the S2 bands `red' and `infrared' (i.e., bands $B4$ and $B8$---cf. table~\ref{table:S2-bands}$B4$) by:
 	\begin{equation}
 		NDVI = \frac{B8 - B4}{B8 + B4}
 		\label{eq:ndvi}
 	\end{equation}
-	Since we measure the NDVI via the S2 satellites from space, we cannot expect to obtain the same NDVI as measured with a ground-based spectroradiometer. This is especially true if the ground signal is obfuscated by either the clouds directly or by cloud shadows. Even if we only use SCL45 observations flagged as cloud-free, we still encounter measurement errors, as described in section~\ref{sec:s2_challangges}. Therefore, we call the calculated values merely the {observed NDVI}. In the following chapters, we will study the resulting NDVI {TS} extensively. Such a {TS} is shown in figure~\ref{fig:raw_ndvi_ts}.
+	Since we measure the NDVI via the S2 satellites from space, we cannot expect to obtain the same NDVI as measured with a ground-based spectroradiometer. This is especially true if the ground signal is contaminated by either the clouds directly or by cloud shadows. Even if we only use SCL45 observations flagged as cloud-free, we still encounter measurement errors, as illustrated in section~\ref{sec:s2_challangges}. Therefore, we call the calculated values merely the {observed NDVI}. In the following chapters, we will study the resulting NDVI {TS} extensively. Such a {TS} is shown in figure~\ref{fig:raw_ndvi_ts}.
 	\begin{figure}[!h]
 		\centering
 		\begin{subfigure}{.47\textwidth}
@@ -111,14 +109,14 @@
 % \end{my_figure}
 \section{Transformation of Timescale}\label{sec:gdd_def}
 	{% GDD & DAS
-		Two drawbacks become apparent when using Days After Sowing (DAS) as the timescale (see figure~\ref{interpol/ndvi_ts_das_grey.pdf}): First, this scale makes it difficult to compare two NDVI {TS} because wheat is not always sown on the same day of the year and in some years plants begin to emerge earlier. Second, because there are only few SCL45 observations in autumn and winter, we face significant data gaps during this period. To fix both problems, \cite{mcmasterGrowingDegreedaysOne1997} propose to transform the timescale into a meaningful temperature based one. The resulting Growing Degree Days ({GDD}) are defined as the cumulative sum of temperature above a given base temperature $T_{base}$ since sowing. For cereals, we use $T_{base}=0$ \citep{holzkamperSpatialTemporalTrends2015}. Thus, the GGD for $n$ days after sowing will be equal to:
+		Two drawbacks become apparent when using Days After Sowing (DAS) as the timescale (see figure~\ref{interpol/ndvi_ts_das_grey.pdf}): First, this scale makes it difficult to compare two NDVI {TS} because wheat is not always sown on the same day of the year and in some years plants begin to emerge earlier. Second, because there are only few SCL45 observations in autumn and winter, we face significant data gaps during this period. To fix both problems, \cite{mcmasterGrowingDegreedaysOne1997} propose to transform the timescale into a meaningful temperature based one. The resulting Growing Degree Days ({GDD}) are defined as the cumulative sum of temperature above a given threshold $T_{base}$ since sowing. For cereals, we use $T_{base}=0$ \citep{holzkamperSpatialTemporalTrends2015}. Thus, the GGD for $n$ days after sowing will be equal to:
 		\begin{equation}
 			\label{eq:gdd}
 			GDD_n := \sum_{i=0}^n \max(T_i - T_{base}, 0).
 		\end{equation}
-		Important plant growth stages and their corresponding GDD values are tabulated in the appendix~\ref{app:gdd_examples}.
 
-		In figure~\ref{fig:raw_ndvi_ts} we see an example for comparison of the DAS and GDD timescale. Here we see that the first 120 DAS are compressed to just 500 GDD, and hence the gap in observations was successfully compressed. Given the reasons mentioned above, from now on we will only consider GDD.
+        An example for comparison of the DAS and GDD timescale is shown in figure~\ref{fig:raw_ndvi_ts}. Here we see that the first 120 DAS are compressed to just 500 GDD, and hence the gap in observations was successfully compressed. Given the reasons mentioned above, from now on we will only consider GDD. 
+        Important plant growth stages and their corresponding GDD values are tabulated in the appendix~\ref{app:gdd_examples}.
 	} 
 
 \section{The Concept of a `Pixel'}{ \label{sec:gather_data_to_pixel}
@@ -134,7 +132,7 @@
 \section{Illustration of S2 Images}{\label{sec:s2_challangges}
 	\input{tex/chapters/misc/2x3_satelite_ts_plot_grid.tex}
 	% Description of plot
-	Using an example pixel, we illustrate the challenges in working with S2 image data. Figure~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, one selected Pixel and the NDVI {TS} of this pixel. 		
+	Using an example pixel, we illustrate the challenges in working with S2 image data. Figure~\ref{fig:witzwil_selected_satellite_images} shows a selection of 6 satellite images of a field, and the NDVI {TS} for the highlighted pixel. 
 	In February (image a), we see no vegetation but bare soil and thus also a low NDVI. At the beginning of May (b), we observe a cloudless dark green field with a high NDVI. In (c) heavy cloud cover (SCL class 9) leads to a complete loss of plant information in this S2 observation. Figure (d) shows that the SCL classification is not reliable, since we evidently observe clouds, which is also reflected in a sudden NDVI drop. Even though SCL indicates that (e) are thin cirrus clouds, a pale green shimmers through, and we also note a reasonably high NDVI. Therefore, we remark that some SCL45 observations are not accurate and even though a few non-SCL45 observations contain useful information, most of them are too unreliable (e.g., all SCL 9 observations). Thus, we aim to substitute the unreliable ones with interpolated versions and correct contaminated ones.
 		
 		%% subfigures references:
@@ -147,7 +145,7 @@
 }
 
 \section{Estimation Evaluation Criteria}{ \label{sec:general_methods}
-	In this section, we define score functions for estimation accuracy and techniques to adequately apply them. 
+	In this section, we define score functions to measure estimation accuracy and techniques to adequately apply them. 
 
 	\subsection{Score Functions}\label{sec:scorefun}
 	    Now, we define the Root Mean Square Error (RMSE), a prominent and outlier-sensitive score function.
@@ -158,14 +156,14 @@
 			 \operatorname{RMSE}:=\sqrt{\frac{1}{n}\sum_{i=1}^n (y_i - \hat y_i)^2}
 		\end{equation}
 		\end{definition}
-		Thus, the RMSE measures how close the estimated $\hat y$ are to the original $y$ by considering the squares of errors. The lower the RMSE, the more similar are the fitted values to the original values. Note that one strong outlier may corrupt this score function. Therefore, we will also define the $x^\text{th}\%$ Quantile of Absolute Residuals (QAR\textsuperscript{x}) that can handle some fraction of outliers:
+		Thus, the RMSE measures how close the estimated $\hat y$ are to the original $y$ by considering the squares of errors. The lower the RMSE, the closer are the fitted values to the original values. Note that one strong outlier may corrupt this score function. Therefore, we will also define the $x^\text{th}\%$ Quantile of Absolute Residuals (QAR\textsuperscript{x}) that can handle some fraction of outliers:
 		\begin{definition} (QAR\textsuperscript{x}) \label{def:qar}
-		    Given a percentage $x\in \{1,2,\dots,100\}$, a vector $y\in \R^n$ and its estimator $\hat y$, we assume that $|y_1-\hat y_1|\leq |y_2-\hat y_2|\leq \dots \leq |y_n-\hat y_n|$. Then, we define the QAR\textsuperscript{x} as the biggest residual under the x\% smallest ones. Formally:  
+		    Given a percentage $x\in \{1,2,\dots,100\}$, a vector $y\in \R^n$ and its estimator $\hat y$, assume without loss of generality that $|y_1-\hat y_1|\leq |y_2-\hat y_2|\leq \dots \leq |y_n-\hat y_n|$. Then, we define the QAR\textsuperscript{x} as the biggest residual under the x\% smallest ones. Formally:  
 		    \begin{equation}
 		        \operatorname{QAR}^{\text{x}}:=\max \left\{|y_i-\hat y_i|:i\leq \frac{x}{100}n \right\}
 		    \end{equation}
 		\end{definition}
-		Note that QAR\textsuperscript{50} coincides with the median of absolute residuals and QAR\textsuperscript{100} with the maximum of absolute residuals. Hence, the higher, $x$ the fewer outliers QAR\textsuperscript{x} can handle. Consequently, if we expect the data to have 5\% outliers, we should choose $x$ smaller than 95. Furthermore, if an estimator attains lower QAR\textsuperscript{x} values than a competing estimator for $x=50,75,85$, we conclude\footnote{Strictly speaking, this conclusion assumes that the distribution of the residuals is unimodal (i.e., has only one `peak').} that it also produces smaller residuals in most cases.  
+		Note that QAR\textsuperscript{50} coincides with the median of absolute residuals and QAR\textsuperscript{100} with the maximum of absolute residuals. Hence, the higher $x$, the fewer outliers QAR\textsuperscript{x} can handle. Consequently, if we expect the data to have 5\% outliers, we should choose $x$ smaller than 95. Furthermore, if an estimator attains lower QAR\textsuperscript{x} values than a competing estimator for $x=50,75,85$, we conclude\footnote{Strictly speaking, this conclusion assumes that the distribution of the residuals have a similar shape and that they are unimodal (i.e., has only one `peak').} that it also produces smaller residuals in most cases.  
 		
 	\subsection{Out-Of-Bag and Leave-One-Out-Cross-Validation}{ \label{sec:OOB_LOOCV}
 		The rationale for Out-Of-Bag ({OOB}) and Leave-One-Out-Cross-Validation ({LOOCV}) is that we intend to evaluate a model $M$ with unseen data. That is, if $D$ describes the entire dataset, and we train a model on a subset of $D$, we can use the remaining data to evaluate the model. 

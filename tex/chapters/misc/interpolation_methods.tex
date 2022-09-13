@@ -2,18 +2,18 @@
 
 \section{Parametric Regression} 
 	\label{sec:itpl_parametric}
-	Parametric Curve estimation tries to fit a parametric function, such as, for example, a Gaussian function with parameters $\mu$ and $\sigma$, to a dataset. In the following, we introduce two parametric approaches.
+	Parametric Curve estimation tries to fit a parametric function to a dataset, such as, a Gaussian function with parameters $\mu$ and $\sigma$. In the following, we introduce two parametric approaches.
 
 	\subsection{Double Logistic}
 		\label{sec:double_logistic}
-		The Double Logistic (DL) smoothing as described in \cite{beckImprovedMonitoringVegetation2006} heavily relies on shape assumptions of the fitted curve (i.e., the NDVI {TS}). First, we assume that there  is a minimum NDVI level $y_{\min}$ in the winter (e.g., due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking several years into account. Second, we assume that the growth cycle can be divided into an increase and a decrease period, where the {TS} follows a logistic function. The maximum increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$). The equation of the double-logistic fit is given by:
+		The Double Logistic (DL) smoothing as described in \cite{beckImprovedMonitoringVegetation2006} heavily relies on shape assumptions of the fitted curve (i.e., the NDVI {TS}). First, we assume that there  is a minimum NDVI level $y_{\min}$ in the winter (e.g., due to evergreen plants), which might be masked by snow. This can be estimated beforehand, taking several years into account. Second, we assume that the growth cycle can be divided into an increase and a decrease period, where both follow a logistic function. The fastest increase (or decrease) is observed at $t_0$ (or $t_1$) with a slope of $d_0$ (or $d_1$). The equation of the double-logistic fit is given by:
 		\begin{equation*}
 			y(t) = y_{\min} + \left(y_{\max}-y_{\min}\right)\left(\frac{1}{1+e^{-d_0(t-t_0)}}+\frac{1}{1+e^{-d_1(t-t_1)}}-1\right)
 		\end{equation*}
-		Where the five free parameters: $y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are initially estimated by least squares. Such fit can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}.
+		Where the five free parameters: $y_{\max}$, $d_0$, $d_1$, $t_0$, $t_1$ are estimated by least squares. Such fit can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}.
 
 		\subsubsection*{Robustification}
-		Similar as for the SG (introduced in section~\ref{sec:Savitzky-Golay}) one can reestimate the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations. For the details on the choice of the weights, we refer to \cite{beckImprovedMonitoringVegetation2006}. We will not apply this reestimation, but rather the robustification introduced later in section~\ref{sec:loess_robustify}.
+		Similar as for the SG (introduced in section~\ref{sec:Savitzky-Golay}), one can reestimate the parameters by giving less weight to the overestimated observations and more weight to the underestimated observations. For the details on the choice of the weights, we refer to \cite{beckImprovedMonitoringVegetation2006}. We will not apply this reestimation, but rather the robustification introduced later in section~\ref{sec:loess_robustify}.
 
 		\begin{my_pros_cons_table}{
 				\item Incorporates subject specific knowledge in the case of evergreen plants covered in snow.
@@ -22,7 +22,7 @@
 				\item Meaningful parameters.
 			}{
 				\item Strong shape assumptions limit flexibility.
-				\item Parameter optimization might go wrong. This can be mitigated to some extent by providing bounds for the parameters.
+				\item Parameter estimation can go wrong. Introducing bounds can help.
 			}
 		\end{my_pros_cons_table}
 
@@ -34,15 +34,15 @@
 			\operatorname{NDVI}(t)=\sum_{j=0}^{2} \Big(a_{j}  \cos \left(j  \Phi_{t}\right)+b_{j}  \sin \left(j  \Phi_{t}  \right)\Big)
 		$$
 		where $\Phi_t= T (t-1) / (2 \pi n)$. If we set the period $T$ to match one year, this would coincide with the notion that plants grow every year. 
-		Analogous to section~\ref{sec:double_logistic} we fit it to the data by least squares.
-		Example fits can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}
+		Analogous to section~\ref{sec:double_logistic} we fit the function above to the data via least squares.
+		Example fits can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}.
 
 
 		% \cite{beckImprovedMonitoringVegetation2006} shows in their lag-plots a heavy autocorrelation of resiudals
 
 		\begin{my_pros_cons_table}{
 				\item Assumption of periodicity can be helpful if we are modelling multiyear grow cycles.
-				\item Fourier Series are widley known.
+				\item Fourier Series are popular.
 			}{
 				\item Bad behavior in regions with little data (cf. figure~\ref{fig:interpol/fourier_dl_comparison}).
 				\item Hard to interpret estimated parameters.
@@ -51,7 +51,7 @@
 		\end{my_pros_cons_table}
 
 		\begin{my_figure}[h]{width=1\textwidth}{interpol/fourier_dl_comparison}
-			\caption[Fourier approximation and Double Logistic]{Here we observe the possibilities of a precise fit for the two parametric methods but notice also some misbehavior.}
+			\caption[Fourier approximation and Double Logistic]{Here we observe the possibilities of a precise fit for the two parametric methods, but notice also some misbehavior.}
 			\label{fig:interpol/fourier_dl_comparison}
 		\end{my_figure}
 
@@ -113,21 +113,17 @@
 		and define $\gamma$ via the above equation by choosing the Gaussian Variogram defined by
 		$$V(h) = p \cdot\left(1-e^{-\frac{h^{2}}{\left(\frac{4}{7} r\right)^{2}}}\right)+n.$$
 		Here $h$ denotes the distance, $n$ is the nugget, $r$ is the range and $p$ is the partial sill. The influence of the parameters is visualized in figure~\ref{fig:interpol/kriging_gauss_variogram}.\footnote{Strictly speaking, we use a scaled version of the Variogram. Thus, only the ratio of $p/n$ matters.}
-
-			\begin{my_figure}[h]{width=0.7\textwidth}{interpol/kriging_gauss_variogram}
+		Finally, we consider a one-dimensional Gaussian process $G_\gamma$ with Variogram $\gamma$ and tune the Variogram parameters using maximum likelihood\footnote{As illustrated in figure~\ref{fig:kriging_parameters} maximum likelihood estimation can lead to overfitting. Thus, we will in practice sample several such optimized parameters and use their median in the end.}. Let $z$ be a vector with the new values to extrapolate, then we can determine the values $m(z) = \mathbb{E}\left[G_\gamma(z) | (t,y)\right]$ using Bayes rule\footnote{Bayes rule generally claims that for two random variables $A$, and $B$ we have that $P(A|B) = P(B|A) / P(B)$.}. For an example fit, we refer to figure~\ref{fig:kriging_parameters}. 
+		    \begin{my_figure}[h]{width=0.7\textwidth}{interpol/kriging_gauss_variogram}
 				\caption[Gaussian Variogram]{Gaussian Variogram with nugget=1, partial sill=3, range=55}
 				\label{fig:interpol/kriging_gauss_variogram}
 			\end{my_figure}
-
 			\begin{my_figure}{width=1\textwidth}{interpol/kriging_parameter}
 				\caption[Effect of variogram parameters and failure of maximum likelihood.]{On the left, we see how the interpolation changes if we increase the nugget and the range parameter. On the right, we compare two UK interpolations, where one takes parameters by numerically maximizing the (which results in a very small nugget) and the other takes the median of many such numerical optimizations.}
 				\label{fig:kriging_parameters}
 			\end{my_figure}
-
-		Finally, we consider a one-dimensional Gaussian process $G_\gamma$ with Variogram $\gamma$ and tune the Variogram parameters using maximum likelihood\footnote{As illustrated in figure~\ref{fig:kriging_parameters} maximum likelihood estimation can lead to overfitting. Thus, we will in practice sample several such optimized parameters and use their median in the end.}. Let $z$ be a vector with the new values to extrapolate, then we can determine the values $m(z) = \mathbb{E}\left[G_\gamma(z) | (t,y)\right]$ using Bayes rule\footnote{Bayes rule generally claims that for two random variables $A$ and $B$ we have that $P(A|B) = P(B|A) / P(B)$.}. For an example fit, we refer to figure~\ref{fig:kriging_parameters}. 
-
 		\subsubsection*{Violated Assumption}
-			Since we observe a clear pattern of a growth period in spring and harvest in the end of summer, we conclude that our stationarity assumption with the constant mean is structurally violated. This is also the reason why we observe a tendency to the mean, as indicated in figure~\ref{fig:kriging_parameters}, regardless of range parameter.
+			Since we observe a clear pattern of a growth period in spring and harvest in the end of summer, we conclude that our stationarity assumption with the constant mean is structurally violated. This is also why we observe a tendency to the mean, as indicated in figure~\ref{fig:kriging_parameters}, regardless of range parameter.
 
 		\begin{my_pros_cons_table}{
 				\item It is a well-studied method.
@@ -161,7 +157,7 @@
 				\item Remove points that would indicate an increase greater than 0.4 within 20 days.
 				\item Linearly interpolate to obtain an equidistant {TS} $X^0$.
 				\item Apply the SG to obtain a new {TS} $X^1$.
-				\item Update $X^1$ by applying again the SG. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the `upper NDVI envelope'.
+				\item Set $X^0\leftarrow X^1$ and update $X^1$ by applying again the SG. Repeat this until $w^T |X^1-X^0|$ stops decreasing, where w is a weight vector with $w_i = \min\left(1, 1 - \frac{X^1_i-X^0_i}{\max_i\|X^1_i-X^0_i\|}\right)$. This reduces the penalty introduced by outliers\footnote{Here we call a point $i$ an outlier if $X^0_i<X^1_i$.} and by repeating this step we approach the `upper NDVI envelope'.
 			\end{enumerate}
 
 		\subsubsection*{Extension: Spatial-Temporal SG}
@@ -187,12 +183,12 @@
 
 		The Locally Weighted Regression (LOESS) introduced by \cite{clevelandRobustLocallyWeighted1979} can be understood as a generalization of the SG (cf. section~\ref{sec:Savitzky-Golay}).
 
-		Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ separately by fitting a polynomial of order $d$ by weighted least squares. The weights are (usually) defined by
+		Given a proportion $\alpha \in (0,1]$, we estimate each $y_i$ separately by fitting a polynomial of order $d$ by weighted least squares. The weights are usually\footnote{Other functions are also possible choices as long as they satisfy the conditions stated in \cite{clevelandRobustLocallyWeighted1979}.} defined by
 		$$w_i(t_j)=\begin{cases}
 				\left(1-\left(\frac{|t_j-t_i|}{h_i}\right)^{3}\right)^{3}, & \text{for } |t_j-t_i|<h_i           \\
 				0,                                                   & \text{for } |t_j-t_i| \geqslant h_i
 			\end{cases} ,$$
-		where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(t_i)$.\footnote{\label{footnote:LOESS}If too many weights are set to zero, we might end up considering not enough observations and thus get a singular design-matrix (for the least squares estimation). To extend good behavior, we substitute $h_i$ with $1.01 h_i$, so that the observations on the boundary of $B_{h_i}(t_i)$ do not get completely ignored. But we also have to assure that $\alpha$ is big enough.} So for each $y_i$ we only consider a proportion $\alpha$ of the observations.
+		where $h_i$ is the minimal distance such that $\lceil \alpha n\rceil$ observations are in the ball $B_{h_i}(t_i)$.\footnote{\label{footnote:LOESS}If too many weights are set to zero, we might end up considering not enough observations and thus get a singular design-matrix (for the least squares estimation). To extend good behavior, we substitute $h_i$ with $1.01 h_i$, so that the observations on the boundary of $B_{h_i}(t_i)$ do not get completely ignored. But we also have to assure that $\alpha$ is big enough.} So for each $y_i$, we only consider a proportion $\alpha$ of the observations.
 
 		\subsubsection{Differences between the Robust LOESS and the SG}
 		The LOESS smoother takes a fraction of points instead of a fixed number, and therefore automatically adapts to the size of the data we wish to interpolate. However, we run into the danger of considering too little observations, since the estimation breaks down if $\lceil \alpha n\rceil < d+1$.\footnoteref{footnote:LOESS}
@@ -224,12 +220,12 @@
 			B_{i, k}(z)=\frac{z-t_{i}}{t_{i+k}-t_{i}} B_{i, k-1}(z)+\frac{t_{i+k+1}-z}{t_{i+k+1}-t_{i+1}} B_{i+1, k-1}(z).
 		\end{equation}
 		
-		Assuming that all $t_i$ are distinct, this yields an interpolation that fits the data perfectly. To reduce the amount of overfitting and increase the smoothness, we relax the constraint that we must perfectly interpolate. Thus, we use the minimum number of basis functions\footnote{So we do not require one basis function for each neighboring pair of knots. SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number of knots used.} such that keeps the sum of squares below some threshold $\lambda$:
+		Assuming that all $t_i$ are distinct, this yields an interpolation that fits the data perfectly. To reduce the amount of overfitting and increase the smoothness, we relax the constraint that we must interpolate perfectly. Thus, we use the minimum number of basis functions\footnote{So we do not require one basis function for each neighboring pair of knots. SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number of knots used.} such that keeps the sum of squares below some threshold $\lambda$:
 		$$\sum_{i=1}^n(w_i (y_i - \hat y_i))^2 \leq \lambda$$
 
 		\begin{my_pros_cons_table}{
 				\item Can be assigned degrees of freedom.
-				\item Extendable to `smooth' version.
+				\item Extendable to a `smooth' version.
 				\item Also performs well if points are not equidistant.
 			}{
 				\item Smoothing process does not translate well to an interpretation (unlike SS).
