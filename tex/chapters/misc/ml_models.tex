@@ -67,7 +67,7 @@
         4) \quad \hat g_j &=& \mathcal S_j(y - \mu - \sum_{k\neq j}\hat g_k(X_{[:,k]})) \quad \text{for }j=2,\dots,p       \\
          & \vdots        
     \end{eqnarray*}
-    We repeat step $3)$ and $4)$ until the change falls below some tolerance.
+    We repeat step $3)$ and $4)$ until the change of the $\hat g_i$'s falls below some tolerance.
 
     \begin{my_pros_cons_table}{
         \item Captures non-linearity.
@@ -80,8 +80,7 @@
 }
 
 \subsection{Random Forest}{\label{sec:corr_model_RF}
-    To define a Random Forests (RF) introduced by \cite{breimanRandomForests2001}  we will first define what a Tree is. A {(decision) Tree} is a graph $(V,E)$ without circles, a distinct root node, every node has at most two children and every leaf has a value assigned to it. At each node there is a boolean condition testing if one variable is greater than some value and a pointer to one child depending on the boolean value. To evaluate a tree we start at the root node, test the boolean expression and go to the node indicated by the resulting pointer. This we repeat until we end up at a leaf-node, where we return the value assigned to it. 
-    
+    To define a Random Forests (RF) introduced by \cite{breimanRandomForests2001}  we will first define what a Tree is. A {(decision) Tree} is a graph without circles, with a distinct root node, every node has at most two children and every leaf has a value assigned to it. At each non-leaf node there is a boolean condition testing if one variable is greater than some value and a pointer to one child depending on the boolean value. To evaluate a tree we start at the root node, test the boolean expression and go to the node indicated by the resulting pointer. This we repeat until we reach at a leaf, where we return the value assigned to it. 
     To build such a Tree, we will recursively partition the covariate space using greedy splits\footnote{For computational reasons, we will only use splits along one covariate. So we `cut' our covariate space into rectangles.} decreasing the RMSE\footnote{To calculate the RMSE, we need a prediction. Let $P$ be the current partition, then the predicted value for some $x\in A \in P$ is the mean of the responses of all the points in $A$ (included in the training data).} each time. If the set we want to split contains less than a certain amount of training points, we stop.
     
     To build a {Random Forest} we will bootstrap-aggregate\footnote{That is we will sample (with replacement) several times n observations from our original data and fit a Tree to each such sample.} many such Trees\footnote{Building the Tree, this time we will not test every covariate at each node (for the RMSE minimization) but a node-specific subsample of the covariates. Thus, also the `second best split' can be selected.}. The prediction of the Random Forest for a new point $x$ is then the mean of the predictions from all the Trees. 
@@ -89,12 +88,13 @@
         \item Captures non-linear relationships.
         \item Captures all interactions and performs automatic variable selection.
         \item Can deal with missing data.
+        \item Integrated OOB estimation.\footnotemark
     }{
         \item The resulting (prediction) function is not continuous, but locally constant.
         \item Computationally expensive.
         \item No interpretability.
     }
-    \end{my_pros_cons_table}
+    \end{my_pros_cons_table}\footnotetext{Estimation of $y$ using all Trees for which $y$ was not in the training set (cf. section~\ref{sec:OOB_LOOCV}).}
 }
 \subsection{Multivariate Adaptive Regression Splines}{\label{sec:corr_model_MARS}
     A Multivariate Adaptive Regression Splines (MARS) model as introduced in \cite{friedmanMultivariateAdaptiveRegression1991} can be described by 
@@ -103,7 +103,6 @@
         g(x) = \sum_{m=0}^M \beta_m h_m(x),
     \end{equation}
     where the $h_m$ are simple functions (explained later) and the $\beta_m$ are estimated via Least Squares. 
-    
     In the building procedure of a MARS model, we first select many of those simple functions and later drop some of them to avoid overfitting. For the construction of those simple functions, define $\mathcal{B}$ the set of pairs of `hockey stick functions' as:
     \begin{equation}
         \label{eq:mars_basis_fun}
@@ -119,15 +118,14 @@
     and the set $\mathcal{M}=\left\{1\right\}$ of all functions currently in the model. Now, consider $\mathcal{C}$ the set of candidate functions-pairs 
     \begin{equation}
         \label{eq:mars_candidate}
-        \mathcal{C}:=\left\{
-            \left(h(\cdot)b_1(\cdot),  h(\cdot)b_2(\cdot) \right)
-            \;| \;\; h\in\mathcal{M}, \; 
+        \mathcal{C}:=\Big\{
+            \big(h(\cdot)b_1(\cdot),  h(\cdot)b_2(\cdot) \big)
+            \,:\, h\in\mathcal{M} \text{ and } 
             (b_1,b_2) \in \mathcal{B}
-        \right\}
+        \Big\}
     \end{equation}
-    and select the pair (which when added to $\mathcal{M}$ and the coefficients refitted) reduces the RMSE the most. Add the selected pair to $\mathcal{M}$ and repeat until the RMSE reduction becomes insignificant.
-
-    Finally, to avoid overfitting, we prune the set $\mathcal{M}$ by optimizing a LOOCV score.\footnote{This means that we perform an iterative procedure to reduce the number of functions in $\mathcal{M}$. For every function $h$ in $\mathcal{M}$, we compute the model using $\mathcal{M}\\\{h\}$. We discard the function that -- when excluding from $\mathcal{M}$ -- leads to the best LOOCV score.}  
+    and select the pair which when added to $\mathcal{M}$ and the coefficients refitted reduces the RMSE the most. Add the selected pair to $\mathcal{M}$ and repeat until the RMSE reduction becomes insignificant.
+    Finally, to avoid overfitting, we prune the set $\mathcal{M}$ by optimizing a LOOCV score.\footnote{This means that we perform an iterative procedure to reduce the number of functions in $\mathcal{M}$. For every function $h$ in $\mathcal{M}$, we compute the model using $\mathcal{M}\\\{h\}$. We discard the function that --- when excluding from $\mathcal{M}$ --- leads to the best LOOCV score.}  
 
     To reduce computational complexity, we follow the recommendation from \cite{stephenEarthMultivariateAdaptive2021} and restrict $h$ in equation~\eqref{eq:mars_candidate} to be of degree one (so it is also in a pair of $\mathcal{B}$). Consequently, $\mathcal{C}$ contains functions with a degree of at most 2. 
 

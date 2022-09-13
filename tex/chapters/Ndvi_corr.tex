@@ -30,7 +30,7 @@
     As expected, the `true' and the observed NDVI seem to be highly correlated for SCL45. But we can also detect some patterns of correlation in the SCL-classes 2, 3, 7, 8 and 10.  
     It might be tempting to just include some of the mentioned SCL classes for the interpolation. But on the one hand, the choice would not be objective and on the other hand, the correlation seems to be weaker than for SCL45. Therefore, in the following section, we will correct the observed NDVI and estimate the uncertainty of each correction. 
     \begin{my_figure}[h]{width=1\textwidth}{ndvi_corr/scl_residuals_scatter}
-        \caption[`True' vs. observed NDVI---for each SCL class]{For each SCL class, we compare the true NDVI with the observed NDVI. (The true NDVI was estimated with LOOCV smoothing splines, and we used all observations of 10\% of the total pixels.)}
+        \caption[`True' vs. observed NDVI --- for each SCL class]{For each SCL class, we compare the true NDVI with the observed NDVI. (The true NDVI was estimated with LOOCV smoothing splines, and we used all observations of 10\% of the total pixels.)}
         \label{fig:ndvi_corr/scl_residuals_scatter}
     \end{my_figure}
 }
@@ -85,7 +85,7 @@
     \begin{Nitemize}
         \item Interpolation: SS / DL
         \item Robustify: Yes / No
-        \item Correction \& uncertainty estimation: RF / OLS -- considering only SCL-classes / OLS -- considering all selected covariates / MARS / GAM / LASSO / no correction.
+        \item Correction and uncertainty estimation: RF / OLS\textsuperscript{SCL} / OLS\textsuperscript{all} / MARS / GAM / LASSO / no correction.
     \end{Nitemize}
     As it is not feasible to try every possible combination, we make the following restrictions on which combinations we will consider:
     \begin{Nitemize}
@@ -94,7 +94,7 @@
         \item We use the same underlying method for correction and uncertainty estimation.
     \end{Nitemize}
 
-    In this fashion, we obtain 28 distinct Interpolation Strategies ({{IS}}s), which we will benchmark in the next section.
+    Under those constrains on the considered combinations, we obtain 28 distinct Interpolation Strategies ({{IS}}s), which we will benchmark in the next section.
 }
 
 \section{Evaluation via (relative) Yield Prediction Error}{
@@ -140,7 +140,6 @@
                 % \end{Nitemize}
         }
         For the choice we were inspired by (cf. table 2 in \cite{kamirEstimatingWheatYields2020}). However, we deliberately omit any statistic that involves the minimum (e.g., the NDVI-range), since we regard the minimum as a very error-prone measure due to the large influence of clouds in the {TS}. 
-        
         As a result, for each {{IS}}, a matrix is obtained in which each row corresponds to a pixel and both the yield and the covariates (computed by applying the above statistics) are contained.
         Using this matrix, we train a random forest for yield estimation, and compute the integrated OOB estimates $\hat y$ (cf. section~\ref{sec:OOB_LOOCV}). Note that the choice of the modeling approach does not matter much, as long as it is general enough (i.e., able to approximate any function) and we use the same one for each {{IS}}. 
         Finally, for each {{IS}}, we calculate the YPE and describe the results in section~\ref{sec:results_ndvi_corr}.
