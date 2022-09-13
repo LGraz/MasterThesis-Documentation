@@ -33,7 +33,7 @@
 
 
 \section{Interpolation}
-	\subsection{Parameter Bounds} 
+	\subsection{Parameter Bounds} \label{sec:app-param_bounds}
 		As discussed in section~\ref{sec:itpl_param_optimizationissues} we encoutered parameter optimization issiues which we solved via bounding them. \\
 		For the DL (cf. section~\ref{sec:double_logistic}) we assumed:  
 		$y_{min} \in [0,0.7],$ 
@@ -44,12 +44,12 @@
 		$d_1 \in [-0.01,0]$. 
 		\\
 		For the FS (cf. section~\ref{sec:fourier_approx}) we assumed: 
-		$\Phi \in [1200,4000]$,
-		$a0   \in [-1,2]$,
-		$a1   \in [-5,5]$,
-		$a2   \in [-5,5]$,
-		$b1   \in [-5,5]$ and
-		$b2   \in [-5,5]$.
+		$T \in [1200,4000]$,
+		$a_0   \in [-1,2]$,
+		$a_1   \in [-5,5]$,
+		$a_2   \in [-5,5]$,
+		$b_1   \in [-5,5]$ and
+		$b_2   \in [-5,5]$.
 	\subsection{Iterations for Robustification} 
 \begin{my_figure}[H]{width=1\textwidth}{interpol/2x3_B-Splines_robust}
 	\caption[B-splines robustification.]{B-splines \RobItPlot}

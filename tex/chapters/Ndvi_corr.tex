@@ -30,7 +30,7 @@
     As expected, the `true' and the observed NDVI seem to be highly correlated for SCL45. But we can also detect some patterns of correlation in the SCL-classes 2, 3, 7, 8 and 10.  
 
     \begin{my_figure}[h]{width=1\textwidth}{ndvi_corr/scl_residuals_scatter}
-        \caption[`True' vs. observed NDVI --- for each SCL class]{For each SCL class, we compare the true NDVI with the observed NDVI. (The true NDVI was estimated with LOOCV smoothing splines, and we used all observations of 10\% of the total pixels.)}
+        \caption[`True' vs. observed NDVI---for each SCL class]{For each SCL class, we compare the true NDVI with the observed NDVI. (The true NDVI was estimated with LOOCV smoothing splines, and we used all observations of 10\% of the total pixels.)}
         \label{fig:ndvi_corr/scl_residuals_scatter}
     \end{my_figure}
 
@@ -120,11 +120,11 @@
         We would like to estimate the yield from the NDVI {TS} produced by all the {{IS}}s for all pixels. However, given the high dimensionality and different lengths of the interpolation (not every {TS} has the same start and end point), we must first map each NDVI {TS} into a low-dimensional vector space of covariates. For this, we will use the following statistics:
         {% covaraites
             \renewcommand{\arraystretch}{1.2} \begin{longtable}{p{0.48\linewidth} p{0.48\linewidth}}
-                --- Maximum slope   &   --- Integral\footnoteref{note:integral-min} up to the peak \\
-                --- Minimum slope   &   --- Integral\footnoteref{note:integral-min} after peak \\
-                --- Integral\footnote{\label{note:integral-min} We will only consider the integral of the function $max(0, NDVI - 0.3)$, where $0.3$ is assumed to be a minimal NDVI value (cf. satellite images~\ref{fig:satelite/time_series_2021_P112/15_scl5_2021-02-23.png} and~\ref{fig:satelite/time_series_2021_P112/45_scl2_2021-07-23.png} with their NDVI in plot~\ref{fig:interpol/ndvi_ts_scl45_grey.pdf}).} over all   &   --- Integral\footnoteref{note:integral-min} from 0-685 GDD \\
-                --- Peak (i.e., maximal NDVI)    &   --- Integral\footnoteref{note:integral-min} from 685-1075 GDD     \\
-                --- GDD for the Peak &  
+               ---Maximum slope   &  ---Integral\footnoteref{note:integral-min} up to the peak \\
+               ---Minimum slope   &  ---Integral\footnoteref{note:integral-min} after peak \\
+               ---Integral\footnote{\label{note:integral-min} We will only consider the integral of the function $max(0, NDVI - 0.3)$, where $0.3$ is assumed to be a minimal NDVI value (cf. satellite images~\ref{fig:satelite/time_series_2021_P112/15_scl5_2021-02-23.png} and~\ref{fig:satelite/time_series_2021_P112/45_scl2_2021-07-23.png} with their NDVI in plot~\ref{fig:interpol/ndvi_ts_scl45_grey.pdf}).} over all   &  ---Integral\footnoteref{note:integral-min} from 0-685 GDD \\
+               ---Peak (i.e., maximal NDVI)    &  ---Integral\footnoteref{note:integral-min} from 685-1075 GDD     \\
+               ---GDD for the Peak &  
             \end{longtable} \renewcommand{\arraystretch}{1}
             % Old itemize
                 % \begin{Nitemize}

@@ -31,9 +31,9 @@
 		\label{sec:fourier_approx}
 		\cite{stockliEuropeanPlantPhenology2004} approximates the NDVI curve using a second order Fourier Series (FS):
 		$$
-			\operatorname{NDVI}(t)=\sum_{j=0}^{2} a_{j} \times \cos \left(j \times \Phi_{t}\right)+b_{j} \times \sin \left(j \times \Phi_{t}  \right)
+			\operatorname{NDVI}(t)=\sum_{j=0}^{2} \Big(a_{j}  \cos \left(j  \Phi_{t}\right)+b_{j}  \sin \left(j  \Phi_{t}  \right)\Big)
 		$$
-		where $\Phi=2 \pi \times(t-1) / n$. If we set the period to match one year, this would coincide with the notion that plants grow every year. 
+		where $\Phi_t= T (t-1) / (2 \pi n)$. If we set the period $T$ to match one year, this would coincide with the notion that plants grow every year. 
 		Analogous to section~\ref{sec:double_logistic} we fit it to the data by least squares.
 		Example fits can be seen in figure~\ref{fig:interpol/fourier_dl_comparison}
 
@@ -56,7 +56,7 @@
 		\end{my_figure}
 
 	\subsection{Optimization Issues}\label{sec:itpl_param_optimizationissues}
-		We shall mention some optimization issues we countered during implementation. Since we aim to minimize the residual sum of squares over 5 (or 6) parameters, we try to solve a non-convex optimization problem. Thus, the algorithm\footnote{We used the python function \texttt{scipy.optimize.curve\_fit}.} either struggles to find the global minimum or fails to converge. This was fixed by providing for each parameter reasonable initial values and generous bounds (that match our experience).
+		We shall mention some optimization issues we countered during implementation. Since we aim to minimize the residual sum of squares over 5 (or 6) parameters, we try to solve a non-convex optimization problem. Thus, the algorithm\footnote{We used the python function \texttt{scipy.optimize.curve\_fit}.} either struggles to find the global minimum or fails to converge. This was fixed by providing for each parameter reasonable initial values and generous bounds that match our experience (cf. appendix section~\ref{sec:app-param_bounds} for the bounds).
 
 \section{Non-Parametric Regression}
 	\label{sec:itpl_nonparametric}
@@ -249,7 +249,7 @@
 		 The objective function ensures that we decrease the curvature while keeping the RMSE low.
 		SS can be represented as cubic splines i.e., piecewise cubic polynomial functions.
 
-		\subsubsection{Whittaker --- Discrete Version with Higher Order Derivatives}
+		\subsubsection{Whittaker---Discrete Version with Higher Order Derivatives}
 			The Whittaker smoother introduced in \cite{eilersPerfectSmoother2003} is closely reminiscent of the SS and is also used for the NDVI TS \citep{atzbergerTimeSeriesMonitoring2011}. Similar to SS, we minimize the following expression over $z\in \R^n$:
 			$$
 			({y}-{z})^{{T}} {W}({y}-{z})+\lambda {z}^{{T}} {D}^{{T}} {D} \mathbf{z},
@@ -278,7 +278,7 @@
 	    % $$
 	    % O(\mathbf{z})=(\mathbf{y}-\mathbf{z})^{\mathrm{T}} \mathbf{W}_{0}(\mathbf{y}-\mathbf{z})+\lambda_{\mathrm{s}} \mathbf{z}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}} \mathbf{z}
 	    % $$
-	%     where $\mathbf{y}$ is a $N \times 1$ vector of measured data, $\mathbf{z}$ is smooth curve to be fit to the data, $\mathbf{W}_{0}$ is a diagonal matrix of weights (typically $0 \leq w_{0, n} \leq 1$ for $n=1, \ldots, N, \mathbf{D}_{\mathrm{s}}$ is a second derivative operator (e.g., $\mathbf{D}_{\mathrm{s}} \mathbf{z}$ is the second derivative of $\mathbf{z}$ ) and $\lambda_{\mathrm{s}}$ is a scalar penalty on the smoothing term. When data are missing, the corresponding weight, $w_{0, n}$, can be set to zero. Once that $\mathbf{W}_{0}$ and $\lambda_{\mathrm{s}}$ are given (set by default or provided by the user) the corresponding estimate of $\mathbf{z}$ is given by
+	%     where $\mathbf{y}$ is a $N \cdot 1$ vector of measured data, $\mathbf{z}$ is smooth curve to be fit to the data, $\mathbf{W}_{0}$ is a diagonal matrix of weights (typically $0 \leq w_{0, n} \leq 1$ for $n=1, \ldots, N, \mathbf{D}_{\mathrm{s}}$ is a second derivative operator (e.g., $\mathbf{D}_{\mathrm{s}} \mathbf{z}$ is the second derivative of $\mathbf{z}$ ) and $\lambda_{\mathrm{s}}$ is a scalar penalty on the smoothing term. When data are missing, the corresponding weight, $w_{0, n}$, can be set to zero. Once that $\mathbf{W}_{0}$ and $\lambda_{\mathrm{s}}$ are given (set by default or provided by the user) the corresponding estimate of $\mathbf{z}$ is given by
 	%     $$
 	%     \hat{\mathbf{z}}=\left(\mathbf{W}_{0}+\lambda_{\mathrm{s}} \mathbf{D}_{\mathrm{s}}^{\mathrm{T}} \mathbf{D}_{\mathrm{s}}\right)^{-1} \mathbf{W}_{0} \mathbf{y}
 	%     $$
