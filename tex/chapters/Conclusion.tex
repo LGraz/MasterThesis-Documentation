@@ -3,7 +3,7 @@
 
 % GENERAL INFORMATION    
 
-    In this thesis, we investigated how to model vegetation dynamics through NDVI {TS} derived from satellite images. The major challenges faced, were how to deal with contaminated observations (due to clouds or shadows) and how to interpolate the observed NDVI values. 
+    In this thesis, we investigated how to model vegetation dynamics through NDVI {TS} derived from satellite images. The major challenges were how to deal with contaminated observations (due to clouds or shadows) and how to interpolate the observed NDVI values. 
     % ITPL METHODS
     A summary of the {{IM}}s considered can be found in the table~\ref{sec:itpl}. 
     
@@ -20,7 +20,7 @@
 
 
 % NDVI CORRECTION
-The traditional answer to the question of how to deal with contaminated observations is that we only consider observations that are labeled as vegetation or bare soil by the SCL (SCL45). The unreliability of this labeling, however, is illustrated in figure~\ref{fig:witzwil_selected_satellite_images}. Moreover, filtered observations (non-SCL45) might still contain valuable information (see section~\ref{sec:corr_otherSCL}). Therefore, we do not adhere to traditional (SCL) filtration, but instead consider all observations and correct the observed NDVI with uncertainty estimation. For this, we use statistical models that take additional information such as the remaining spectral bands, the current SCL label and the observed NDVI into account. But before we interpolate the corrected NDVI values, we assign a weight to each observation, corresponding to its uncertainty. The uncertainty is estimated analogously as the NDVI has been corrected. That is, taking the same covariates but replacing the old response ($\operatorname{NDVI}^\text{true}$) with a new one ($\operatorname{abs}(\operatorname{NDVI}^\text{corrected}-\operatorname{NDVI}^\text{true})$).
+The traditional answer to the question of how to deal with contaminated observations is that we only consider observations that are labeled as vegetation or bare soil by the SCL (SCL45). The unreliability of this labeling, however, is illustrated in figure~\ref{fig:witzwil_selected_satellite_images}. Moreover, filtered observations (non-SCL45) might still contain valuable information (see section~\ref{sec:corr_otherSCL}). Therefore, we do not adhere to traditional (SCL) filtration, but instead consider all observations and correct the observed NDVI with uncertainty estimations. For this, we use statistical models that take additional information such as the remaining spectral bands, the current SCL label and the observed NDVI into account. But before we interpolate the corrected NDVI values, we assign a weight to each observation, corresponding to its uncertainty. The uncertainty is estimated analogously as the NDVI has been corrected. That is, taking the same covariates but replacing the old response ($\operatorname{NDVI}^\text{true}$) with a new one ($\operatorname{abs}(\operatorname{NDVI}^\text{corrected}-\operatorname{NDVI}^\text{true})$).
     % Considerd {{IS}}s
     By combining different {{IM}}s with various statistical models, we obtain 28 different Interpolation Strategies ({{IS}}s) (see section~\ref{sec:corr_itpl_stat}). To assess which of these {{IS}}s is best, we assume that the better the {{IS}}, the better it allows interpolated NDVI {TS} to predict yield. Surprisingly, the best strategy is the one with SS and the simplest static model considered, which uses only the observed NDVI and SCL classification.
     % Best Itpl strategy
@@ -42,28 +42,28 @@ As to the question of which {{IM}} we recommend, we consider two cases. If one o
     \label{sec:FutureWork}
 
     \subsection{Time Series Correction-Interpolation as a General Method}{
-        Throughout this thesis, we developed a correction and {{IM}} for the NDVI. However, we never relied on any properties of the NDVI. Only the parameter estimated via cross-validation in chapter~\ref{sec:itpl_param_est} depends on the scale of the {TS}. For simplicity, we could thus determine the parameter using Generalized Cross Validation \citep{ripleyFitSmoothingSpline2022}. Therefore, our approach of interpolation and correction of {TS} can be applied to arbitrary {TS} if additional information is available. This includes TS outside of satellite imagery or remote sensing. However, further research is required, to demonstrate the general usefulness of this approach.
+        Throughout this thesis, we developed a correcting uncertainty-weighted interpolation procedure for the NDVI. However, we never relied on any properties of the NDVI. Only the parameter estimated via cross-validation in chapter~\ref{sec:itpl_param_est} depends on the scale of the {TS}. For simplicity, we could thus determine the parameter using Generalized Cross Validation \citep{ripleyFitSmoothingSpline2022}. Therefore, our approach of interpolation and correction of {TS} can be applied to arbitrary {TS} if additional information is available. This includes TS outside of satellite imagery or remote sensing. However, further research is required, to demonstrate the general usefulness of this approach.
 
-        As an example, we could develop cloud-correction with uncertainty estimation and interpolation.
-        In the same manner as we corrected the NDVI {TS} for a pixel in chapter~\ref{sec:corr}, one could look at each spectral band separately and correct it with an uncertainty estimate. Subsequently, one reassembles the corrected bands and translates the multiple estimated uncertainties into one. Optionally, the {TS} can also be interpolated before merging, as in chapter~\ref{sec:corr_link}. The resulting question would be how well this approach performs.
+        As an example, we could perform cloud-correction with uncertainty estimation and interpolation.
+        In the same manner as we corrected the NDVI {TS} for a pixel in chapter~\ref{sec:corr}, one could look at each spectral band separately and correct it with an uncertainty estimate. Subsequently, one reassembles the corrected bands and translates the multiple estimated uncertainties into one. Optionally, the {TS} can also be interpolated before merging, as in chapter~\ref{sec:corr_link}. The remaining question is how such an approach might perform.
     }
 
 
 
     \subsection{Minor Improvements}
-        During this project, we also noticed some minor issues that we would have liked to investigate further if more resources were available. The most relevant of these are:
+        During this project, we also noticed some minor issues that we would have liked to investigate further if more resources had been available. The most relevant of these are:
         \begin{Nitemize}
             \item \textbf{Data:}
             The method how the combine harvester point cloud has been extrapolated to the 10m grid of S2 could possibly be improved.
             \item \textbf{Data:}
             We have not included the spectral bands that have a resolution of 60 m. But precisely these seem to be promising for cloud correction, since they are a proxy of the water (content and form) in the atmosphere.
             \item \textbf{Data:}
-            \cite{raiyaniSentinel2ImageScene2021} presents a machine learning approach that supposedly improves the SCL and thus could improve our results that are based on the SCL.
+            \cite{raiyaniSentinel2ImageScene2021} present a machine learning approach that supposedly improves the SCL and thus could improve our results that are based on the SCL.
             % \item \textbf{Interpolation:}
             % Penalized Regressions as described in ... are similar to smoothing splines (cf. ...) but different. Better?XXX
             \item \textbf{NDVI Correction:}
             Explore the effect of different link and normalizing functions % between the estimated absolute residuals and the weights 
-            in section~\ref{sec:corr_link}. Currently, we run into the danger of some outer points getting nearly ignored just because one estimated absolute residual for some interior point is close to zero.
+            in section~\ref{sec:corr_link}. Currently, we run into the danger of some outer points getting nearly ignored because one estimated absolute residual for some interior point is close to zero.
             \item \textbf{NDVI Correction:}
             Yield is not the only target variable of interest. Other variables like protein content could also be used in section~\ref{sec:ndvi_corr_eval} for the method evaluation. 
         \end{Nitemize}

@@ -34,10 +34,10 @@
 
     \cite{tibshiraniRegressionShrinkageSelection2011} shows that the LASSO solution tends to be sparse. That is $\beta_i = 0$ for most $i = 1,\dots,p$. The larger $\lambda$, the more $\beta_i = 0$ and hence the simpler the resulting model.
 
-    In order to know which $\lambda$ to choose, we try a huge range of possible values. For each $\beta_\lambda$, we calculate the cross-validated $RMSE_\lambda$
+    In order to know which $\lambda$ to choose, we try a large range of possible values. For each $\beta_\lambda$, we calculate the cross-validated $RMSE_\lambda$
     \footnote{The cross validated Root Mean Square Error is the mean of the RMSE's obtained for each fold using the model trained on the remaining folds. 
     %We use the following definition of the $RMSE$: $\sqrt{\sum_{i=1}^n(y-\hat y)^2/n}$
-    } (and its standard deviation $\sigma_\lambda$ using the $k$ folds) and define the $\lambda$ with the smallest corresponding  $RMSE_\lambda$ as $\lambda_{min}$. From here we choose the largest $\lambda$ for which the $RMSE_\lambda$ is smaller than $RMSE_{\lambda_{min}}+\sigma_\lambda$. This yields a simpler model while keeping the $RMSE$ reasonable model.
+    } (and its standard deviation $\sigma_\lambda$ using the $k$ folds) and define the $\lambda$ with the smallest corresponding  $RMSE_\lambda$ as $\lambda_{min}$. From here we choose the largest $\lambda$ for which the $RMSE_\lambda$ is smaller than $RMSE_{\lambda_{min}}+\sigma_\lambda$. This yields a simpler model while keeping the $RMSE$ small.
 
     We will apply the LASSO using the selected covariates in section~\ref{sec:corr_data_table} and their second degree of interactions.\footnote{This is if our covariates are $\{1,a,b\}$, then we will now use $\{1,a,b,ab,a^2,b^2\}.$}
     
@@ -105,7 +105,7 @@
     \end{equation}
     where the $h_m$ are simple functions (explained later) and the $\beta_m$ are estimated via Least Squares. 
     
-    In the building procedure of a MARS model, we first select many of those simple functions and later drop some of them to avoid overfitting. For the construction of those simple functions, define $\mathcal{B}$ be the set of pairs of `hockey stick functions'
+    In the building procedure of a MARS model, we first select many of those simple functions and later drop some of them to avoid overfitting. For the construction of those simple functions, define $\mathcal{B}$ the set of pairs of `hockey stick functions' as:
     \begin{equation}
         \label{eq:mars_basis_fun}
         \mathcal{B}:=\left\{

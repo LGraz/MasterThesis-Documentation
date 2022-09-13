@@ -1,7 +1,7 @@
 \chapter{NDVI Correction} \label{sec:corr}
 
 {
-    Let's remind ourselves that the data from the S2 satellites is distributed  with a SCL, and we therefore have some evidence about what is observed at each pixel for each sampled time (cf. table~\ref{tab:satelite/scl_classes}). So far, we have only considered points, labeled as cloud- and shadow-free (SCL45). However, we remind ourselves of the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite the `vegetation' label and see vegetation in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to see `cirrus clouds'.
+    Let's remind ourselves that the data from the S2 satellites is distributed  with an SCL, and we therefore have some evidence about what is observed at each pixel for each sampled time (cf. table~\ref{tab:satelite/scl_classes}). So far, we have only considered points, labeled as cloud- and shadow-free (SCL45). However, we remind ourselves of the satellite images in figure~\ref{fig:satelite/time_series_2021_P112/35_scl4_2021-06-03.png}, where we had cloudy images despite the `vegetation' label and see vegetation in figure~\ref{fig:satelite/time_series_2021_P112/40_scl10_2021-06-28.png} even though we are supposed to see `cirrus clouds'.
     
     % In this chapter, we would like to improve the NDVI interpolation by inspecting also other SCL-classes and by using more than just the two bands used to calculate the NDVI (B4 and B8). 
 
@@ -103,7 +103,7 @@
     % idea
     The fundamental assumption is that the closer the interpolated NDVI {TS} is to the true one, the better it can be used to determine crop yield. Implicitly, we believe that an NDVI {TS} that better models yield will incorporate more true information about the underlying vegetation. 
     Therefore, we want to determine a comparable YPE for each {{IS}} and choose it as a benchmark criterion. 
-    This is an objective measure since we have not considered crop yield in any of our previous steps. Moreover, this criterion is justified by the fact that yield estimation has been a motivation for the interpolation.
+    This is an objective measure, since we have not considered crop yield in any of our previous steps. Moreover, this criterion is justified by the fact that yield estimation has been a motivation for the interpolation.
 
     \begin{definition}(Relative YPE) \label{def:YPE}
         Let $y\in \R^n$ be the yield, $M$ be a model for estimating $y$, and $\hat y = M(X)$ where $X$ describes the data\footnote{We will use the matrixes derived in section~\ref{sec:corr_yield_est}.}. 

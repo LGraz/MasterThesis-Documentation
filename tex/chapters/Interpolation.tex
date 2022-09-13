@@ -35,7 +35,7 @@
 		m(t)=\mathbb{E}[y \mid t]
 	$$
 	We will introduce parametric and non-parametric approaches to estimate $m$ in section~\ref{sec:itpl_parametric} and~\ref{sec:itpl_nonparametric}.
-	Furthermore, in the subsequent, we denote $w\in \R^n$ as the vector of weights such that $w_i$ corresponds to the weight that $(t_i, y_i)$ should have in the interpolation. Since not all of the following IMs support extrapolation outside of the data range, we will always extrapolate with the closest value within the data range. 
+	Furthermore, in the subsequent, we denote $w\in \R^n$ as the vector of weights such that $w_i$ corresponds to the weight that $(t_i, y_i)$ should have in the interpolation. Since not all the following IMs support extrapolation outside the data range, we will always extrapolate with the closest value within the data range. 
 }
 
 
@@ -92,7 +92,7 @@
 			w_i^\text{new}:=w_i^\text{old} \begin{cases}
 				\left(1-\tilde r_i^{2}\right)^{2}, & \text{if } |\tilde r_i|<1 \\
 				0,                        & \text{else }
-			\end{cases};\quad
+			\end{cases}.\quad
 			\label{eq:bisquare}
 		\end{equation}
 		Using the new weights, we can re-interpolate. This reweighting can be iterated for several steps or till the change of the values is smaller than some tolerance.
@@ -122,7 +122,7 @@
 		
 	}
 	\subsection{Examples and Conclusions}{		
-		Examples of the first four iterations using SS and LOESS are shown in figure~\ref{fig:interpol/2x3_SS_robust} and~\ref{fig:interpol/2x3_loess_robust} for six pixels. For the analogous figures of BS and DL we refere to the appendix~\ref{fig:interpol/2x3_B-Splines_robust} and~\ref{fig:interpol/2x3_DL_robust}.
+		Examples of the first four iterations using SS and LOESS are shown in figure~\ref{fig:interpol/2x3_SS_robust} and~\ref{fig:interpol/2x3_loess_robust} for six pixels. For the analogous figures of BS and DL, we refer to the appendix~\ref{fig:interpol/2x3_B-Splines_robust} and~\ref{fig:interpol/2x3_DL_robust}.
 		Indeed, we observe how the interpolated {TS} is less affected by outliers after each iteration. The most notable change happens during the first iteration. In figure~\ref{fig:interpol/2x3_SS_robust} plot (d) we see how the interpolation `escapes' from the right endpoint with each successive iteration, even though our intuition does not necessarily identify this point as an outlier. Therefore, in the following, we will always stop after one iteration.
 
 		\begin{my_figure}[h]{width=1\textwidth}{interpol/2x3_SS_robust}
