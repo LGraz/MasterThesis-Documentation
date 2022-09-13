@@ -19,10 +19,11 @@
         \item Computationally cheap.
     }{
         \item Models only linear relationships.
-        \item No integrated variable selection.\footnote{There is the possibility of stepwise model selection by dropping or adding some covariates, but for higher p this gets too expensive since the time complexity grows in $\mathcal{O}(np^4)$ (computing $X^TX$ requires $\mathcal{O}(np^2)$ which assuming $n>p$ dominates $\mathcal{O}(p^3) $ needed for the Cholesky Decomposition of $X^TX$). % p^2 time OLS. 
-        }
+        \item No integrated variable selection.\footnotemark
     }
     \end{my_pros_cons_table}
+    \footnotetext{There is the possibility of stepwise model selection by dropping or adding some covariates, but for higher p this gets too expensive since the time complexity grows in $\mathcal{O}(np^4)$ (computing $X^TX$ requires $\mathcal{O}(np^2)$ which assuming $n>p$ dominates $\mathcal{O}(p^3) $ needed for the Cholesky Decomposition of $X^TX$). % p^2 time OLS. 
+    }
 }
 \subsection{Least Absolute Shrinkage and Selection Operator}{\label{sec:corr_model_LASSO}
     The Least Absolute Shrinkage and Selection Operator (LASSO) can be similarly expressed than the OLS but adds a penalty to the minimization problem:

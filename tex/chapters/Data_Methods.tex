@@ -123,7 +123,7 @@
 	Now we create a new data structure that we call Pixel. This originates from the pixels of the S2 satellite images. It will contain all the information needed to answer the research questions in the following chapters. 
 		
 		Consider a 10 by 10 meter square that coincides with a S2 image pixel and $T$ the GDD values for which S2 images are available in a given season. For $t\in T$ let $P_t$ be a tuple of all the spectral bands, the observed NDVI and the SCL class at the considered location at time $t$. Then, define $P$ as the collection of all the $P_t$ and the estimated dry yield for this square.
-		Analogously to $P$, define $P^{SCL45}$ by only considering $P_t$ with SCL-classes 4 or 5 (vegetation and soil).  
+		% Analogously to $P$, define $P^{SCL45}$ by only considering $P_t$ with SCL-classes 4 or 5 (vegetation and soil).  
 }
 
 		% We will call the resulting data set {PIXELS}, as it is the collection of all Pixels (over all seasons). 
@@ -175,7 +175,7 @@
 		
 		In the case that $M^{(-i)}$ was fitted on the set $D\setminus\{(X_i,y_i)\}$ (i.e., not a true subset), we call the corresponding $\hat y_i$ also the LOOCV estimator.	
 		If we optimize some parameter via OOB (or LOOCV) this means that we search for the parameter that minimizes some loss function which takes the OOB (or LOOCV) residuals. 
-		In the bootstrap (e.g., random forest) framework, we define $\hat y_i$ to be the average of all computed and admissible $M^{(-i)}$. 
+		In the bootstrap (e.g., random forest) framework, we define $\hat y_i$ to be the average of all computed and feasible $M^{(-i)}$. 
 	}
 
 }

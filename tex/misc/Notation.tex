@@ -1,10 +1,10 @@
-\chapter*{\vspace{-3.5cm} Notations}
+\chapter*{ Notations}
 \label{c:Notation}
-\vspace{-0.6cm}
+% \vspace{-0.6cm}
 Since this thesis, despite its applied nature, is located at the Mathematics Department, we adhere to the convention of speaking in the first-person plural `we'.\\
 Furthermore, only equations that are referenced elsewhere are equipped with a number.
 
-\section*{Variables}\vspace{-0.3cm}
+\section*{Variables}\vspace{-0.2cm}
 \renewcommand{\arraystretch}{1.3} % for non-dense tables
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
 $c$		& A (vector of) constant(s).\\
@@ -24,10 +24,10 @@ $X_{[i,:]}$ 	& i\textsuperscript{th} row of $X$.
 \end{longtable}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section*{Abbreviations and Objects}\vspace{-0.3cm}
+\section*{Abbreviations and Objects}\vspace{-0.2cm}
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
 	DAS       & Days After Sowing.\\
-	GDD       & Growing Degree Days -- cumulative sum of `$\max(0, \text{temperature}-\text{threshold})$'.\\
+	GDD       & Growing Degree Days -- cumulative sum of temperature (see. section~\ref{sec:gdd_def}).\\
 	IM       & Interpolation Method. That is a  method that interpolates data $(t_i,y_i)_{i = 1,\dots ,n}$ and returns a function $f(t)=y$, approximating the data.\\
 	IS       & Interpolation Strategy. By combining various correction models with different IMs (with and without robustification) in section~\ref{sec:corr_itpl_stat} 28 ISs were obtained.\\% This is the category of functions that map $(t_i,y_i)_{i=1,\dots,n}$ to a function $f(t)=y$, approximating the data. So a IS describes a strategy of how to arrive at an interpolation starting from the data $(t_i,y_i)_{i=1,\dots,n}$. For this, initial data may be corrected (cf. chapter~\ref{sec:corr}), (possible different) IMs (iteratively) used, weightings applied (cf. robustification in section~\ref{sec:loess_robustify}). Note, that strictly speaking, every IM also is an IS. But usually, we expect an IS to involve a more `complex' procedure.\\
 	LOOCV        & Leave One Out Cross Validation. Describes the procedure of estimating the value for a point by a model that has seen all the points except the current one (see section~\ref{sec:OOB_LOOCV}).\\
@@ -45,7 +45,7 @@ $X_{[i,:]}$ 	& i\textsuperscript{th} row of $X$.
 	YPE        & (Relative) Yield Prediction Error (see definition~\ref{def:YPE}).\\
 \end{longtable} 
 
-\section*{Statistical Models}\vspace{-0.3cm}
+\section*{Statistical Models}\vspace{-0.2cm}
 \begin{longtable}{p{0.12\linewidth} p{0.87\linewidth}}
 	BS & B-splines (see section~\ref{sec:B}).\\
 	DL & Double Logistic (see section~\ref{sec:double_logistic}).\\

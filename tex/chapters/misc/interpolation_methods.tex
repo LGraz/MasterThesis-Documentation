@@ -87,13 +87,14 @@
 		\begin{my_pros_cons_table}{
 				\item Flexible due to different possible kernels.
 				\item Can be assigned degrees of freedom.
-				\item Estimation of the noise variance $\hat \sigma_\varepsilon^2$.\footnote{Cf. lecture notes of \cite{buhlmanComputationalStatistics2020} section 3.2.2.}
+				\item Estimation of the noise variance $\hat \sigma_\varepsilon^2$.\footnotemark
 			}{
-				\item If the $t \mapsto K(t)$ is not continuous, $\hat m $ isn't either.
+				\item $\hat m $ is only continuous if $t \mapsto K(t)$ is continuous.
 				\item Choice of bandwidth, especially if $t_i$ are not equidistant.
 				\item Biased estimator. Underestimation (overestimation) for peaks (valleys).
 			}
 		\end{my_pros_cons_table}
+		\footnotetext{{Cf. lecture notes of \cite{buhlmanComputationalStatistics2020} section 3.2.2.}}
 
 
 	\subsection{Universal Kriging}
@@ -257,12 +258,13 @@
 				\item Efficient estimation (closed form solution).
 				\item Intuitive penalty reduces curvature.
 				\item Performs well if points are not equidistant.
-				\item Fixes the Runge's phenomenon\footnote{I.e., fluctuation of high degree polynomial interpolation.}.
+				\item Fixes the Runge's phenomenon\footnotemark.
 				\item Bounded within the data range if $\lambda$ is chosen a priori.
 			}{
 				\item The tuning parameter $\lambda$ must be chosen. This can be done via cross validation and optimizing a score function (e.g., the RMSE). 
 			}
 		\end{my_pros_cons_table}
+		\footnotetext{{I.e., fluctuation of high degree polynomial interpolation.}}
 
 
 	% \subsection{XXX Whittaker Smoother}

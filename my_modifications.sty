@@ -49,7 +49,9 @@
       \end{center}
     \end{figure}
 }
-
+\pdfstringdefDisableCommands{%
+  \def\textsuperscript#1{\textasciicircum(#1)}%
+}
 % Environment for pros and cons table
 \usepackage{float} % for H  force-here
 \newenvironment{my_pros_cons_table}[3][topsep=0pt,parsep=2pt,partopsep=0pt, leftmargin=5pt, rightmargin=-10pt]{
@@ -57,7 +59,7 @@
     \vspace{-8pt} % remove space before table
     \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
       % \toprule %makes a bar at the top
-      \hfil\bfseries Advantages & \hfil\bfseries Disadvantages
+      \hfil\bfseries Advantages & \hfil\bfseries Disadvantages % consider repalcing `\hfil' with `\texorpdfstring{\hfil}{\space}'
       \\\cmidrule(r{3\tabcolsep}){1-1}\cmidrule(l{-\tabcolsep}){2-2}
       \vspace{-11pt} % no gap wetween pros/cons and list
       \begin{itemize}[#1]
