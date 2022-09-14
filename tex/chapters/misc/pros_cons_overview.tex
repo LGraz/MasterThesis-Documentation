@@ -14,7 +14,7 @@
 
 		Double-Logistic                                                                                                                                              &
 		\begin{cptitemize} \item[--]  Bell shape of curve \item[--]  NDVI has a minimal value                       \end{cptitemize}        &
-		\begin{cptitemize} \item[--]  Good for evergreen plants (if snow masks NDVI) \item[--] Handles data gaps well                            \end{cptitemize}        &
+		\begin{cptitemize} \item[--]  Good for evergreen plants if snow masks NDVI \item[--] Handles data gaps well                            \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Parameter estimation can be challanging, to solve this the parameter space can be bounded             \end{cptitemize}        &
 		Yes                                                                                                                                                          &
 		(Yes)                                                                                                                                                         \\ \hline%comment out?
@@ -26,7 +26,7 @@
 		Yes                                                                                                                                                          &
 		No                                                                                                                                                         \\ \hline%comment out?
 
-		Nadaraya-Watson (Kernel Smoothing)                                                                                                                                  &
+		Nadaraya-Watson                                                                                                                            &
 		\begin{cptitemize} \item[--]  Close points are related to each other via a kernel function \end{cptitemize}                                                                                                                                                            &
 		\begin{cptitemize} \item[--]  Simple  \item[--]  Computationally very fast                                                             \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Biased, especially at `peaks' and `valleys'   \item[--]  Bandwidth: fails if there are big data-gaps                                                     \end{cptitemize}               &
@@ -40,7 +40,7 @@
 		Yes                                                                                                                                                          &
 		(Yes)                \\ \hline%comment out?                                                                                                                                         \\ %\hline%comment out?
 
-		SG                                                                                                                                        &
+		Savitzky-Golay                                                                                                                                         &
 		\begin{cptitemize}
 			\item[--]  High frequencies are noise (Low-Pass-Filter) \item[--]  Equidistant points \item[--]  Local polynomials\end{cptitemize}                                              &
 		\begin{cptitemize} \item[--]  Computationally very fast                                                                   \end{cptitemize}                   &
@@ -48,7 +48,7 @@
 		No                                                                                                                                                           &
 		(Yes)                                                                                                                                                         \\ \hline%comment out?
 
-		SG +~NDVI                                                                                                                                                    &
+		Savitzky-Golay  +~NDVI                                                                                                                                                    &
 		\begin{cptitemize} \item[--]  Upper envelope \item[--]  Vegetation cannot grow faster than some slope                                \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Biological knowledge                                                                            \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  Bad `upper envelope' since weights are not used for the estimation itself                    \end{cptitemize}               &
@@ -57,19 +57,19 @@
 
 		LOESS                                                                                                                                                        &
 		\begin{cptitemize} \item[--]  Local  polynomial with points closer to the estimated point are more important                  \end{cptitemize}               &
-		\begin{cptitemize} \item[--]  Flexible \item[--]  Generalization of SG \item[--] Intuitive weighting function                   \end{cptitemize} &
+		\begin{cptitemize} \item[--]  Flexible \item[--]  Generalization of the Savitzky-Golay \item[--] Intuitive weighting function                   \end{cptitemize} &
 		\begin{cptitemize} \item[--]  Computationally expensive                                                                       \end{cptitemize}               &
 		Yes                                                                                                                                                          &
 		(Yes)                                                                                                                                                         \\ \hline%comment out?
 
-		B-Splines (Smoothed)                                                                                                                                         &
+		B-Splines                                                                                                                                          &
 		\begin{cptitemize} \item[--]  Function can be approximated by a linear combination of B-splines basis functions               \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  General assumption \item[--]  Flexible shape                                                            \end{cptitemize}        &
 		\begin{cptitemize} \item[--]  Unbounded \item[--]  Non-intuitive smoothing process                                                \end{cptitemize}        &
 		Yes                                                                                                                                                            &
 		No                                            \\ \hline%comment out?
 
-		Smoothing splines                                                                                                                                            &
+		Smoothing Splines                                                                                                                                            &
 		\begin{cptitemize} \item[--]  \nth{2} derivative of function is integrable                                                        \end{cptitemize}               &
 		\begin{cptitemize} \item[--]  Intuitive meaning of penalty \item[--]  General assumptions \item[--]  Flexible shape                         \end{cptitemize} &
 		\begin{cptitemize} \item[--]  Choice of smoothing parameter                                                                                       \end{cptitemize}               &

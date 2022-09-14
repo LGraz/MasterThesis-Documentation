@@ -114,7 +114,6 @@
 			\label{eq:gdd}
 			GDD_n := \sum_{i=0}^n \max(T_i - T_{base}, 0).
 		\end{equation}
-
         An example for comparison of the DAS and GDD timescale is shown in figure~\ref{fig:raw_ndvi_ts}. Here we see that the first 120 DAS are compressed to just 500 GDD, and hence the gap in observations was successfully compressed. Given the reasons mentioned above, from now on we will only consider GDD. 
         Important plant growth stages and their corresponding GDD values are tabulated in the appendix~\ref{app:gdd_examples}.
 	} 
@@ -167,9 +166,9 @@
 		
 	\subsection{Out-Of-Bag and Leave-One-Out-Cross-Validation}{ \label{sec:OOB_LOOCV}
 		The rationale for Out-Of-Bag ({OOB}) and Leave-One-Out-Cross-Validation ({LOOCV}) is that we intend to evaluate a model $M$ with unseen data. That is, if $D$ describes the entire dataset, and we train a model on a subset of $D$, we can use the remaining data to evaluate the model. 
-		To formally introduce this, let:
+		To formally introduce this, let
 		$$
-			D=\{(X_{[j,:]},y_j)|\; X\in\R^{n\times p}, y\in \R^n, j=1,\dots,n\}
+			D:=\{(X_{[j,:]},y_j)|\; X\in\R^{n\times p}, y\in \R^n, j=1,\dots,n\}
 		$$
 		be a dataset, $i\in \{1,\dots,n\}$ and $M^{(-i)}$ a model fitted on a subset of $D\setminus\{(X_{[i,:]},y_i)\}$. Then we call $\hat y_i:= M^{(-i)}(X_{[i,:]})$ an {OOB} estimator of $y_i$. If we do this for all $i\in\{1,\dots,n\}$, we obtain $\hat y := \left(\hat y_1,\dots,\hat y_n\right)$ the OOB estimator for $y\in \R^n$.
 		

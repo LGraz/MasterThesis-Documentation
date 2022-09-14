@@ -235,19 +235,19 @@
 
 	\subsection{Smoothing Splines}
 		\label{sec:Natural_SS}
-		To define Smoothing Splines (SS) as in \cite{cravenSmoothingNoisyData1978}, let $\mathcal F$ be the Sobolev space (i.e., the space of functions of which the second derivative is integrable). Then SS are the unique minimizer of
+		To define Smoothing Splines (SS) as in \cite{cravenSmoothingNoisyData1978}, let $\mathcal F$ be the Sobolev space (i.e., the space of functions for which the second derivative is integrable). Then SS are the unique minimizer of
 		\begin{equation}
 			\label{eq:ss}
-			\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}w_i\left(y_{i}-{f}\left(t_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(t)^{2} dt,\quad \text{ for } \lambda >0.
+			\argmin_{f \in \mathcal F} \sum_{i=1}^{n}w_i\left(y_{i}-{f}\left(t_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(t)^{2} dt,\quad \text{ for } \lambda >0.
 		\end{equation}
 		 % natural\footnote{It is called natural since it is affine outside the data range ($\forall t\notin [t_1, t_n]:\hat m''(t) = 0$)} 
 		 The objective function ensures that we decrease the curvature while keeping the RMSE low.
 		SS can be represented as cubic splines i.e., piecewise cubic polynomial functions.
 
 		\subsubsection{Whittaker --- Discrete Version with Higher Order Derivatives}
-			The Whittaker smoother introduced in \cite{eilersPerfectSmoother2003} is closely reminiscent of the SS and is also used for the NDVI TS \citep{atzbergerTimeSeriesMonitoring2011}. Similar to SS, we minimize the following expression over $z\in \R^n$:
+			The Whittaker smoother introduced in \cite{eilersPerfectSmoother2003} is closely reminiscent of the SS and is also used for the NDVI TS \citep{atzbergerTimeSeriesMonitoring2011}. Similar to SS, we minimize the following expression:
 			$$
-			({y}-{z})^{{T}} {W}({y}-{z})+\lambda {z}^{{T}} {D}^{{T}} {D} \mathbf{z},
+			\argmin_{z\in \R^n} ({y}-{z})^{{T}} {W}({y}-{z})+\lambda {z}^{{T}} {D}^{{T}} {D} \mathbf{z},
 			$$
 			where $W$ is a diagonal weight-matrix, $\lambda$ our smoothing parameter and $D$ a matrix that serves the purpose of approximating a differentiation of $k^\text{th}$ order. In essence, this minimization function is the same as equation~\refeq{eq:ss}. The only differences are, that we substitute the integral by a sum and that we are more flexible with the order of the derivatives we are using. The main drawback is that we do not get a smooth function that interpolates, and that the sum behaves worse than the integral for non-equidistant data points. Thus, we will not consider the Whittaker further in favor of the more general SS. 
 
@@ -256,7 +256,7 @@
 				\item Efficient estimation (closed form solution).
 				\item Intuitive penalty reduces curvature.
 				\item Performs well if points are not equidistant.
-				\item Fixes the Runge's phenomenon\footnotemark.
+				\item Fixes the Runge's phenomenon.\footnotemark
 				\item Bounded within the data range if $\lambda$ is chosen a priori.
 			}{
 				\item The tuning parameter $\lambda$ must be chosen. This can be done via cross validation and optimizing a score function (e.g., the RMSE). 
