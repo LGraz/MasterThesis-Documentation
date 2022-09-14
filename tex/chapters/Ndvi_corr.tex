@@ -43,7 +43,7 @@
 
     For training an NDVI correction model, we require ground-truth data which we will aim to model using informative covariates. Since ground-truth NDVI data is not available, we will again use the assumption~\ref{true_ndvi_assumption} and use the `true' NDVI instead. There is no canonical answer to the question of which covariates we should use. It is a tradeoff between simplicity, generalizability, and performance (with the danger of overfitting). 
     Our goal with the NDVI correction is to develop a product that is simple to use and to understand. Therefore, we will only utilize the spectral data of the satellite (i.e., all the bands) and the observed NDVI derived from it as covariates. We organize the chosen covariates in the design matrix $X$\footnote{Strictly speaking, we include also the intercept and introduce  dummy variables to encode the SCL classes.}, where each row corresponds to a $P_t$ (i.e., a pixel at a time $t$) and each column to one covariate.    
-    In the following, we will introduce different approaches to model the relationship between the response $y:=\operatorname{NDVI}_\text{true}\in \R^n$ and the design matrix $X\in\R^{n \times p}$. First, we will study the basic OLS. Second, we look at the LASSO, a penalized adaptation of the OLS which is known to successfully deal with highly correlated covariates. Afterwards, GAMs are introduced, which model the response similar to OLS but allow for non-linear relations. Last, we discuss RF and MARS, which are both flexible modelling approaches. % since only weak assumptions on the relationship between the response and covariates are made. 
+    In the following, we will introduce different approaches to model the relationship between the response $y:=\operatorname{NDVI}^\text{true}\in \R^n$ and the design matrix $X\in\R^{n \times p}$. First, we will study the basic OLS. Second, we look at the LASSO, a penalized adaptation of the OLS which is known to successfully deal with highly correlated covariates. Afterwards, GAMs are introduced, which model the response similar to OLS but allow for non-linear relations. Last, we discuss RF and MARS, which are both flexible modelling approaches. % since only weak assumptions on the relationship between the response and covariates are made. 
 
     Note that in order to reduce computation time, only $10\%$ of the data has been used to fit the subsequent models, which are still more than 120'000 observations. 
     
@@ -53,16 +53,16 @@
 \section{Weighted Interpolation}{
 % \section{Uncertainty Estimation}{
     \label{sec:corr_uncertainty}
-    Once we obtain the estimate $\widehat{\operatorname{NDVI}}_\text{true}$ using the models described in the previous section, we are left with the problem that not every correction is equally reliable. One such example is illustrated in figure~\ref{fig:step_plot/2017-206_corr.pdf}, where the outer points (labeled as clouds) have a large scatter. Hence, we are interested in a measure of how uncertain an estimate is and thus use the the absolute residuals: 
+    Once we obtain the estimate $\widehat{\operatorname{NDVI}}^\text{true}$ using the models described in the previous section, we are left with the problem that not every correction is equally reliable. One such example is illustrated in figure~\ref{fig:step_plot/2017-206_corr.pdf}, where the outer points (labeled as clouds) have a large scatter. Hence, we are interested in a measure of how uncertain an estimate is and thus use the the absolute residuals: 
         \begin{equation}
             \label{eq:absndvires}
-            v := \left|\operatorname{NDVI}_\text{true}-\widehat{\operatorname{NDVI}}_\text{true}\right|
+            v := \left|\operatorname{NDVI}^\text{true}-\widehat{\operatorname{NDVI}}^\text{true}\right|
         \end{equation} 
-    Analogously as we corrected the NDVI, we replace the response $\operatorname{NDVI}_\text{true}$ with $v$ and model its relationship with the covariates defined by $X$.  In this way, we obtain a model for the absolute residuals $v$ and the estimator $\hat v$. 
+    Analogously as we corrected the NDVI, we replace the response $\operatorname{NDVI}^\text{true}$ with $v$ and model its relationship with the covariates defined by $X$.  In this way, we obtain a model for the absolute residuals $v$ and the estimator $\hat v$. 
     % }
 % \section{Interpolation}{
     \label{sec:corr_link}
-    In the following, we will convert our uncertainty estimate into weights that can be used for interpolation. For this, consider a pixel, its corresponding $\widehat{\operatorname{NDVI}}_\text{true}$ and $\hat v$ . In order to interpolate $\widehat{\operatorname{NDVI}}_\text{true}$, we will give less weight to unreliable observations. Thus, we define the link function connecting $\hat v$ with weights: 
+    In the following, we will convert our uncertainty estimate into weights that can be used for interpolation. For this, consider a pixel, its corresponding $\widehat{\operatorname{NDVI}}^\text{true}$ and $\hat v$ . In order to interpolate $\widehat{\operatorname{NDVI}}^\text{true}$, we will give less weight to unreliable observations. Thus, we define the link function connecting $\hat v$ with weights: 
     \begin{equation}
         \label{eq:corr_link}
         w_\tau:=\frac{1}{R} \frac{1}{\hat v_\tau}, 
@@ -76,8 +76,8 @@
     \label{sec:corr_itpl_stat}
     We have developed the following procedure to obtain a new interpolation (keyword-wise):
     \begin{Nenumerate}
-        \item LOOCV Interpolation (+ robustify?) $\Longrightarrow$ $\operatorname{NDVI}_\text{true}$
-        \item Correction $\Longrightarrow$ $\widehat{\operatorname{NDVI}}_\text{true}$
+        \item LOOCV Interpolation (+ robustify?) $\Longrightarrow$ $\operatorname{NDVI}^\text{true}$
+        \item Correction $\Longrightarrow$ $\widehat{\operatorname{NDVI}}^\text{true}$
         \item Uncertainty estimation $\Longrightarrow$ $\hat v$ and $w$
         \item Interpolation (+ robustify?)
     \end{Nenumerate}
@@ -106,12 +106,12 @@
     This is an objective measure, since we have not considered crop yield in any of our previous steps. Moreover, this criterion is justified by the fact that yield estimation has been a motivation for the interpolation.
 
     \begin{definition}(Relative YPE) \label{def:YPE}
-        Let $y\in \R^n$ be the yield, $M$ be a model for estimating $y$, and $\hat y = M(X)$ where $X$ describes the data\footnote{We will use the matrixes derived in section~\ref{sec:corr_yield_est}.}. 
-        We define the relative YPE as the relative RMSE in yield estimation. Formally expressed:
+        Let $y\in \R^n$ be the yield, $M$ be a model for predicting $y$, and $\hat y = M(X)$ where $X$ describes the data\footnote{We will use the matrixes derived in section~\ref{sec:corr_yield_est}.}. 
+        Define the YPE as the RMSE in yield prediction. Formally expressed as:
         \begin{equation}
-            YPE = \frac{\sqrt{\sum_{i=1}^n(y_i - \hat y_i)}}{\bar y}, %Y bar wird nicht erklärt
+            YPE = {\sqrt{\sum_{i=1}^n(y_i - \hat y_i)}}. %Y bar wird nicht erklärt
         \end{equation}
-        where $\bar y$ denotes the sample mean. For the (non-relative) YPE do not divide by $\bar y$.
+        Furthermore, define the relative YPE as the YPE divided by the sample mean $\bar y$.
     \end{definition}
 
     % \subsubsection*{Yield Estimation}

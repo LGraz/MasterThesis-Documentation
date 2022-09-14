@@ -21,7 +21,7 @@
 \section{Yield Prediction Error for Tested ISs} \label{sec:results_ndvi_corr}
 	\begin{table}
 		\begin{center}
-			\caption[Relative Yield Estimation Error for ISs]{Relative YPE for various ISs. For the non-relative YPE and the coefficient of determination (R\textsuperscript{2}) cf. table~\ref{tab:methods_vs_yieldprediction} and~\ref{tab:methods_vs_yieldprediction_r2}.}
+			\caption[relative RMSE for yield prediction in t/ha]{Relative YPE for various ISs. For the non-relative YPE and the coefficient of determination (R\textsuperscript{2}) cf. table~\ref{tab:methods_vs_yieldprediction} and~\ref{tab:methods_vs_yieldprediction_r2}.}
 			\small
 			\input{tex/chapters/misc/table_methods_vs_yieldprediction_relative.tex}
 			\label{tab:methods_vs_yieldprediction_relative}
@@ -29,11 +29,11 @@
 		\end{center}
 	\end{table}
 	The YPE for the in section~\ref{sec:corr_itpl_stat} chosen {{IS}}s is given in table~\ref{tab:methods_vs_yieldprediction_relative}. We note that robustification does not improve the quality of the fit (measured via the YPE) in most cases. 
-	In terms of YPE, SS tend to be better than DL (with and without robustification), especially if no correction is made. The {{IS}} that leads to the lowest YPE is the OLS\textsuperscript{SCL} with SS. Note that it is the simplest model which performs best.Given that the OLS\textsuperscript{SCL} models have very good interpretability, we also present the regression equations below. The corrected NDVI is calculated using 
+	In terms of YPE, SS tend to be better than DL (with and without robustification), especially if no correction is made. The {{IS}} that leads to the lowest YPE is the OLS\textsuperscript{SCL} with SS. Note that it is the simplest model which performs best. Given that the OLS\textsuperscript{SCL} models have very good interpretability, we also present the regression equations below. The corrected NDVI is calculated using 
 	\begin{equation}\label{eq:corr_lm}
 		\begin{aligned}		
 			{\widehat{\operatorname{NDVI}}}_{\text{true}}  = &
-			0.711 \operatorname{NDVI}_\text{observed}  
+			0.711 \operatorname{NDVI}^\text{observed}  
 			+ 0.215 \,\mathbbm 1_{{SCL = 2}} 
 			+ 0.237 \,\mathbbm 1_{{SCL = 3}} 
 			+ 0.210 \,\mathbbm 1_{{SCL = 4}} \\ &
@@ -50,7 +50,7 @@
 	\begin{equation}\label{eq:corr_lm_res}
 		\begin{aligned}		
 			\hat v  = &
-			-0.133 \operatorname{NDVI}_\text{observed}  
+			-0.133 \operatorname{NDVI}^\text{observed}  
 			+ 0.186 \, \mathbbm 1_{{SCL = 2}} 
 			+ 0.185 \, \mathbbm 1_{{SCL = 3}} 
 			+ 0.146 \, \mathbbm 1_{{SCL = 4}} \\ &

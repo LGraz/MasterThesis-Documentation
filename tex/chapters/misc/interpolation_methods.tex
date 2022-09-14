@@ -72,7 +72,7 @@
 			=\frac{\int_{\R} y f_{T, Y}(t, y) d y}{f_{T}(t)},
 		\end{equation}
 		where $f_{Y \mid T}, f_{T, Y}, f_{T}$ denote the conditional, joint and marginal densities.
-		This can be done with a kernel $K$:
+		This can be done with a kernel $K$
 		\begin{equation}
 			\hat{f}_{T}(t)=\frac{\sum_{i=1}^{n} K\left(\frac{t-t_{i}}{h}\right)}{n h}, \quad \hat{f}_{T, Y}(t, y)=\frac{\sum_{i=1}^{n} K\left(\frac{t-t_{i}}{h}\right) K\left(\frac{y-Y_{i}}{h}\right)}{n h^{2}},
 			\label{eq:kernel_with_bandwidt}
@@ -212,18 +212,16 @@
 		$$
 			S(t)=\sum_{j=0}^{n-1} c_{j} B_{j, k ; t}(t),
 		$$
-		where $B$ are basis functions and recursively defined by:
-		
+		where $B$ are basis functions and recursively defined by
 		\begin{equation}
 				B_{i, 0}(z)=1, \text { if } t_{i} \leq z<t_{i+1}, \text { otherwise } 0 \\
 		\end{equation}
 		\begin{equation}
 			B_{i, k}(z)=\frac{z-t_{i}}{t_{i+k}-t_{i}} B_{i, k-1}(z)+\frac{t_{i+k+1}-z}{t_{i+k+1}-t_{i+1}} B_{i+1, k-1}(z).
 		\end{equation}
-		
+
 		Assuming that all $t_i$ are distinct, this yields an interpolation that fits the data perfectly. To reduce the amount of overfitting and increase the smoothness, we relax the constraint that we must interpolate perfectly. Thus, we use the minimum number of basis functions\footnote{So we do not require one basis function for each neighboring pair of knots. SciPy uses FITPACK and DFITPACK, the documentation suggests that smoothness is achieved by reducing the number of knots used.} such that keeps the sum of squares below some threshold $\lambda$:
 		$$\sum_{i=1}^n(w_i (y_i - \hat y_i))^2 \leq \lambda$$
-
 		\begin{my_pros_cons_table}{
 				\item Can be assigned degrees of freedom.
 				\item Extendable to a `smooth' version.
@@ -237,7 +235,7 @@
 
 	\subsection{Smoothing Splines}
 		\label{sec:Natural_SS}
-		To define the Smoothing Splines (SS) as in \cite{cravenSmoothingNoisyData1978}, let $\mathcal F$ be the Sobolev space (i.e., the space of functions of which the second derivative is integrable). Then the SS are the unique minimizer of
+		To define Smoothing Splines (SS) as in \cite{cravenSmoothingNoisyData1978}, let $\mathcal F$ be the Sobolev space (i.e., the space of functions of which the second derivative is integrable). Then SS are the unique minimizer of
 		\begin{equation}
 			\label{eq:ss}
 			\hat m :=\argmin_{f \in \mathcal F} \sum_{i=1}^{n}w_i\left(y_{i}-{f}\left(t_{i}\right)\right)^{2}+\lambda \int {f}^{\prime \prime}(t)^{2} dt,\quad \text{ for } \lambda >0.

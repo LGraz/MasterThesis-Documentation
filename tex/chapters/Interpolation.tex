@@ -84,7 +84,7 @@
 		Even though the procedure is taken from the robust version of the LOESS smoother (cf. section~\ref{sec:loess} and \cite{clevelandRobustLocallyWeighted1979}), we can apply it to every {{IM}} that allows for prior weighting of observations.
 	}
 	{	
-		After an initial fit, we calculate the residuals $r_i := y_i - \hat y_i$ and obtain $\tilde r_i$ by scaling with the median of the absolute residuals: 
+		After an initial fit, we calculate the residuals $r_i := y_i - \hat y_i$ and obtain $\tilde r_i$ by scaling with the median of the absolute residuals
 		\begin{equation}
 			\tilde r_i := \frac{r_i}{6\operatorname{med}\left(|r_1|,\dots,|r_n|\right)}
 		\end{equation}
@@ -142,7 +142,6 @@
 }
 \section{Performance Assessment}{\label{sec:itpl_perfomance_assessment}
 	Next, we will benchmark the in section~\ref{sec:itpl_preselection} preselected {{IM}}s with and without robustification. For this, we will use the same technique as we did for the parameter determination in section~\ref{sec:itpl_param_est}. We apply the score functions from section~\ref{sec:scorefun} on $B_\lambda$.  
-
 	The results are presented in section~\ref{sec:results_itpl} and are discussed in section~\ref{sec:discussion_itpl}. The double logistic turns out to be the best convincing parametric method, and from the non-parametric methods we choose the SS.
 }
 

@@ -109,7 +109,7 @@
 % \end{my_figure}
 \section{Transformation of Timescale}\label{sec:gdd_def}
 	{% GDD & DAS
-		Two drawbacks become apparent when using Days After Sowing (DAS) as the timescale (see figure~\ref{interpol/ndvi_ts_das_grey.pdf}): First, this scale makes it difficult to compare two NDVI {TS} because wheat is not always sown on the same day of the year and in some years plants begin to emerge earlier. Second, because there are only few SCL45 observations in autumn and winter, we face significant data gaps during this period. To fix both problems, \cite{mcmasterGrowingDegreedaysOne1997} propose to transform the timescale into a meaningful temperature based one. The resulting Growing Degree Days ({GDD}) are defined as the cumulative sum of temperature above a given threshold $T_{base}$ since sowing. For cereals, we use $T_{base}=0$ \citep{holzkamperSpatialTemporalTrends2015}. Thus, the GGD for $n$ days after sowing will be equal to:
+		Two drawbacks become apparent when using Days After Sowing (DAS) as the timescale (see figure~\ref{interpol/ndvi_ts_das_grey.pdf}): First, this scale makes it difficult to compare two NDVI {TS} because wheat is not always sown on the same day of the year and in some years plants begin to emerge earlier. Second, because there are only few SCL45 observations in autumn and winter, we face significant data gaps during this period. To fix both problems, \cite{mcmasterGrowingDegreedaysOne1997} propose to transform the timescale into a meaningful temperature based one. The resulting Growing Degree Days ({GDD}) are defined as the cumulative sum of temperature above a given threshold $T_{base}$ since sowing. For cereals, we use $T_{base}=0$ \citep{holzkamperSpatialTemporalTrends2015}. Thus, the GGD for $n$ days after sowing will be equal to
 		\begin{equation}
 			\label{eq:gdd}
 			GDD_n := \sum_{i=0}^n \max(T_i - T_{base}, 0).
@@ -120,9 +120,9 @@
 	} 
 
 \section{The Concept of a `Pixel'}{ \label{sec:gather_data_to_pixel}
-	Now we create a new data structure that we call Pixel. This originates from the pixels of the S2 satellite images. It will contain all the information needed to answer the research questions in the following chapters. 
+	Now we create a new data structure that we call Pixel. This originates from the pixels of the S2 satellite images (for an illustration of such pixels, see figure~\ref{fig:satelite/witzwil_2021_P112_yield_cropped.png}). It will contain all the information needed to answer the research questions in the following chapters. 
 		
-		Consider a 10 by 10 meter square that coincides with a S2 image pixel and $T$ the GDD values for which S2 images are available in a given season. For $t\in T$ let $P_t$ be a tuple of all the spectral bands, the observed NDVI and the SCL class at the considered location at time $t$. Then, define $P$ as the collection of all the $P_t$ and the estimated dry yield for this square.
+		Consider a $10m\times 10m$ square that coincides with a S2 image pixel and $T$ the GDD values for which S2 images are available in a given season. For $t\in T$ let $P_t$ be a tuple of all the spectral bands, the observed NDVI and the SCL class at the considered location at time $t$. Then, define the pixel $P$ as the collection of all the $P_t$ and the estimated dry yield for this square.
 		% Analogously to $P$, define $P^{SCL45}$ by only considering $P_t$ with SCL-classes 4 or 5 (vegetation and soil).  
 }
 
@@ -150,7 +150,7 @@
 	\subsection{Score Functions}\label{sec:scorefun}
 	    Now, we define the Root Mean Square Error (RMSE), a prominent and outlier-sensitive score function.
 	    \begin{definition}(RMSE)\label{def:rmse}
-		Given a vector $y\in \R^n$ and its estimator $\hat y$, we define the RMSE as:
+		Given a vector $y\in \R^n$ and its estimator $\hat y$, we define the RMSE as
 		\begin{equation}
 			\label{eq:rmse}
 			 \operatorname{RMSE}:=\sqrt{\frac{1}{n}\sum_{i=1}^n (y_i - \hat y_i)^2}
