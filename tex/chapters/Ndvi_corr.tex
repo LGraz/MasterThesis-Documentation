@@ -53,7 +53,7 @@
 \section{Weighted Interpolation}{
 % \section{Uncertainty Estimation}{
     \label{sec:corr_uncertainty}
-    Once we obtain the estimate $\widehat{\operatorname{NDVI}}^\text{true}$ using the models described in the previous section, we are left with the problem that not every correction is equally reliable. One such example is illustrated in figure~\ref{fig:step_plot/2017-206_corr.pdf}, where the outer points (labeled as clouds) have a large scatter. Hence, we are interested in a measure of how uncertain an estimate is and thus use the the absolute residuals: 
+    Once we obtain the estimate $\widehat{\operatorname{NDVI}}^\text{true}$ using the models described in the previous section, we are left with the problem that not every correction is equally reliable. One such example is illustrated in figure~\ref{fig:step_plot/2017-206_corr.pdf}, where the outer points (labeled as clouds) have a large scatter. Hence, we are interested in a measure of how uncertain an estimate is and thus use the absolute residuals: 
         \begin{equation}
             \label{eq:absndvires}
             v := \left|\operatorname{NDVI}^\text{true}-\widehat{\operatorname{NDVI}}^\text{true}\right|
@@ -94,7 +94,7 @@
         \item We use the same underlying method for correction and uncertainty estimation.
     \end{Nitemize}
 
-    Under those constrains on the considered combinations, we obtain 28 distinct Interpolation Strategies ({{IS}}s), which we will benchmark in the next section.
+    Under these constraints, we obtain 28 distinct combination. We will call them Interpolation Strategies ({{IS}}s) and benchmark them in the next section.
 }
 
 \section{Evaluation via (relative) Yield Prediction Error}{
